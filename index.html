@@ -4,15 +4,16 @@
     <meta charset="UTF-8">
     <title>CAPITALISM - Void Platform</title>
     <link rel="icon" href="data:,">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         /* --- 変数定義（モード切替用） --- */
         :root {
             --bg-color: #050508;
             --text-color: #ffffff;
             --accent-color: #8a2be2;
-            --sub-text: #444;
-            --card-bg: rgba(10, 10, 15, 0.95);
-            --nav-bg: rgba(0, 0, 0, 0.6);
+            --sub-text: #aaa;
+            --card-bg: rgba(15, 15, 25, 0.98); /* 透明度を下げて見やすく */
+            --nav-bg: rgba(0, 0, 0, 0.8);
             --rank-bg: rgba(255, 255, 255, 0.05);
         }
 
@@ -20,9 +21,9 @@
             --bg-color: #f0f2f5;
             --text-color: #1a1a1a;
             --accent-color: #4b0082;
-            --sub-text: #888;
-            --card-bg: rgba(255, 255, 255, 0.9);
-            --nav-bg: rgba(255, 255, 255, 0.8);
+            --sub-text: #555;
+            --card-bg: rgba(255, 255, 255, 0.98);
+            --nav-bg: rgba(255, 255, 255, 0.9);
             --rank-bg: rgba(0, 0, 0, 0.05);
         }
 
@@ -32,6 +33,7 @@
             background: var(--bg-color); color: var(--text-color); text-align: center; 
             padding: 0; margin: 0; overflow-x: hidden; min-height: 100vh;
             transition: background 0.3s, color 0.3s;
+            touch-action: manipulation;
         }
 
         /* --- Layout --- */
@@ -45,6 +47,12 @@
             padding-top: 150px;
         }
 
+        @media (max-width: 900px) {
+            .main-layout { grid-template-columns: 1fr; padding-top: 130px; }
+            .sidebar { order: 2; margin-bottom: 50px; }
+            .container { order: 1; }
+        }
+
         .container { position: relative; z-index: 1; padding-bottom: 40px; }
 
         /* --- Navigation & Theme Switch --- */
@@ -54,17 +62,14 @@
             z-index: 1000; background: var(--nav-bg); backdrop-filter: blur(8px);
         }
         .theme-switch {
-            position: absolute; left: 30px; top: 50%; transform: translateY(-50%);
+            position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
             background: var(--card-bg); border: 1px solid var(--accent-color);
-            color: var(--text-color); padding: 10px; border-radius: 50px; cursor: pointer;
-            z-index: 1001; font-size: 20px;
+            color: var(--text-color); padding: 8px; border-radius: 50px; cursor: pointer;
+            z-index: 1001; font-size: 18px;
         }
 
         /* --- Ranking Sidebar --- */
-        .sidebar {
-            padding-top: 20px;
-            z-index: 5;
-        }
+        .sidebar { padding-top: 20px; z-index: 5; }
         .ranking-board {
             background: var(--rank-bg); border: 1px solid var(--accent-color);
             border-radius: 15px; padding: 20px; text-align: left;
@@ -84,6 +89,7 @@
             position: fixed; bottom: -20px; right: 20px; z-index: 100;
             pointer-events: none; transition: 0.5s;
         }
+        @media (max-width: 600px) { .mascot-img { width: 180px !important; } }
         .mascot-img {
             width: 280px; filter: drop-shadow(0 0 15px var(--accent-color));
             animation: floating 4s ease-in-out infinite;
@@ -102,44 +108,59 @@
             50% { transform: translateY(-20px); }
         }
 
-        /* --- Bottom Banner (AD Area) --- */
+        /* --- Bottom Banner (AD Area) --- イラストのみの表示へ --- */
         .ad-section {
             width: 100%; max-width: 1000px; margin: 50px auto 100px;
-            padding: 20px; border-top: 1px solid var(--sub-text);
+            padding: 0 20px;
         }
         .banner-slider {
-            width: 100%; height: 150px; background: #000; overflow: hidden;
-            border-radius: 10px; position: relative; border: 1px solid var(--accent-color);
+            width: 100%; height: auto; min-height: 150px;
+            overflow: hidden; border-radius: 15px; position: relative;
+            /* 外枠と背景を削除 */
+            background: transparent; border: none;
         }
         .banner-slide {
             width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
-            font-size: 24px; font-weight: bold; color: white;
-            background: linear-gradient(45deg, #1a1a1a, #8a2be2);
+        }
+        .banner-img {
+            width: 100%; max-height: 300px; object-fit: contain; border-radius: 10px;
         }
 
-        /* --- 既存のスタイルを継承・調整 --- */
-        .nav-container-fantasy { position: relative; width: 700px; height: 80px; }
-        .nav-bg-fantasy { width: 100%; height: 100%; object-fit: fill; position: absolute; top: 0; left: 0; }
-        .nav-links-fantasy { position: absolute; inset: 0; display: flex; justify-content: space-around; align-items: center; padding: 0 40px; box-sizing: border-box; }
-        .nav-item-fantasy { background: none; border: none; color: #ffd700; font-size: 16px; font-weight: bold; cursor: pointer; z-index: 1001; }
-
-        h1 { font-size: clamp(2rem, 5vw, 3.5rem); letter-spacing: 10px; margin: 20px 0; background: linear-gradient(to bottom, var(--text-color) 20%, var(--accent-color) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-        .card-container { height: 500px; perspective: 2000px; display: flex; justify-content: center; align-items: center; }
+        /* --- Shop Card Design --- */
+        .card-container { height: 500px; perspective: 2000px; display: flex; justify-content: center; align-items: center; touch-action: pan-y; }
         #shop-items { width: 280px; height: 400px; transform-style: preserve-3d; transition: transform 0.1s; cursor: grab; }
-        .card { position: absolute; inset: 0; background: var(--card-bg); border: 1px solid #222; padding: 30px 20px; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: space-between; border-radius: 10px; }
+        #shop-items:active { cursor: grabbing; }
 
-        .status-card { width: 100%; max-width: 400px; background: var(--card-bg); border: 1px solid var(--accent-color); padding: 40px; margin: auto; border-radius: 20px; }
-        .prof-avatar { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--accent-color); margin-bottom: 20px; }
-        .money-display { font-size: 40px; color: #00ffcc; font-weight: bold; }
+        .card { 
+            position: absolute; inset: 0; background: var(--card-bg); 
+            border: 2px solid var(--accent-color); padding: 30px 20px; 
+            backface-visibility: hidden; display: flex; flex-direction: column; 
+            justify-content: space-between; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8); /* 文字を見やすく */
+        }
+        .card h3 { font-size: 22px; margin: 0; color: var(--accent-color); }
+        .card p { font-size: 14px !important; color: var(--text-color) !important; line-height: 1.4; }
+
+        /* --- Navigation Items --- */
+        .nav-container-fantasy { position: relative; width: 90%; max-width: 700px; height: 80px; }
+        .nav-bg-fantasy { width: 100%; height: 100%; object-fit: fill; position: absolute; top: 0; left: 0; }
+        .nav-links-fantasy { position: absolute; inset: 0; display: flex; justify-content: space-around; align-items: center; padding: 0 20px; box-sizing: border-box; }
+        .nav-item-fantasy { background: none; border: none; color: #ffd700; font-size: clamp(12px, 3vw, 16px); font-weight: bold; cursor: pointer; z-index: 1001; text-shadow: 1px 1px 2px #000; }
+
+        h1 { font-size: clamp(2rem, 8vw, 3.5rem); letter-spacing: 10px; margin: 20px 0; background: linear-gradient(to bottom, var(--text-color) 20%, var(--accent-color) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .status-card { width: 85%; max-width: 400px; background: var(--card-bg); border: 1px solid var(--accent-color); padding: 30px; margin: auto; border-radius: 20px; }
+        .prof-avatar { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--accent-color); margin-bottom: 20px; }
+        .money-display { font-size: 32px; color: #00ffcc; font-weight: bold; }
 
         #auth-modal, #gacha-reveal-modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; pointer-events: none; transition: 0.5s; }
         #auth-modal.active, #gacha-reveal-modal.active { opacity: 1; pointer-events: auto; }
-        .modal-content { background: var(--bg-color); border: 1px solid var(--accent-color); padding: 40px; width: 320px; color: var(--text-color); }
-        .modal-input { width: 100%; background: #000; border: 1px solid #333; padding: 10px; color: #fff; text-align: center; font-size: 20px; margin: 20px 0; }
+        .modal-content { background: var(--bg-color); border: 1px solid var(--accent-color); padding: 30px; width: 80%; max-width: 320px; color: var(--text-color); border-radius: 15px; }
+        .modal-input { width: 100%; background: #000; border: 1px solid #333; padding: 12px; color: #fff; text-align: center; font-size: 20px; margin: 20px 0; box-sizing: border-box; }
 
         .hidden { display: none !important; }
-        .main-shop-btn { background: #000; color: #fff; border: 1px solid var(--accent-color); padding: 20px 40px; cursor: pointer; transition: 0.3s; }
+        .main-shop-btn { background: #000; color: #fff; border: 1px solid var(--accent-color); padding: 15px 30px; cursor: pointer; transition: 0.3s; border-radius: 5px; font-weight: bold; }
         .main-shop-btn:hover { background: var(--accent-color); box-shadow: 0 0 20px var(--accent-color); }
     </style>
 </head>
@@ -171,6 +192,7 @@
 
             <div id="shop-page" class="hidden">
                 <h1>ROLL SHOP</h1>
+                <p style="font-size:12px; color:var(--accent-color);">DRAG OR SWIPE TO ROTATE</p>
                 <div class="card-container"><div id="shop-items"></div></div>
             </div>
 
@@ -189,6 +211,7 @@
                         <div><small>SUBS</small><div id="prof-subs">0</div></div>
                         <div><small>RANK</small><div id="prof-rank-val">---</div></div>
                     </div>
+                    <button class="main-shop-btn" style="margin-top:20px; width:100%;" onclick="showPage('menu-page')">BACK</button>
                 </div>
             </div>
         </main>
@@ -206,11 +229,10 @@
     <section class="ad-section">
         <div class="banner-slider">
             <div class="banner-slide">
-                <img src="banner1.png" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'">
-                <span style="position:absolute;">NEW EVENT: DOMAIN EXPANSION</span>
+                <img src="banner1.png" class="banner-img" onerror="this.style.display='none'">
             </div>
         </div>
-        <p style="font-size: 10px; color: var(--sub-text); margin-top: 10px;">SPONSORED BY VOID CORP</p>
+        <p style="font-size: 10px; color: var(--sub-text); margin-top: 10px; letter-spacing: 2px;">SECURED BY VOID CORP</p>
     </section>
 
     <div class="character-box">
@@ -223,8 +245,8 @@
             <h2 id="modal-title">AUTHORIZE</h2>
             <input type="password" id="password-input" class="modal-input" placeholder="••••">
             <div style="display: flex; gap: 10px;">
-                <button onclick="closeModal()" style="flex:1;">ABORT</button>
-                <button id="modal-confirm-btn" style="flex:1; background: var(--accent-color); border:none; color:#fff;">EXECUTE</button>
+                <button onclick="closeModal()" style="flex:1; border: 1px solid #444; background:none; color:#fff; cursor:pointer;">ABORT</button>
+                <button id="modal-confirm-btn" style="flex:1; background: var(--accent-color); border:none; color:#fff; cursor:pointer; font-weight:bold;">EXECUTE</button>
             </div>
         </div>
     </div>
@@ -267,13 +289,12 @@
             }
         });
 
-        // ランキングボードの生成
         function updateRanking(profiles) {
             const list = document.getElementById('ranking-list');
             list.innerHTML = "";
             const sorted = Object.entries(profiles)
                 .sort(([,a], [,b]) => b.money - a.money)
-                .slice(0, 8); // 上位8名
+                .slice(0, 8);
 
             sorted.forEach(([pwd, u], i) => {
                 const item = document.createElement('div');
@@ -288,7 +309,6 @@
             });
         }
 
-        // モード切替
         function toggleTheme() {
             const body = document.documentElement;
             const btn = document.querySelector('.theme-switch');
@@ -301,7 +321,6 @@
             }
         }
 
-        // --- 既存のロジック（そのまま） ---
         function showPage(id) {
             document.querySelectorAll('main > div').forEach(c => c.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
@@ -313,31 +332,52 @@
         function renderShop() {
             const container = document.getElementById('shop-items');
             container.innerHTML = ""; 
-            if (!window.SHOP_DATA.length) return;
+            if (!window.SHOP_DATA || !window.SHOP_DATA.length) return;
             const step = 360 / SHOP_DATA.length;
-            const r = Math.max(300, 150 / Math.tan(Math.PI / SHOP_DATA.length));
+            const r = Math.max(280, 140 / Math.tan(Math.PI / SHOP_DATA.length));
             SHOP_DATA.forEach((item, i) => {
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.style.transform = `rotateY(${i * step}deg) translateZ(${r}px)`;
-                card.innerHTML = `<h3>${item.name}</h3><p style="font-size:12px;color:var(--sub-text);">${item.desc}</p><div class="money-display" style="font-size:24px;">${item.price.toLocaleString()}</div><button onclick="openBuyModal('${item.name}', ${item.price}, '${item.id}')">BUY</button>`;
+                card.innerHTML = `
+                    <h3>${item.name}</h3>
+                    <p>${item.desc}</p>
+                    <div class="money-display" style="font-size:24px;">${item.price.toLocaleString()}</div>
+                    <button class="main-shop-btn" onclick="openBuyModal('${item.name}', ${item.price}, '${item.id}')">BUY NOW</button>
+                `;
                 container.appendChild(card);
             });
             setupRotation();
         }
 
+        // --- スマホ対応の回転制御 ---
         function setupRotation() {
             const el = document.getElementById('shop-items');
-            document.querySelector('.card-container').onmousedown = (e) => {
-                isDragging = true; startX = e.pageX;
-            };
+            const cardContainer = document.querySelector('.card-container');
+
+            // マウス操作
+            cardContainer.onmousedown = (e) => { isDragging = true; startX = e.pageX; };
+
+            // タッチ操作（スマホ用）
+            cardContainer.ontouchstart = (e) => { isDragging = true; startX = e.touches[0].pageX; };
+
             window.onmousemove = (e) => {
                 if (!isDragging) return;
-                rotationY += (e.pageX - startX) * 0.2;
+                const delta = (e.pageX - startX) * 0.5;
+                rotationY += delta;
                 el.style.transform = `rotateY(${rotationY}deg)`;
                 startX = e.pageX;
             };
-            window.onmouseup = () => isDragging = false;
+
+            window.ontouchmove = (e) => {
+                if (!isDragging) return;
+                const delta = (e.touches[0].pageX - startX) * 0.5;
+                rotationY += delta;
+                el.style.transform = `rotateY(${rotationY}deg)`;
+                startX = e.touches[0].pageX;
+            };
+
+            window.onmouseup = window.ontouchend = () => { isDragging = false; };
         }
 
         function renderGachaMenu() {
@@ -346,7 +386,8 @@
             const types = [{ id: 'normal', name: '通常召喚' }, { id: 'limited_time', name: '期間限定' }, { id: 'limited_stock', name: '数量限定' }];
             types.forEach(t => {
                 const btn = document.createElement('button'); btn.className = 'main-shop-btn';
-                btn.innerHTML = `${t.name}<br><small>${GACHA_PRICES[t.id].toLocaleString()}</small>`;
+                btn.style.width = "280px";
+                btn.innerHTML = `${t.name}<br><small>${GACHA_PRICES[t.id].toLocaleString()} Credits</small>`;
                 btn.onclick = () => openGachaAuth(t.id, GACHA_PRICES[t.id]);
                 container.appendChild(btn);
             });
@@ -398,10 +439,10 @@
         function openProfileAuth() {
             document.getElementById('modal-confirm-btn').onclick = () => {
                 const pwd = document.getElementById('password-input').value;
-                if (USER_PROFILES[pwd]) {
+                if (window.USER_PROFILES && window.USER_PROFILES[pwd]) {
                     sessionPassword = pwd; closeModal();
                     updateProfileDisplay(pwd); showPage('profile-page');
-                } else { alert("VOID."); }
+                } else { alert("ACCESS DENIED: USER NOT FOUND"); }
             };
             showModal();
         }
