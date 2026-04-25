@@ -76,22 +76,22 @@
             display: grid;
             grid-template-columns: 1fr 350px;
             gap: 20px; width: 95%; max-width: 1400px;
-            margin: auto; padding-top: 150px;
+            margin: auto; padding-top: 180px; /* ナビが深くなった分少し調整 */
             position: relative; z-index: 2;
         }
         .main-layout.full-width { grid-template-columns: 1fr; }
 
         @media (max-width: 900px) {
-            .main-layout { grid-template-columns: 1fr !important; padding-top: 130px; }
+            .main-layout { grid-template-columns: 1fr !important; padding-top: 160px; }
             .sidebar { order: 2; margin-bottom: 50px; }
             .container { order: 1; }
         }
 
         .container { position: relative; padding-bottom: 40px; width: 100%; }
 
-        /* --- Navigation (Modified for Top_banner.png) --- */
+        /* --- Navigation (Modified for Image Buttons & Labels) --- */
         .top-nav-fantasy {
-            position: fixed; top: 0; left: 0; width: 100%; height: 120px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 150px; /* 高さを少し拡張 */
             display: flex; justify-content: flex-start; align-items: center;
             z-index: 1001; 
             background: url('Top_banner.png') no-repeat center;
@@ -104,25 +104,50 @@
             display: flex; align-items: center; padding-left: 40px; 
         }
         .nav-links-fantasy { 
-            display: flex; gap: 20px; align-items: center; 
+            display: flex; gap: 30px; align-items: flex-start; 
         }
+
+        .nav-btn-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
         .nav-item-fantasy { 
-            background: rgba(0, 0, 0, 0.6); 
+            width: 80px; 
+            height: 70px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: rgba(0, 0, 0, 0.4); 
             border: 1px solid var(--accent-color); 
-            color: #ffd700; 
-            padding: 10px 20px;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: bold; 
+            border-radius: 8px;
             cursor: pointer; 
             transition: 0.3s;
-            text-shadow: 1px 1px 2px #000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
             backdrop-filter: blur(4px);
         }
+
+        /* 個別背景画像クラス */
+        .nav-home     { background-image: url('home_bg.png'); }
+        .nav-shop     { background-image: url('shop_bg.png'); }
+        .nav-gacha    { background-image: url('gacha_bg.png'); }
+        .nav-identity { background-image: url('identity_bg.png'); }
+
         .nav-item-fantasy:hover {
-            background: var(--accent-color);
-            color: #fff;
+            transform: translateY(-5px) scale(1.05);
             box-shadow: 0 0 15px var(--accent-color);
+            border-color: #fff;
+        }
+
+        .nav-label {
+            color: #ffd700;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px #000;
+            pointer-events: none;
         }
 
         .theme-switch {
@@ -238,10 +263,22 @@
     <nav class="top-nav-fantasy">
         <div class="nav-container-fantasy">
             <div class="nav-links-fantasy">
-                <button class="nav-item-fantasy" onclick="showPage('menu-page')">HOME</button>
-                <button class="nav-item-fantasy" onclick="showPage('shop-page')">SHOP</button>
-                <button class="nav-item-fantasy" onclick="showPage('gacha-menu-page')">GACHA</button>
-                <button class="nav-item-fantasy" onclick="openProfileAuth()">IDENTITY</button>
+                <div class="nav-btn-wrapper">
+                    <button class="nav-item-fantasy nav-home" onclick="showPage('menu-page')"></button>
+                    <span class="nav-label">HOME</span>
+                </div>
+                <div class="nav-btn-wrapper">
+                    <button class="nav-item-fantasy nav-shop" onclick="showPage('shop-page')"></button>
+                    <span class="nav-label">SHOP</span>
+                </div>
+                <div class="nav-btn-wrapper">
+                    <button class="nav-item-fantasy nav-gacha" onclick="showPage('gacha-menu-page')"></button>
+                    <span class="nav-label">GACHA</span>
+                </div>
+                <div class="nav-btn-wrapper">
+                    <button class="nav-item-fantasy nav-identity" onclick="openProfileAuth()"></button>
+                    <span class="nav-label">IDENTITY</span>
+                </div>
             </div>
         </div>
         <button class="theme-switch" onclick="toggleTheme()">🌙</button>
