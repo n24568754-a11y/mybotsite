@@ -6,13 +6,14 @@
     <link rel="icon" href="data:,">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* --- 変数定義（モード切替用） --- */
+        /* --- 変数定義 --- */
         :root {
             --bg-color: #050508;
             --text-color: #ffffff;
             --accent-color: #8a2be2;
+            --accent-glow: rgba(138, 43, 226, 0.5);
             --sub-text: #aaa;
-            --card-bg: rgba(15, 15, 25, 0.98);
+            --card-bg: rgba(15, 15, 25, 0.9);
             --nav-bg: rgba(0, 0, 0, 0.8);
             --rank-bg: rgba(255, 255, 255, 0.05);
         }
@@ -21,36 +22,67 @@
             --bg-color: #f0f2f5;
             --text-color: #1a1a1a;
             --accent-color: #4b0082;
+            --accent-glow: rgba(75, 0, 130, 0.3);
             --sub-text: #555;
-            --card-bg: rgba(255, 255, 255, 0.98);
+            --card-bg: rgba(255, 255, 255, 0.95);
             --nav-bg: rgba(255, 255, 255, 0.9);
             --rank-bg: rgba(0, 0, 0, 0.05);
         }
 
-        /* --- Base System --- */
+        /* --- Advanced Background Decor --- */
         body { 
             font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif; 
             background: var(--bg-color); color: var(--text-color); text-align: center; 
             padding: 0; margin: 0; overflow-x: hidden; min-height: 100vh;
             transition: background 0.3s, color 0.3s;
             touch-action: manipulation;
+            position: relative;
+        }
+
+        /* 背景の装飾レイヤー */
+        body::before {
+            content: ""; position: fixed; inset: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, var(--accent-glow) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, var(--accent-glow) 0%, transparent 40%);
+            z-index: -2; opacity: 0.4; pointer-events: none;
+        }
+
+        /* グリッド・スキャンライン */
+        .bg-overlay {
+            position: fixed; inset: 0;
+            background: 
+                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 4px, 3px 100%;
+            z-index: 1000; pointer-events: none; opacity: 0.3;
+        }
+
+        /* 浮遊する幾何学パーティクル */
+        .particles {
+            position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute; background: var(--accent-color);
+            border-radius: 2px; opacity: 0.15; filter: blur(1px);
+            animation: float-particle linear infinite;
+        }
+
+        @keyframes float-particle {
+            from { transform: translateY(100vh) rotate(0deg); }
+            to { transform: translateY(-10vh) rotate(360deg); }
         }
 
         /* --- Layout --- */
         .main-layout {
             display: grid;
             grid-template-columns: 1fr 350px;
-            gap: 20px;
-            width: 95%;
-            max-width: 1400px;
-            margin: auto;
-            padding-top: 150px;
-            transition: all 0.3s ease;
+            gap: 20px; width: 95%; max-width: 1400px;
+            margin: auto; padding-top: 150px;
+            position: relative; z-index: 2;
         }
-
-        .main-layout.full-width {
-            grid-template-columns: 1fr;
-        }
+        .main-layout.full-width { grid-template-columns: 1fr; }
 
         @media (max-width: 900px) {
             .main-layout { grid-template-columns: 1fr !important; padding-top: 130px; }
@@ -58,35 +90,36 @@
             .container { order: 1; }
         }
 
-        .container { position: relative; z-index: 1; padding-bottom: 40px; width: 100%; }
+        .container { position: relative; padding-bottom: 40px; width: 100%; }
 
-        /* --- Navigation & Theme Switch --- */
+        /* --- Navigation --- */
         .top-nav-fantasy {
             position: fixed; top: 0; left: 0; width: 100%; height: 120px;
             display: flex; justify-content: center; align-items: center;
-            z-index: 1000; background: var(--nav-bg); backdrop-filter: blur(8px);
+            z-index: 1001; background: var(--nav-bg); backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
         }
         .theme-switch {
             position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
             background: var(--card-bg); border: 1px solid var(--accent-color);
             color: var(--text-color); padding: 8px; border-radius: 50px; cursor: pointer;
-            z-index: 1001; font-size: 18px;
+            z-index: 1002; font-size: 18px; box-shadow: 0 0 10px var(--accent-color);
         }
 
         /* --- Ranking Sidebar --- */
-        .sidebar { padding-top: 20px; z-index: 5; transition: opacity 0.3s ease; }
+        .sidebar { padding-top: 20px; z-index: 5; }
         .ranking-board {
             background: var(--rank-bg); border: 1px solid var(--accent-color);
             border-radius: 15px; padding: 20px; text-align: left;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px); box-shadow: inset 0 0 20px rgba(138, 43, 226, 0.1);
         }
         .rank-item {
             display: flex; align-items: center; gap: 10px; padding: 10px 0;
             border-bottom: 1px solid rgba(138, 43, 226, 0.2);
         }
         .rank-num { font-weight: bold; color: var(--accent-color); width: 25px; }
-        .rank-avatar { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; }
-        .rank-name { flex-grow: 1; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .rank-avatar { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 1px solid var(--accent-color); }
+        .rank-name { flex-grow: 1; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .rank-money { color: #00ffcc; font-weight: bold; font-size: 14px; }
 
         /* --- Character Mascot --- */
@@ -94,7 +127,6 @@
             position: fixed; bottom: -20px; right: 20px; z-index: 100;
             pointer-events: none; transition: 0.5s;
         }
-        @media (max-width: 600px) { .mascot-img { width: 180px !important; } }
         .mascot-img {
             width: 280px; filter: drop-shadow(0 0 15px var(--accent-color));
             animation: floating 4s ease-in-out infinite;
@@ -113,62 +145,44 @@
             50% { transform: translateY(-20px); }
         }
 
-        /* --- 大型・自動横スライドバナー --- */
+        /* --- Banner Slider --- */
         .ad-section {
             width: 100%; max-width: 1400px; 
-            margin: 100px auto 150px; /* 余白を大きくして位置を下げた */
-            padding: 0; box-sizing: border-box;
-            overflow: hidden;
+            margin: 100px auto 150px; padding: 0;
+            overflow: hidden; position: relative; z-index: 2;
         }
         .banner-track {
-            display: flex;
-            width: calc(450px * 10); /* バナー幅450px * 10枚 */
-            animation: scroll-loop 40s linear infinite; /* 幅に合わせて速度を調整 */
+            display: flex; width: calc(450px * 10);
+            animation: scroll-loop 40s linear infinite;
         }
-        .banner-slide {
-            width: 450px; /* 広告サイズを大きく */
-            flex-shrink: 0;
-            padding: 0 20px;
-            box-sizing: border-box;
-        }
+        .banner-slide { width: 450px; flex-shrink: 0; padding: 0 20px; box-sizing: border-box; }
         .banner-img {
             width: 100%; height: auto; border-radius: 15px;
             border: 2px solid rgba(138, 43, 226, 0.4);
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: 0.4s;
         }
-        .banner-img:hover {
-            transform: scale(1.08);
-            border-color: var(--accent-color);
-            box-shadow: 0 0 30px var(--accent-color);
-        }
+        .banner-img:hover { transform: scale(1.08); border-color: var(--accent-color); box-shadow: 0 0 30px var(--accent-color); }
 
         @keyframes scroll-loop {
             0% { transform: translateX(0); }
             100% { transform: translateX(calc(-450px * 5)); }
         }
 
-        /* --- Shop Card Design --- */
-        .card-container { height: 550px; perspective: 2000px; display: flex; justify-content: center; align-items: center; touch-action: pan-y; }
+        /* --- Shop Card --- */
+        .card-container { height: 550px; perspective: 2000px; display: flex; justify-content: center; align-items: center; }
         #shop-items { width: 300px; height: 420px; transform-style: preserve-3d; transition: transform 0.1s; cursor: grab; }
-        #shop-items:active { cursor: grabbing; }
-
         .card { 
             position: absolute; inset: 0; background: var(--card-bg); 
             border: 2px solid var(--accent-color); padding: 30px 20px; 
             backface-visibility: hidden; display: flex; flex-direction: column; 
             justify-content: space-between; border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
             background-size: cover; background-position: center;
-            box-sizing: border-box;
         }
-        .card h3 { font-size: 22px; margin: 0; color: var(--accent-color); position: relative; z-index: 2; }
-        .card p { font-size: 14px !important; color: var(--text-color) !important; line-height: 1.4; position: relative; z-index: 2; }
-
         .card::before {
             content: ""; position: absolute; inset: 0;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8));
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8));
             border-radius: 18px; z-index: 1;
         }
         .card > * { position: relative; z-index: 2; }
@@ -176,34 +190,29 @@
         /* --- UI Elements --- */
         .nav-container-fantasy { position: relative; width: 90%; max-width: 700px; height: 80px; }
         .nav-bg-fantasy { width: 100%; height: 100%; object-fit: fill; position: absolute; top: 0; left: 0; }
-        .nav-links-fantasy { position: absolute; inset: 0; display: flex; justify-content: space-around; align-items: center; padding: 0 20px; box-sizing: border-box; }
-        .nav-item-fantasy { background: none; border: none; color: #ffd700; font-size: clamp(12px, 3vw, 16px); font-weight: bold; cursor: pointer; z-index: 1001; text-shadow: 1px 1px 2px #000; }
+        .nav-links-fantasy { position: absolute; inset: 0; display: flex; justify-content: space-around; align-items: center; padding: 0 20px; }
+        .nav-item-fantasy { background: none; border: none; color: #ffd700; font-size: clamp(12px, 3vw, 16px); font-weight: bold; cursor: pointer; text-shadow: 1px 1px 2px #000; }
 
-        h1 { font-size: clamp(2rem, 8vw, 3.5rem); letter-spacing: 10px; margin: 20px 0; background: linear-gradient(to bottom, var(--text-color) 20%, var(--accent-color) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        h1 { font-size: clamp(2rem, 8vw, 3.5rem); letter-spacing: 10px; margin: 20px 0; background: linear-gradient(to bottom, var(--text-color) 20%, var(--accent-color) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px var(--accent-glow)); }
 
-        .status-card { width: 90%; max-width: 500px; background: var(--card-bg); border: 1px solid var(--accent-color); padding: 40px; margin: auto; border-radius: 20px; }
+        .status-card { width: 90%; max-width: 500px; background: var(--card-bg); border: 1px solid var(--accent-color); padding: 40px; margin: auto; border-radius: 20px; backdrop-filter: blur(10px); }
         .prof-avatar { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--accent-color); margin-bottom: 20px; }
         .money-display { font-size: 38px; color: #00ffcc; font-weight: bold; }
 
         #auth-modal, #gacha-reveal-modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; pointer-events: none; transition: 0.5s; }
         #auth-modal.active, #gacha-reveal-modal.active { opacity: 1; pointer-events: auto; }
-        .modal-content { background: var(--bg-color); border: 1px solid var(--accent-color); padding: 30px; width: 80%; max-width: 320px; color: var(--text-color); border-radius: 15px; }
+        .modal-content { background: var(--bg-color); border: 2px solid var(--accent-color); padding: 30px; width: 80%; max-width: 320px; color: var(--text-color); border-radius: 15px; box-shadow: 0 0 30px var(--accent-glow); }
         .modal-input { width: 100%; background: #000; border: 1px solid #333; padding: 12px; color: #fff; text-align: center; font-size: 20px; margin: 20px 0; box-sizing: border-box; }
 
         .hidden { display: none !important; }
-        .main-shop-btn { background: #000; color: #fff; border: 1px solid var(--accent-color); padding: 15px 30px; cursor: pointer; transition: 0.3s; border-radius: 5px; font-weight: bold; position: relative; z-index: 2; }
+        .main-shop-btn { background: #000; color: #fff; border: 1px solid var(--accent-color); padding: 15px 30px; cursor: pointer; transition: 0.3s; border-radius: 5px; font-weight: bold; }
         .main-shop-btn:hover { background: var(--accent-color); box-shadow: 0 0 20px var(--accent-color); }
-
-        #result-card-box {
-            position: relative; width: 280px; height: 400px; margin: 20px auto;
-            background-size: cover; background-position: center;
-            border: 2px solid gold; border-radius: 20px;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
-        }
     </style>
 </head>
-<body id="main-body">
+<body>
+
+    <div class="bg-overlay"></div>
+    <div class="particles" id="particle-container"></div>
 
     <button class="theme-switch" onclick="toggleTheme()">🌙</button>
 
@@ -317,6 +326,23 @@
     <script src="config.js"></script>
 
     <script>
+        // パーティクル生成
+        function createParticles() {
+            const container = document.getElementById('particle-container');
+            for(let i=0; i<20; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                const size = Math.random() * 4 + 2;
+                p.style.width = size + 'px';
+                p.style.height = size + 'px';
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                p.style.animationDelay = (Math.random() * 5) + 's';
+                container.appendChild(p);
+            }
+        }
+        createParticles();
+
         const firebaseConfig = { databaseURL: "https://mybot-4e6b1-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();

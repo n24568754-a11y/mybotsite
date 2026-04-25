@@ -253,6 +253,76 @@
             "type": "normal",
             "series": "ノーマル",
             "stock": -1
+        },
+        {
+            "id": "1497622176533315664",
+            "name": "かまって",
+            "type": "limited_time",
+            "series": "闇かわ",
+            "stock": -1
+        },
+        {
+            "id": "1497622240928202896",
+            "name": "さみしい",
+            "type": "limited_time",
+            "series": "闇かわ",
+            "stock": -1
+        },
+        {
+            "id": "1497622363196362793",
+            "name": "束縛",
+            "type": "limited_time",
+            "series": "闇かわ",
+            "stock": -1
+        },
+        {
+            "id": "1497622456729337866",
+            "name": "情緒不安定",
+            "type": "limited_time",
+            "series": "闇かわ",
+            "stock": -1
+        },
+        {
+            "id": "1497622549964656730",
+            "name": "泣き虫",
+            "type": "limited_time",
+            "series": "闇かわ",
+            "stock": -1
+        },
+        {
+            "id": "1497622624745033849",
+            "name": "甘えんぼ",
+            "type": "limited_time",
+            "series": "闇かわ",
+            "stock": -1
+        },
+        {
+            "id": "1497622701425037332",
+            "name": "わがまま",
+            "type": "limited_time",
+            "series": "闇かわ",
+            "stock": -1
+        },
+        {
+            "id": "1497622784015204503",
+            "name": "嫉妬",
+            "type": "limited_time",
+            "series": "闇かわ",
+            "stock": -1
+        },
+        {
+            "id": "1497622860762710028",
+            "name": "独占欲",
+            "type": "limited_time",
+            "series": "闇かわ",
+            "stock": -1
+        },
+        {
+            "id": "1497622958456438927",
+            "name": "壊れかけ",
+            "type": "limited_time",
+            "series": "闇かわ",
+            "stock": -1
         }
     ],
     "CURRENCY_NAME": "星",
@@ -260,14 +330,14 @@
         "tenya": {
             "name": "てんや",
             "avatar": "https://cdn.discordapp.com/avatars/1368428956214100062/29a23ac792889cfd274120aa8a823144.png?size=1024",
-            "money": 98908264,
-            "subs_count": 23
+            "money": 98668264,
+            "subs_count": 27
         },
         "age0309": {
             "name": "m!dc",
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1387724679225278484/avatars/b6bf077b975eea218fc289855c978d91.png?size=1024",
-            "money": 899800,
-            "subs_count": 7
+            "money": 839800,
+            "subs_count": 8
         },
         "Sw0623": {
             "name": "愛＄",

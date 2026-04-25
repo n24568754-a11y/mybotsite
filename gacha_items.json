@@ -208,5 +208,75 @@
     "type": "normal",
     "series": "ノーマル",
     "stock": -1
+  },
+  {
+    "id": "1497622176533315664",
+    "name": "かまって",
+    "type": "limited_time",
+    "series": "闇かわ",
+    "stock": -1
+  },
+  {
+    "id": "1497622240928202896",
+    "name": "さみしい",
+    "type": "limited_time",
+    "series": "闇かわ",
+    "stock": -1
+  },
+  {
+    "id": "1497622363196362793",
+    "name": "束縛",
+    "type": "limited_time",
+    "series": "闇かわ",
+    "stock": -1
+  },
+  {
+    "id": "1497622456729337866",
+    "name": "情緒不安定",
+    "type": "limited_time",
+    "series": "闇かわ",
+    "stock": -1
+  },
+  {
+    "id": "1497622549964656730",
+    "name": "泣き虫",
+    "type": "limited_time",
+    "series": "闇かわ",
+    "stock": -1
+  },
+  {
+    "id": "1497622624745033849",
+    "name": "甘えんぼ",
+    "type": "limited_time",
+    "series": "闇かわ",
+    "stock": -1
+  },
+  {
+    "id": "1497622701425037332",
+    "name": "わがまま",
+    "type": "limited_time",
+    "series": "闇かわ",
+    "stock": -1
+  },
+  {
+    "id": "1497622784015204503",
+    "name": "嫉妬",
+    "type": "limited_time",
+    "series": "闇かわ",
+    "stock": -1
+  },
+  {
+    "id": "1497622860762710028",
+    "name": "独占欲",
+    "type": "limited_time",
+    "series": "闇かわ",
+    "stock": -1
+  },
+  {
+    "id": "1497622958456438927",
+    "name": "壊れかけ",
+    "type": "limited_time",
+    "series": "闇かわ",
+    "stock": -1
   }
 ]
