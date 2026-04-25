@@ -1,3 +1,4 @@
+
 import discord
 from discord import app_commands
 from discord.ext import commands, tasks
@@ -72,8 +73,14 @@ class BillView(discord.ui.View):
             await interaction.followup.send(f"所持金が足りません！", ephemeral=True)
             return
         if receiver_id not in data: data[receiver_id] = self.cog.get_default_user_data()
+
+        # お金の移動
         data[payer_id]['money'] -= self.amount
         data[receiver_id]['money'] += self.amount
+
+        # 送金累計の加算
+        data[payer_id]['send_money_total'] = data[payer_id].get('send_money_total', 0) + self.amount
+
         self.cog.save_data(data); self.cog.update_web_data()
         for item in self.children: item.disabled = True
         await interaction.message.edit(view=self)
@@ -153,7 +160,7 @@ class Economy(commands.Cog):
     def get_default_user_data(self):
         return {
             'money': 0, 'last_daily': None, 'subscriptions': {}, 'inventory': [],
-            'chat_chars': 0, 'vc_minutes': 0, 'gacha_count': 0,
+            'chat_chars': 0, 'vc_minutes': 0, 'gacha_count': 0, 'send_money_total': 0,
             'daily_chat': 0, 'daily_vc': 0, 'completed_missions': []
         }
 
@@ -193,7 +200,8 @@ class Economy(commands.Cog):
                         "money": info.get('money', 0),
                         "stats": {
                             "chat": info.get('chat_chars', 0), "vc": info.get('vc_minutes', 0),
-                            "daily_chat": info.get('daily_chat', 0), "daily_vc": info.get('daily_vc', 0)
+                            "daily_chat": info.get('daily_chat', 0), "daily_vc": info.get('daily_vc', 0),
+                            "send_money_total": info.get('send_money_total', 0)
                         },
                         "inventory": info.get('inventory', []),
                         "completed_missions": info.get('completed_missions', [])
@@ -405,7 +413,14 @@ class Economy(commands.Cog):
         if 金額 <= 0 or sid == rid or data.get(sid, {}).get('money', 0) < 金額:
             await interaction.followup.send("無効な操作です。", ephemeral=True); return
         if rid not in data: data[rid] = self.get_default_user_data()
-        data[sid]['money'] -= 金額; data[rid]['money'] += 金額
+
+        # お金の移動
+        data[sid]['money'] -= 金額
+        data[rid]['money'] += 金額
+
+        # 送金累計の加算
+        data[sid]['send_money_total'] = data[sid].get('send_money_total', 0) + 金額
+
         self.save_data(data); self.update_web_data()
         await interaction.followup.send(f"✅ {相手.display_name} へ送金しました。", ephemeral=True)
 
