@@ -39,7 +39,7 @@
         /* --- Layout --- */
         .main-layout {
             display: grid;
-            grid-template-columns: 1fr 350px; /* デフォルト（HOME用） */
+            grid-template-columns: 1fr 350px;
             gap: 20px;
             width: 95%;
             max-width: 1400px;
@@ -48,7 +48,6 @@
             transition: all 0.3s ease;
         }
 
-        /* サイドバー非表示時のレイアウト変更 */
         .main-layout.full-width {
             grid-template-columns: 1fr;
         }
@@ -114,21 +113,36 @@
             50% { transform: translateY(-20px); }
         }
 
-        /* --- Bottom Banner (AD Area) --- */
+        /* --- 自動横スライドバナーの設定 --- */
         .ad-section {
-            width: 100%; max-width: 1000px; margin: 50px auto 100px;
-            padding: 0 20px;
+            width: 100%; max-width: 1200px; margin: 50px auto 100px;
+            padding: 0 20px; box-sizing: border-box;
+            overflow: hidden; /* はみ出た部分を隠す */
         }
-        .banner-slider {
-            width: 100%; height: auto; min-height: 150px;
-            overflow: hidden; border-radius: 15px; position: relative;
-            background: transparent; border: none;
+        .banner-track {
+            display: flex;
+            width: calc(250px * 10); /* バナー幅 * (5枚 + 複製5枚) */
+            animation: scroll-loop 30s linear infinite; /* ゆっくり流す */
         }
         .banner-slide {
-            width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+            width: 250px; /* 1枚あたりの幅（調整可） */
+            flex-shrink: 0;
+            padding: 0 15px;
+            box-sizing: border-box;
         }
         .banner-img {
-            width: 100%; max-height: 300px; object-fit: contain; border-radius: 10px;
+            width: 100%; height: auto; border-radius: 10px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            transition: transform 0.3s;
+        }
+        .banner-img:hover {
+            transform: scale(1.05);
+            border-color: var(--accent-color);
+        }
+
+        @keyframes scroll-loop {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-250px * 5)); } /* 5枚分移動したら最初に戻る */
         }
 
         /* --- Shop Card Design --- */
@@ -149,7 +163,6 @@
         .card h3 { font-size: 22px; margin: 0; color: var(--accent-color); position: relative; z-index: 2; }
         .card p { font-size: 14px !important; color: var(--text-color) !important; line-height: 1.4; position: relative; z-index: 2; }
 
-        /* カード内のテキスト可読性を上げるためのオーバーレイ（背景画像がある場合のみ有効） */
         .card::before {
             content: ""; position: absolute; inset: 0;
             background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8));
@@ -157,7 +170,7 @@
         }
         .card > * { position: relative; z-index: 2; }
 
-        /* --- Navigation Items --- */
+        /* --- UI Elements --- */
         .nav-container-fantasy { position: relative; width: 90%; max-width: 700px; height: 80px; }
         .nav-bg-fantasy { width: 100%; height: 100%; object-fit: fill; position: absolute; top: 0; left: 0; }
         .nav-links-fantasy { position: absolute; inset: 0; display: flex; justify-content: space-around; align-items: center; padding: 0 20px; box-sizing: border-box; }
@@ -178,7 +191,6 @@
         .main-shop-btn { background: #000; color: #fff; border: 1px solid var(--accent-color); padding: 15px 30px; cursor: pointer; transition: 0.3s; border-radius: 5px; font-weight: bold; position: relative; z-index: 2; }
         .main-shop-btn:hover { background: var(--accent-color); box-shadow: 0 0 20px var(--accent-color); }
 
-        /* ガチャ結果カード用 */
         #result-card-box {
             position: relative; width: 280px; height: 400px; margin: 20px auto;
             background-size: cover; background-position: center;
@@ -251,10 +263,17 @@
     </div>
 
     <section class="ad-section">
-        <div class="banner-slider">
-            <div class="banner-slide">
-                <img src="banner1.png" class="banner-img" onerror="this.style.display='none'">
-            </div>
+        <div class="banner-track">
+            <div class="banner-slide"><img src="banner1.png" class="banner-img" onerror="this.src='https://via.placeholder.com/250x120?text=VOID+AD+1'"></div>
+            <div class="banner-slide"><img src="banner2.png" class="banner-img" onerror="this.src='https://via.placeholder.com/250x120?text=VOID+AD+2'"></div>
+            <div class="banner-slide"><img src="banner3.png" class="banner-img" onerror="this.src='https://via.placeholder.com/250x120?text=VOID+AD+3'"></div>
+            <div class="banner-slide"><img src="banner4.png" class="banner-img" onerror="this.src='https://via.placeholder.com/250x120?text=VOID+AD+4'"></div>
+            <div class="banner-slide"><img src="banner5.png" class="banner-img" onerror="this.src='https://via.placeholder.com/250x120?text=VOID+AD+5'"></div>
+            <div class="banner-slide"><img src="banner1.png" class="banner-img" onerror="this.style.display='none'"></div>
+            <div class="banner-slide"><img src="banner2.png" class="banner-img" onerror="this.style.display='none'"></div>
+            <div class="banner-slide"><img src="banner3.png" class="banner-img" onerror="this.style.display='none'"></div>
+            <div class="banner-slide"><img src="banner4.png" class="banner-img" onerror="this.style.display='none'"></div>
+            <div class="banner-slide"><img src="banner5.png" class="banner-img" onerror="this.style.display='none'"></div>
         </div>
         <p style="font-size: 10px; color: var(--sub-text); margin-top: 10px; letter-spacing: 2px;">SECURED BY VOID CORP</p>
     </section>
@@ -318,19 +337,11 @@
         function updateRanking(profiles) {
             const list = document.getElementById('ranking-list');
             list.innerHTML = "";
-            const sorted = Object.entries(profiles)
-                .sort(([,a], [,b]) => b.money - a.money)
-                .slice(0, 8);
-
+            const sorted = Object.entries(profiles).sort(([,a], [,b]) => b.money - a.money).slice(0, 8);
             sorted.forEach(([pwd, u], i) => {
                 const item = document.createElement('div');
                 item.className = 'rank-item';
-                item.innerHTML = `
-                    <span class="rank-num">${i+1}</span>
-                    <img src="${u.avatar}" class="rank-avatar" onerror="this.src='https://discord.com/assets/f78426a064bc98b57351.png'">
-                    <span class="rank-name">${u.name}</span>
-                    <span class="rank-money">${Number(u.money).toLocaleString()}</span>
-                `;
+                item.innerHTML = `<span class="rank-num">${i+1}</span><img src="${u.avatar}" class="rank-avatar" onerror="this.src='https://discord.com/assets/f78426a064bc98b57351.png'"><span class="rank-name">${u.name}</span><span class="rank-money">${Number(u.money).toLocaleString()}</span>`;
                 list.appendChild(item);
             });
         }
@@ -338,30 +349,17 @@
         function toggleTheme() {
             const body = document.documentElement;
             const btn = document.querySelector('.theme-switch');
-            if (body.getAttribute('data-theme') === 'light') {
-                body.removeAttribute('data-theme');
-                btn.innerText = '🌙';
-            } else {
-                body.setAttribute('data-theme', 'light');
-                btn.innerText = '☀️';
-            }
+            if (body.getAttribute('data-theme') === 'light') { body.removeAttribute('data-theme'); btn.innerText = '🌙'; }
+            else { body.setAttribute('data-theme', 'light'); btn.innerText = '☀️'; }
         }
 
         function showPage(id) {
             document.querySelectorAll('main > div').forEach(c => c.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
-
             const layout = document.getElementById('main-layout-container');
             const sidebar = document.getElementById('main-sidebar');
-
-            if (id === 'menu-page') {
-                layout.classList.remove('full-width');
-                sidebar.classList.remove('hidden');
-            } else {
-                layout.classList.add('full-width');
-                sidebar.classList.add('hidden');
-            }
-
+            if (id === 'menu-page') { layout.classList.remove('full-width'); sidebar.classList.remove('hidden'); }
+            else { layout.classList.add('full-width'); sidebar.classList.add('hidden'); }
             if(id === 'shop-page') renderShop();
             if(id === 'gacha-menu-page') renderGachaMenu();
             window.scrollTo(0,0);
@@ -376,15 +374,9 @@
             SHOP_DATA.forEach((item, i) => {
                 const card = document.createElement('div');
                 card.className = 'card';
-                // --- 背景画像指定 ---
                 card.style.backgroundImage = "url('shop_card.png')";
                 card.style.transform = `rotateY(${i * step}deg) translateZ(${r}px)`;
-                card.innerHTML = `
-                    <h3>${item.name}</h3>
-                    <p>${item.desc}</p>
-                    <div class="money-display" style="font-size:24px;">${item.price.toLocaleString()}</div>
-                    <button class="main-shop-btn" onclick="openBuyModal('${item.name}', ${item.price}, '${item.id}')">BUY NOW</button>
-                `;
+                card.innerHTML = `<h3>${item.name}</h3><p>${item.desc}</p><div class="money-display" style="font-size:24px;">${item.price.toLocaleString()}</div><button class="main-shop-btn" onclick="openBuyModal('${item.name}', ${item.price}, '${item.id}')">BUY NOW</button>`;
                 container.appendChild(card);
             });
             setupRotation();
@@ -449,17 +441,13 @@
         function revealGachaResult() {
             document.getElementById('chest-container').classList.add('hidden');
             document.getElementById('gacha-result-area').classList.remove('hidden');
-
             const resultBox = document.getElementById('result-card-box');
-            // --- ガチャ背景画像指定 ---
             resultBox.style.backgroundImage = "url('gacha_card.png')";
-
             document.getElementById('result-series').innerText = gachaResult.series;
             document.getElementById('result-name').innerText = gachaResult.name;
         }
 
         function closeGachaReveal() { document.getElementById('gacha-reveal-modal').classList.remove('active'); showPage('menu-page'); }
-
         function showModal() { document.getElementById('password-input').value = sessionPassword; document.getElementById('auth-modal').classList.add('active'); }
         function closeModal() { document.getElementById('auth-modal').classList.remove('active'); }
 
