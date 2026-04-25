@@ -8,216 +8,232 @@
     <style>
         /* --- 変数定義 --- */
         :root {
-            --bg-color: #030305;
+            --bg-color: #050508;
             --text-color: #ffffff;
             --accent-color: #8a2be2;
-            --accent-glow: rgba(138, 43, 226, 0.6);
-            --sub-text: #888;
-            --card-bg: rgba(10, 10, 18, 0.85);
+            --accent-glow: rgba(138, 43, 226, 0.4);
+            --sub-text: #aaa;
+            --card-bg: rgba(15, 15, 25, 0.85);
             --nav-bg: rgba(0, 0, 0, 0.8);
             --rank-bg: rgba(255, 255, 255, 0.03);
             --gold: #ffd700;
         }
 
         [data-theme="light"] {
-            --bg-color: #f4f7f9;
-            --text-color: #1a1a2e;
-            --accent-color: #5d10ad;
-            --accent-glow: rgba(93, 16, 173, 0.3);
+            --bg-color: #f0f2f5;
+            --text-color: #1a1a1a;
+            --accent-color: #4b0082;
+            --accent-glow: rgba(75, 0, 130, 0.2);
             --sub-text: #555;
             --card-bg: rgba(255, 255, 255, 0.9);
-            --nav-bg: rgba(240, 240, 240, 0.9);
+            --nav-bg: rgba(255, 255, 255, 0.9);
             --rank-bg: rgba(0, 0, 0, 0.05);
         }
 
         body { 
-            font-family: 'Hiragino Kaku Gothic ProN', sans-serif; 
+            font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif; 
             background: var(--bg-color); color: var(--text-color); text-align: center; 
             padding: 0; margin: 0; overflow-x: hidden; min-height: 100vh;
-            transition: background 0.5s; position: relative;
+            transition: background 0.3s, color 0.3s;
+            touch-action: manipulation;
+            position: relative;
         }
 
-        /* --- 高度な背景レイヤー --- */
-        .parallax-bg {
-            position: fixed; inset: -10%; width: 120%; height: 120%;
-            background: 
-                radial-gradient(circle at var(--x, 50%) var(--y, 50%), var(--accent-glow) 0%, transparent 45%),
-                radial-gradient(circle at 80% 20%, rgba(0, 255, 204, 0.1) 0%, transparent 35%);
-            z-index: -2; pointer-events: none; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        /* --- 軌道を描く背景エフェクト --- */
+        .ambient-orb {
+            position: fixed; width: 600px; height: 600px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            z-index: -2; border-radius: 50%; pointer-events: none;
+            filter: blur(80px); opacity: 0.5;
+            animation: orb-move 20s infinite alternate ease-in-out;
+        }
+
+        @keyframes orb-move {
+            0% { transform: translate(-10%, -10%); }
+            100% { transform: translate(110%, 110%); }
         }
 
         .bg-overlay {
-            position: fixed; inset: 0; z-index: 1000; pointer-events: none;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%);
-            background-size: 100% 4px; opacity: 0.25;
+            position: fixed; inset: 0;
+            background: 
+                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%),
+                linear-gradient(90deg, rgba(138, 43, 226, 0.02), rgba(0, 255, 204, 0.02));
+            background-size: 100% 4px, 100% 100%;
+            z-index: 1000; pointer-events: none; opacity: 0.4;
         }
 
-        .particles { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+        .particles { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
         .particle {
             position: absolute; background: var(--accent-color);
-            border-radius: 50%; opacity: 0.3; filter: blur(1px);
+            border-radius: 2px; opacity: 0.2; filter: blur(1px);
             animation: float-particle linear infinite;
         }
 
         @keyframes float-particle {
-            from { transform: translateY(110vh) scale(1); opacity: 0; }
-            50% { opacity: 0.5; }
-            to { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+            from { transform: translateY(105vh) rotate(0deg); opacity: 0; }
+            50% { opacity: 0.3; }
+            to { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
         }
 
-        /* --- ナビゲーション（磁力エフェクト対応） --- */
-        .top-nav-fantasy {
-            position: fixed; top: 0; left: 0; width: 100%; height: 160px;
-            display: flex; align-items: center; z-index: 1001; 
-            background: url('Top_banner.png') no-repeat center; background-size: cover;
-            border-bottom: 2px solid var(--accent-color);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-        }
-
-        .nav-links-fantasy { display: flex; gap: 40px; padding-left: 60px; }
-
-        .nav-btn-wrapper {
-            position: relative; display: flex; flex-direction: column; align-items: center;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .nav-item-fantasy { 
-            width: 85px; height: 85px; background-size: contain; background-position: center;
-            background-repeat: no-repeat; background-color: transparent; border: none;
-            cursor: pointer; filter: drop-shadow(0 0 10px rgba(0,0,0,0.8));
-            transition: 0.3s; outline: none;
-        }
-        .nav-item-fantasy:hover { transform: scale(1.15); filter: drop-shadow(0 0 15px var(--accent-color)); }
-
-        .nav-home { background-image: url('home_bg.png'); }
-        .nav-shop { background-image: url('shop_bg.png'); }
-        .nav-gacha { background-image: url('gacha_bg.png'); }
-        .nav-identity { background-image: url('identity_bg.png'); }
-
-        .nav-label {
-            color: var(--gold); font-size: 10px; font-weight: bold; letter-spacing: 3px;
-            text-shadow: 0 0 10px #000; margin-top: 5px; opacity: 0.9; pointer-events: none;
-        }
-
-        .theme-switch {
-            position: absolute; right: 30px; background: var(--card-bg); border: 1px solid var(--accent-color);
-            color: white; width: 45px; height: 45px; border-radius: 50%; cursor: pointer;
-            box-shadow: 0 0 15px var(--accent-glow); transition: 0.3s; font-size: 20px;
-        }
-
-        /* --- タイトルアニメーション --- */
-        .glitch-title {
-            font-size: clamp(2.5rem, 10vw, 4.5rem); letter-spacing: 15px; font-weight: 900;
-            background: linear-gradient(to bottom, #fff 20%, var(--accent-color) 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 20px var(--accent-glow));
-            margin-top: 0; animation: title-float 3s ease-in-out infinite;
-        }
-
-        @keyframes title-float {
-            0%, 100% { transform: translateY(0); filter: brightness(1); }
-            50% { transform: translateY(-12px); filter: brightness(1.3) drop-shadow(0 0 35px var(--accent-color)); }
-        }
-
-        /* --- メインレイアウト --- */
+        /* --- Layout --- */
         .main-layout {
-            display: grid; grid-template-columns: 1fr 360px;
-            gap: 40px; width: 95%; max-width: 1450px;
-            margin: auto; padding-top: 220px; z-index: 2; position: relative;
+            display: grid; grid-template-columns: 1fr 350px;
+            gap: 25px; width: 95%; max-width: 1400px;
+            margin: auto; padding-top: 180px;
+            position: relative; z-index: 2;
+            transition: transform 0.1s ease-out; /* 視差効果用 */
         }
         .main-layout.full-width { grid-template-columns: 1fr; }
 
-        .container { min-height: 600px; position: relative; }
-
-        /* --- 3D Shop Card --- */
-        .card-container { height: 600px; perspective: 2500px; display: flex; justify-content: center; align-items: center; }
-        #shop-items { width: 320px; height: 450px; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1); cursor: grab; }
-
-        .card { 
-            position: absolute; inset: 0; background: var(--card-bg); 
-            border: 1px solid var(--accent-color); padding: 30px; 
-            backface-visibility: hidden; border-radius: 24px;
-            backdrop-filter: blur(25px); box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-            display: flex; flex-direction: column; justify-content: space-between;
-            background-image: linear-gradient(135deg, rgba(138, 43, 226, 0.1), transparent);
+        @media (max-width: 900px) {
+            .main-layout { grid-template-columns: 1fr !important; padding-top: 160px; }
+            .sidebar { order: 2; margin-bottom: 50px; }
+            .container { order: 1; }
         }
 
-        /* --- Sidebar Ranking --- */
+        .container { position: relative; padding-bottom: 40px; width: 100%; }
+
+        /* --- Navigation --- */
+        .top-nav-fantasy {
+            position: fixed; top: 0; left: 0; width: 100%; height: 150px;
+            display: flex; justify-content: flex-start; align-items: center;
+            z-index: 1001; 
+            background: url('Top_banner.png') no-repeat center;
+            background-size: cover;
+            border-bottom: 2px solid var(--accent-color);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.7);
+        }
+        .nav-container-fantasy { position: relative; width: 100%; height: 100%; display: flex; align-items: center; padding-left: 40px; }
+        .nav-links-fantasy { display: flex; gap: 35px; align-items: flex-start; }
+
+        .nav-btn-wrapper { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+
+        .nav-item-fantasy { 
+            width: 80px; height: 80px; 
+            background-size: contain; background-position: center; background-repeat: no-repeat;
+            background-color: transparent; border: none; cursor: pointer; 
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 0 8px rgba(0,0,0,0.8));
+        }
+
+        .nav-home     { background-image: url('home_bg.png'); }
+        .nav-shop     { background-image: url('shop_bg.png'); }
+        .nav-gacha    { background-image: url('gacha_bg.png'); }
+        .nav-identity { background-image: url('identity_bg.png'); }
+
+        .nav-item-fantasy:hover {
+            transform: translateY(-10px) scale(1.15);
+            filter: drop-shadow(0 0 15px var(--accent-color));
+        }
+
+        .nav-label {
+            color: var(--gold); font-size: 11px; font-weight: bold; letter-spacing: 2px;
+            text-shadow: 0 0 10px #000; pointer-events: none; opacity: 0.8;
+        }
+
+        .theme-switch {
+            position: absolute; right: 25px; top: 50%; transform: translateY(-50%);
+            background: var(--card-bg); border: 1px solid var(--accent-color);
+            color: #fff; width: 45px; height: 45px; border-radius: 50%; cursor: pointer;
+            z-index: 1002; font-size: 20px; box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        /* --- Ranking Sidebar --- */
+        .sidebar { padding-top: 20px; z-index: 5; }
         .ranking-board {
-            background: var(--rank-bg); border: 1px solid rgba(138, 43, 226, 0.4);
-            border-radius: 20px; padding: 25px; text-align: left;
-            backdrop-filter: blur(20px); box-shadow: inset 0 0 30px rgba(138, 43, 226, 0.05);
+            background: var(--card-bg); border: 1px solid var(--accent-color);
+            border-radius: 20px; padding: 20px; text-align: left;
+            backdrop-filter: blur(15px); box-shadow: inset 0 0 30px rgba(138, 43, 226, 0.1);
         }
         .rank-item {
-            display: flex; align-items: center; gap: 15px; padding: 12px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.3s;
+            display: flex; align-items: center; gap: 12px; padding: 12px 0;
+            border-bottom: 1px solid rgba(138, 43, 226, 0.2); transition: 0.3s;
         }
-        .rank-item:hover { background: rgba(138, 43, 226, 0.15); padding-left: 10px; }
-        .rank-num { color: var(--accent-color); font-weight: 900; width: 20px; font-style: italic; }
-        .rank-avatar { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--accent-color); object-fit: cover; }
-        .rank-name { flex-grow: 1; font-size: 14px; font-weight: 500; }
-        .rank-money { color: #00ffcc; font-weight: bold; text-shadow: 0 0 10px rgba(0, 255, 204, 0.3); }
+        .rank-item:hover { background: rgba(138, 43, 226, 0.1); padding-left: 5px; }
+        .rank-num { font-weight: bold; color: var(--accent-color); width: 25px; font-style: italic; }
+        .rank-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 1px solid var(--accent-color); }
+        .rank-name { flex-grow: 1; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+        .rank-money { color: #00ffcc; font-weight: bold; font-size: 14px; text-shadow: 0 0 5px rgba(0, 255, 204, 0.3); }
 
-        /* --- Mascot & Bubble --- */
-        .character-box { position: fixed; bottom: 0; right: 40px; z-index: 100; pointer-events: none; }
-        .mascot-img { width: 300px; filter: drop-shadow(0 0 25px var(--accent-color)); animation: floating 5s ease-in-out infinite; pointer-events: auto; }
+        /* --- Character Mascot --- */
+        .character-box { position: fixed; bottom: -10px; right: 30px; z-index: 100; pointer-events: none; transition: 0.5s; }
+        .mascot-img { width: 290px; filter: drop-shadow(0 0 20px var(--accent-color)); animation: floating 5s ease-in-out infinite; pointer-events: auto; }
         .chat-bubble {
-            position: absolute; top: -50px; left: -30px; background: #fff; color: #000;
-            padding: 12px 25px; border-radius: 30px; font-size: 13px; font-weight: bold;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); opacity: 0; transition: 0.4s;
+            background: #fff; color: #000; padding: 12px 24px; border-radius: 30px;
+            position: absolute; top: -50px; left: -30px; font-size: 13px; font-weight: bold;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4); opacity: 0; transition: 0.4s; pointer-events: none;
         }
         .character-box:hover .chat-bubble { opacity: 1; transform: translateY(-10px); }
 
-        @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-25px); } }
+        @keyframes floating { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-25px) rotate(1deg); } }
 
-        /* --- Buttons & UI --- */
-        .main-shop-btn {
-            background: transparent; color: #fff; border: 1px solid var(--accent-color);
-            padding: 15px 40px; cursor: pointer; transition: 0.4s; border-radius: 4px;
-            font-weight: bold; letter-spacing: 3px; position: relative; overflow: hidden;
-            text-transform: uppercase;
+        /* --- Shop Card --- */
+        .card-container { height: 550px; perspective: 2500px; display: flex; justify-content: center; align-items: center; }
+        #shop-items { width: 310px; height: 430px; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1); cursor: grab; }
+        .card { 
+            position: absolute; inset: 0; background: var(--card-bg); 
+            border: 1px solid var(--accent-color); padding: 35px 25px; 
+            backface-visibility: hidden; border-radius: 25px;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.6);
+            display: flex; flex-direction: column; justify-content: space-between;
+            backdrop-filter: blur(10px);
         }
-        .main-shop-btn:hover { background: var(--accent-color); box-shadow: 0 0 35px var(--accent-color); color: #000; }
+        .card::before {
+            content: ""; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), transparent);
+            border-radius: 24px; pointer-events: none;
+        }
 
-        /* Modals */
-        #auth-modal, #gacha-reveal-modal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.96);
-            display: flex; align-items: center; justify-content: center; z-index: 2000;
-            opacity: 0; pointer-events: none; transition: 0.5s; backdrop-filter: blur(12px);
-        }
+        /* --- UI Elements --- */
+        h1 { font-size: clamp(2.5rem, 9vw, 4rem); letter-spacing: 12px; margin: 25px 0; font-weight: 900; background: linear-gradient(to bottom, #fff 30%, var(--accent-color) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 15px var(--accent-glow)); }
+
+        .status-card { width: 90%; max-width: 500px; background: var(--card-bg); border: 1px solid var(--accent-color); padding: 45px; margin: auto; border-radius: 25px; backdrop-filter: blur(20px); box-shadow: 0 0 40px rgba(0,0,0,0.5); }
+        .prof-avatar { width: 130px; height: 130px; border-radius: 50%; border: 3px solid var(--accent-color); margin-bottom: 25px; box-shadow: 0 0 20px var(--accent-glow); }
+        .money-display { font-size: 42px; color: #00ffcc; font-weight: 900; text-shadow: 0 0 15px rgba(0, 255, 204, 0.2); }
+
+        #auth-modal, #gacha-reveal-modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; pointer-events: none; transition: 0.5s; backdrop-filter: blur(10px); }
         #auth-modal.active, #gacha-reveal-modal.active { opacity: 1; pointer-events: auto; }
-        .modal-content {
-            background: var(--bg-color); border: 2px solid var(--accent-color);
-            padding: 40px; border-radius: 8px; width: 360px; text-align: center;
-            box-shadow: 0 0 40px var(--accent-glow);
-        }
+        .modal-content { background: #0a0a0f; border: 2px solid var(--accent-color); padding: 40px; width: 85%; max-width: 350px; color: var(--text-color); border-radius: 20px; box-shadow: 0 0 50px var(--accent-glow); }
+        .modal-input { width: 100%; background: #000; border: 1px solid #333; padding: 15px; color: #fff; text-align: center; font-size: 24px; margin: 25px 0; box-sizing: border-box; border-radius: 10px; letter-spacing: 5px; }
 
         .hidden { display: none !important; }
+        .main-shop-btn { background: transparent; color: #fff; border: 1px solid var(--accent-color); padding: 16px 35px; cursor: pointer; transition: 0.4s; border-radius: 8px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
+        .main-shop-btn:hover { background: var(--accent-color); box-shadow: 0 0 30px var(--accent-color); color: #000; }
+
+        /* バナースライダー等 */
+        .ad-section { width: 100%; max-width: 1400px; margin: 100px auto 150px; overflow: hidden; position: relative; z-index: 2; }
+        .banner-track { display: flex; width: calc(450px * 10); animation: scroll-loop 45s linear infinite; }
+        .banner-slide { width: 450px; padding: 0 20px; box-sizing: border-box; }
+        .banner-img { width: 100%; border-radius: 18px; border: 1px solid rgba(138, 43, 226, 0.4); transition: 0.4s; filter: grayscale(30%); }
+        .banner-img:hover { transform: scale(1.05); border-color: var(--accent-color); filter: grayscale(0%); box-shadow: 0 0 25px var(--accent-glow); }
+        @keyframes scroll-loop { from { transform: translateX(0); } to { transform: translateX(calc(-450px * 5)); } }
     </style>
 </head>
 <body>
 
-    <div class="parallax-bg" id="parallax-bg"></div>
+    <div class="ambient-orb"></div>
     <div class="bg-overlay"></div>
     <div class="particles" id="particle-container"></div>
 
     <nav class="top-nav-fantasy">
-        <div class="nav-links-fantasy">
-            <div class="nav-btn-wrapper" onmousemove="applyMagnetic(event)" onmouseleave="resetMagnetic(this)">
-                <button class="nav-item-fantasy nav-home" onclick="showPage('menu-page')"></button>
-                <span class="nav-label">HOME</span>
-            </div>
-            <div class="nav-btn-wrapper" onmousemove="applyMagnetic(event)" onmouseleave="resetMagnetic(this)">
-                <button class="nav-item-fantasy nav-shop" onclick="showPage('shop-page')"></button>
-                <span class="nav-label">SHOP</span>
-            </div>
-            <div class="nav-btn-wrapper" onmousemove="applyMagnetic(event)" onmouseleave="resetMagnetic(this)">
-                <button class="nav-item-fantasy nav-gacha" onclick="showPage('gacha-menu-page')"></button>
-                <span class="nav-label">GACHA</span>
-            </div>
-            <div class="nav-btn-wrapper" onmousemove="applyMagnetic(event)" onmouseleave="resetMagnetic(this)">
-                <button class="nav-item-fantasy nav-identity" onclick="openProfileAuth()"></button>
-                <span class="nav-label">IDENTITY</span>
+        <div class="nav-container-fantasy">
+            <div class="nav-links-fantasy">
+                <div class="nav-btn-wrapper">
+                    <button class="nav-item-fantasy nav-home" onclick="showPage('menu-page')"></button>
+                    <span class="nav-label">HOME</span>
+                </div>
+                <div class="nav-btn-wrapper">
+                    <button class="nav-item-fantasy nav-shop" onclick="showPage('shop-page')"></button>
+                    <span class="nav-label">SHOP</span>
+                </div>
+                <div class="nav-btn-wrapper">
+                    <button class="nav-item-fantasy nav-gacha" onclick="showPage('gacha-menu-page')"></button>
+                    <span class="nav-label">GACHA</span>
+                </div>
+                <div class="nav-btn-wrapper">
+                    <button class="nav-item-fantasy nav-identity" onclick="openProfileAuth()"></button>
+                    <span class="nav-label">IDENTITY</span>
+                </div>
             </div>
         </div>
         <button class="theme-switch" onclick="toggleTheme()">🌙</button>
@@ -226,41 +242,41 @@
     <div class="main-layout" id="main-layout-container">
         <main class="container">
             <div id="menu-page">
-                <h1 class="glitch-title">CAPITALISM</h1>
-                <p style="color: var(--sub-text); letter-spacing: 12px; font-size: 13px;">VOID PROTOCOL // 2.0.2.6</p>
-                <div style="margin-top: 80px;">
+                <h1>CAPITALISM</h1>
+                <p style="color: var(--sub-text); letter-spacing: 8px; font-size: 13px;">VOID PROTOCOL // 2.0.2.6</p>
+                <div style="margin-top: 70px;">
                     <button class="main-shop-btn" onclick="showPage('shop-page')">MARKET ACCESS</button>
                 </div>
             </div>
 
             <div id="shop-page" class="hidden">
-                <h1 class="glitch-title" style="font-size: 2.5rem;">ROLL SHOP</h1>
+                <h1>ROLL SHOP</h1>
                 <div class="card-container"><div id="shop-items"></div></div>
             </div>
 
             <div id="gacha-menu-page" class="hidden">
-                <h1 class="glitch-title" style="font-size: 2.5rem;">VOID SUMMON</h1>
-                <div id="gacha-types-container" style="display: flex; flex-direction: column; align-items: center; gap: 25px; margin-top:50px;"></div>
+                <h1>GACHA SYSTEM</h1>
+                <div id="gacha-types-container" style="display: flex; flex-direction: column; align-items: center; gap: 25px; margin-top:40px;"></div>
             </div>
 
             <div id="profile-page" class="hidden">
-                <h1 class="glitch-title" style="font-size: 2.5rem;">STATUS</h1>
-                <div class="modal-content" style="width: 100%; max-width: 450px; margin: auto;">
-                    <img id="prof-avatar" src="" style="width: 140px; height: 140px; border-radius: 50%; border: 3px solid var(--accent-color); margin-bottom: 25px; box-shadow: 0 0 20px var(--accent-glow);">
-                    <h2 id="prof-name" style="letter-spacing: 4px; margin-bottom: 5px;">---</h2>
-                    <div class="money-display" id="prof-money" style="font-size: 48px; color: #00ffcc; font-weight: 900; margin: 20px 0;">0</div>
-                    <div style="display: flex; justify-content: space-around; border-top: 1px solid #333; padding-top: 20px; font-size: 14px; color: var(--sub-text);">
-                        <div>SUBS: <span id="prof-subs" style="color:#fff;">0</span></div>
-                        <div>RANK: <span id="prof-rank-val" style="color:#fff;">---</span></div>
+                <h1>STATUS</h1>
+                <div class="status-card">
+                    <img id="prof-avatar" src="" class="prof-avatar">
+                    <h2 id="prof-name" style="letter-spacing: 3px;">???</h2>
+                    <div class="money-display" id="prof-money">0</div>
+                    <div style="display: flex; justify-content: space-around; margin-top: 30px; border-top: 1px solid #333; padding-top: 25px;">
+                        <div><small style="letter-spacing: 2px;">SUBS</small><div id="prof-subs" style="font-weight:bold; font-size:18px;">0</div></div>
+                        <div><small style="letter-spacing: 2px;">RANK</small><div id="prof-rank-val" style="font-weight:bold; font-size:18px;">---</div></div>
                     </div>
-                    <button class="main-shop-btn" style="margin-top:40px; width:100%;" onclick="showPage('menu-page')">BACK TO MAIN</button>
+                    <button class="main-shop-btn" style="margin-top:35px; width:100%;" onclick="showPage('menu-page')">RETURN</button>
                 </div>
             </div>
         </main>
 
         <aside class="sidebar" id="main-sidebar">
             <div class="ranking-board">
-                <h3 style="margin: 0 0 25px; color: var(--accent-color); letter-spacing: 5px; font-size: 14px; border-bottom: 1px solid var(--accent-color); padding-bottom: 12px; font-weight: 900;">TOP PRIVILEGED</h3>
+                <h3 style="margin-top: 0; color: var(--accent-color); border-bottom: 1px solid var(--accent-color); padding-bottom: 10px; letter-spacing: 3px; font-size: 16px;">TOP HOLDERS</h3>
                 <div id="ranking-list">
                     <p style="font-size: 12px; color: var(--sub-text);">Syncing data...</p>
                 </div>
@@ -268,32 +284,47 @@
         </aside>
     </div>
 
+    <section class="ad-section">
+        <div class="banner-track">
+            <div class="banner-slide"><img src="banner1.png" class="banner-img" onerror="this.src='https://via.placeholder.com/450x200?text=VOID+AD+1'"></div>
+            <div class="banner-slide"><img src="banner2.png" class="banner-img" onerror="this.src='https://via.placeholder.com/450x200?text=VOID+AD+2'"></div>
+            <div class="banner-slide"><img src="banner3.png" class="banner-img" onerror="this.src='https://via.placeholder.com/450x200?text=VOID+AD+3'"></div>
+            <div class="banner-slide"><img src="banner4.png" class="banner-img" onerror="this.src='https://via.placeholder.com/450x200?text=VOID+AD+4'"></div>
+            <div class="banner-slide"><img src="banner5.png" class="banner-img" onerror="this.src='https://via.placeholder.com/450x200?text=VOID+AD+5'"></div>
+            <div class="banner-slide"><img src="banner1.png" class="banner-img" onerror="this.style.display='none'"></div>
+            <div class="banner-slide"><img src="banner2.png" class="banner-img" onerror="this.style.display='none'"></div>
+            <div class="banner-slide"><img src="banner3.png" class="banner-img" onerror="this.style.display='none'"></div>
+            <div class="banner-slide"><img src="banner4.png" class="banner-img" onerror="this.style.display='none'"></div>
+            <div class="banner-slide"><img src="banner5.png" class="banner-img" onerror="this.style.display='none'"></div>
+        </div>
+    </section>
+
     <div class="character-box">
-        <div class="chat-bubble" id="char-quote">御用でしょうか...？</div>
-        <img src="character.png" class="mascot-img" onerror="this.src='https://via.placeholder.com/300x450?text=VOID'">
+        <div class="chat-bubble" id="char-quote">いらっしゃいませ...</div>
+        <img src="character.png" class="mascot-img" onerror="this.src='https://via.placeholder.com/280x400?text=VOID'">
     </div>
 
     <div id="auth-modal">
         <div class="modal-content">
-            <h2 style="letter-spacing: 6px;">AUTHORIZE</h2>
-            <input type="password" id="password-input" class="modal-input" style="width:100%; background:#000; border:1px solid var(--accent-color); color:#fff; padding:15px; margin: 30px 0; text-align:center; font-size: 24px; letter-spacing: 8px;" placeholder="••••">
+            <h2 id="modal-title" style="letter-spacing: 5px;">AUTHORIZE</h2>
+            <input type="password" id="password-input" class="modal-input" placeholder="••••">
             <div style="display: flex; gap: 15px;">
-                <button onclick="closeModal()" style="flex:1; background:none; border:1px solid #444; color:#fff; cursor:pointer; font-weight: bold;">ABORT</button>
-                <button id="modal-confirm-btn" style="flex:1; background:var(--accent-color); border:none; color:#000; font-weight:bold; cursor:pointer;">EXECUTE</button>
+                <button onclick="closeModal()" style="flex:1; border: 1px solid #444; background:none; color:#fff; cursor:pointer; border-radius:8px;">ABORT</button>
+                <button id="modal-confirm-btn" style="flex:1; background: var(--accent-color); border:none; color:#000; cursor:pointer; font-weight:bold; border-radius:8px;">EXECUTE</button>
             </div>
         </div>
     </div>
 
     <div id="gacha-reveal-modal">
         <div id="chest-container">
-            <img id="chest-img" src="closed_chest.png" style="width:240px; cursor:pointer; filter: drop-shadow(0 0 35px var(--gold));" onclick="revealGachaResult()">
-            <p style="color:var(--gold); letter-spacing:10px; margin-top:25px; font-weight: bold; animation: pulse 1.5s infinite;">TAP TO UNSEAL</p>
+            <img id="chest-img" src="closed_chest.png" style="width:220px; cursor:pointer; filter: drop-shadow(0 0 30px var(--gold));" onclick="revealGachaResult()">
+            <p style="color:var(--gold); letter-spacing:5px; font-weight:bold; margin-top:20px;">TAP TO UNSEAL</p>
         </div>
         <div id="gacha-result-area" class="hidden">
-            <div id="result-card-box" style="padding: 60px; border: 2px solid var(--gold); background: rgba(0,0,0,0.85); border-radius: 12px; box-shadow: 0 0 60px var(--gold); background-size: cover;">
-                <h2 id="result-series" style="color:var(--gold); font-size:14px; margin:0; letter-spacing: 3px;"></h2>
-                <h1 id="result-name" style="font-size:3.5rem; margin: 25px 0; text-shadow: 0 0 15px rgba(255,255,255,0.5);"></h1>
-                <p style="font-size: 12px; color: #00ffcc; letter-spacing: 5px;">UNSEALED SUCCESSFUL</p>
+            <div id="result-card-box" style="padding: 40px; border: 1px solid var(--gold); border-radius: 20px; background: rgba(0,0,0,0.8); box-shadow: 0 0 50px var(--gold);">
+                <h2 id="result-series" style="color: var(--gold); margin: 0; font-size: 14px; letter-spacing: 3px;"></h2>
+                <h1 id="result-name" style="margin: 20px 0; font-size: 36px; color: #fff; text-shadow: 0 0 10px #fff;"></h1>
+                <p style="font-size: 12px; color: #00ffcc; letter-spacing: 2px;">UNSEALED SUCCESSFUL</p>
                 <button class="main-shop-btn" style="margin-top:30px;" onclick="closeGachaReveal()">CLOSE</button>
             </div>
         </div>
@@ -304,42 +335,29 @@
     <script src="config.js"></script>
 
     <script>
-        // 1. エフェクト制御
-        function initVisuals() {
+        // 視差効果（重くない程度にレイアウトを微調整）
+        document.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth / 2 - e.pageX) / 50;
+            const y = (window.innerHeight / 2 - e.pageY) / 50;
+            const layout = document.getElementById('main-layout-container');
+            if(layout) layout.style.transform = `translate(${x}px, ${y}px)`;
+        });
+
+        function createParticles() {
             const container = document.getElementById('particle-container');
-            for(let i=0; i<30; i++) {
+            for(let i=0; i<25; i++) {
                 const p = document.createElement('div');
                 p.className = 'particle';
                 const size = Math.random() * 3 + 2;
                 p.style.width = size + 'px'; p.style.height = size + 'px';
                 p.style.left = Math.random() * 100 + 'vw';
-                p.style.animationDuration = (Math.random() * 10 + 8) + 's';
-                p.style.animationDelay = Math.random() * 5 + 's';
+                p.style.animationDuration = (Math.random() * 12 + 10) + 's';
+                p.style.animationDelay = (Math.random() * 5) + 's';
                 container.appendChild(p);
             }
-
-            document.addEventListener('mousemove', (e) => {
-                const x = (e.clientX / window.innerWidth) * 100;
-                const y = (e.clientY / window.innerHeight) * 100;
-                const bg = document.getElementById('parallax-bg');
-                bg.style.setProperty('--x', x + '%');
-                bg.style.setProperty('--y', y + '%');
-                bg.style.transform = `translate(${(x-50)*-0.12}px, ${(y-50)*-0.12}px)`;
-            });
         }
-        initVisuals();
+        createParticles();
 
-        // 2. 磁力エフェクト関数
-        function applyMagnetic(e) {
-            const wrapper = e.currentTarget;
-            const rect = wrapper.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width/2;
-            const y = e.clientY - rect.top - rect.height/2;
-            wrapper.style.transform = `translate(${x * 0.35}px, ${y * 0.35}px)`;
-        }
-        function resetMagnetic(el) { el.style.transform = `translate(0, 0)`; }
-
-        // --- Firebase Core ---
         const firebaseConfig = { databaseURL: "https://mybot-4e6b1-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
@@ -362,7 +380,7 @@
 
         function updateRanking(profiles) {
             const list = document.getElementById('ranking-list');
-            if(!list) return; list.innerHTML = "";
+            list.innerHTML = "";
             const sorted = Object.entries(profiles).sort(([,a], [,b]) => b.money - a.money).slice(0, 10);
             sorted.forEach(([pwd, u], i) => {
                 const item = document.createElement('div');
@@ -370,6 +388,13 @@
                 item.innerHTML = `<span class="rank-num">${i+1}</span><img src="${u.avatar}" class="rank-avatar" onerror="this.src='https://discord.com/assets/f78426a064bc98b57351.png'"><span class="rank-name">${u.name}</span><span class="rank-money">${Number(u.money).toLocaleString()}</span>`;
                 list.appendChild(item);
             });
+        }
+
+        function toggleTheme() {
+            const body = document.documentElement;
+            const btn = document.querySelector('.theme-switch');
+            if (body.getAttribute('data-theme') === 'light') { body.removeAttribute('data-theme'); btn.innerText = '🌙'; }
+            else { body.setAttribute('data-theme', 'light'); btn.innerText = '☀️'; }
         }
 
         function showPage(id) {
@@ -388,14 +413,14 @@
             const container = document.getElementById('shop-items');
             container.innerHTML = ""; 
             if (!window.SHOP_DATA || !window.SHOP_DATA.length) return;
-            const r = Math.max(450, 200 / Math.tan(Math.PI / SHOP_DATA.length));
             const step = 360 / SHOP_DATA.length;
+            const r = Math.max(420, 200 / Math.tan(Math.PI / SHOP_DATA.length));
             SHOP_DATA.forEach((item, i) => {
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.style.backgroundImage = "url('shop_card.png')";
                 card.style.transform = `rotateY(${i * step}deg) translateZ(${r}px)`;
-                card.innerHTML = `<h3 style="color:var(--accent-color); margin:0; letter-spacing:2px;">${item.name}</h3><p style="font-size:12px; color:var(--sub-text); line-height:1.6;">${item.desc}</p><div style="color:#00ffcc; font-size:32px; font-weight:bold; letter-spacing:1px;">${item.price.toLocaleString()}</div><button class="main-shop-btn" onclick="openBuyModal('${item.name}', ${item.price}, '${item.id}')">ACQUIRE</button>`;
+                card.innerHTML = `<h3 style="color:var(--accent-color); margin:0;">${item.name}</h3><p style="font-size:12px; line-height:1.5;">${item.desc}</p><div class="money-display" style="font-size:28px;">${item.price.toLocaleString()}</div><button class="main-shop-btn" onclick="openBuyModal('${item.name}', ${item.price}, '${item.id}')">ACQUIRE</button>`;
                 container.appendChild(card);
             });
             setupRotation();
@@ -403,18 +428,18 @@
 
         function setupRotation() {
             const el = document.getElementById('shop-items');
-            const area = document.querySelector('.card-container');
-            area.onmousedown = (e) => { isDragging = true; startX = e.pageX; el.style.transition = "none"; };
-            area.ontouchstart = (e) => { isDragging = true; startX = e.touches[0].pageX; el.style.transition = "none"; };
+            const cardContainer = document.querySelector('.card-container');
+            cardContainer.onmousedown = (e) => { isDragging = true; startX = e.pageX; el.style.transition = "none"; };
+            cardContainer.ontouchstart = (e) => { isDragging = true; startX = e.touches[0].pageX; el.style.transition = "none"; };
             window.onmousemove = (e) => {
                 if (!isDragging) return;
-                rotationY += (e.pageX - startX) * 0.45;
+                rotationY += (e.pageX - startX) * 0.6;
                 el.style.transform = `rotateY(${rotationY}deg)`;
                 startX = e.pageX;
             };
             window.ontouchmove = (e) => {
                 if (!isDragging) return;
-                rotationY += (e.touches[0].pageX - startX) * 0.45;
+                rotationY += (e.touches[0].pageX - startX) * 0.6;
                 el.style.transform = `rotateY(${rotationY}deg)`;
                 startX = e.touches[0].pageX;
             };
@@ -424,10 +449,10 @@
         function renderGachaMenu() {
             const container = document.getElementById('gacha-types-container');
             container.innerHTML = "";
-            const types = [{ id: 'normal', name: 'NORMAL SUMMON' }, { id: 'limited_time', name: 'TIME LIMITED' }, { id: 'limited_stock', name: 'STOCK LIMITED' }];
+            const types = [{ id: 'normal', name: 'NORMAL SUMMON' }, { id: 'limited_time', name: 'LIMITED TIME' }, { id: 'limited_stock', name: 'LIMITED STOCK' }];
             types.forEach(t => {
                 const btn = document.createElement('button'); btn.className = 'main-shop-btn';
-                btn.style.width = "340px";
+                btn.style.width = "300px";
                 btn.innerHTML = `${t.name}<br><small style="color:var(--gold)">${GACHA_PRICES[t.id].toLocaleString()} Credits</small>`;
                 btn.onclick = () => openGachaAuth(t.id, GACHA_PRICES[t.id]);
                 container.appendChild(btn);
@@ -435,7 +460,7 @@
         }
 
         function openGachaAuth(type, price) {
-            const pool = GACHA_DATA.filter(i => i.type === type && (i.stock !== 0));
+            const pool = GACHA_DATA.filter(i => i.type === type && (i.stock === -1 || i.stock > 0));
             if (!pool.length) return alert("POOL EMPTY");
             document.getElementById('modal-confirm-btn').onclick = async () => { 
                 const pwd = document.getElementById('password-input').value;
@@ -444,11 +469,15 @@
                 currentItem = { name: "ガチャ召喚", price: price, id: gachaResult.id };
                 closeModal();
                 await executeOrderSilent(pwd);
-                document.getElementById('gacha-reveal-modal').classList.add('active');
-                document.getElementById('chest-container').classList.remove('hidden');
-                document.getElementById('gacha-result-area').classList.add('hidden');
+                startGachaAnimation();
             };
             showModal();
+        }
+
+        function startGachaAnimation() {
+            document.getElementById('gacha-reveal-modal').classList.add('active');
+            document.getElementById('chest-container').classList.remove('hidden');
+            document.getElementById('gacha-result-area').classList.add('hidden');
         }
 
         function revealGachaResult() {
@@ -459,6 +488,10 @@
             document.getElementById('result-series').innerText = gachaResult.series;
             document.getElementById('result-name').innerText = gachaResult.name;
         }
+
+        function closeGachaReveal() { document.getElementById('gacha-reveal-modal').classList.remove('active'); showPage('menu-page'); }
+        function showModal() { document.getElementById('password-input').value = sessionPassword; document.getElementById('auth-modal').classList.add('active'); }
+        function closeModal() { document.getElementById('auth-modal').classList.remove('active'); }
 
         function openBuyModal(name, price, id) {
             currentItem = { name, price, id };
@@ -488,11 +521,6 @@
             document.getElementById('prof-money').innerText = Number(u.money).toLocaleString();
             document.getElementById('prof-subs').innerText = u.subs_count;
         }
-
-        function showModal() { document.getElementById('password-input').value = sessionPassword; document.getElementById('auth-modal').classList.add('active'); }
-        function closeModal() { document.getElementById('auth-modal').classList.remove('active'); }
-        function closeGachaReveal() { document.getElementById('gacha-reveal-modal').classList.remove('active'); showPage('menu-page'); }
-        function toggleTheme() { document.documentElement.toggleAttribute('data-theme'); }
 
         async function executeOrderSilent(password) {
             const url = (typeof CONFIG !== 'undefined') ? CONFIG.webhookUrl : "";
