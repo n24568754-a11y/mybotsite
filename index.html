@@ -113,36 +113,39 @@
             50% { transform: translateY(-20px); }
         }
 
-        /* --- 自動横スライドバナーの設定 --- */
+        /* --- 大型・自動横スライドバナー --- */
         .ad-section {
-            width: 100%; max-width: 1200px; margin: 50px auto 100px;
-            padding: 0 20px; box-sizing: border-box;
-            overflow: hidden; /* はみ出た部分を隠す */
+            width: 100%; max-width: 1400px; 
+            margin: 100px auto 150px; /* 余白を大きくして位置を下げた */
+            padding: 0; box-sizing: border-box;
+            overflow: hidden;
         }
         .banner-track {
             display: flex;
-            width: calc(250px * 10); /* バナー幅 * (5枚 + 複製5枚) */
-            animation: scroll-loop 30s linear infinite; /* ゆっくり流す */
+            width: calc(450px * 10); /* バナー幅450px * 10枚 */
+            animation: scroll-loop 40s linear infinite; /* 幅に合わせて速度を調整 */
         }
         .banner-slide {
-            width: 250px; /* 1枚あたりの幅（調整可） */
+            width: 450px; /* 広告サイズを大きく */
             flex-shrink: 0;
-            padding: 0 15px;
+            padding: 0 20px;
             box-sizing: border-box;
         }
         .banner-img {
-            width: 100%; height: auto; border-radius: 10px;
-            border: 1px solid rgba(138, 43, 226, 0.3);
-            transition: transform 0.3s;
+            width: 100%; height: auto; border-radius: 15px;
+            border: 2px solid rgba(138, 43, 226, 0.4);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .banner-img:hover {
-            transform: scale(1.05);
+            transform: scale(1.08);
             border-color: var(--accent-color);
+            box-shadow: 0 0 30px var(--accent-color);
         }
 
         @keyframes scroll-loop {
             0% { transform: translateX(0); }
-            100% { transform: translateX(calc(-250px * 5)); } /* 5枚分移動したら最初に戻る */
+            100% { transform: translateX(calc(-450px * 5)); }
         }
 
         /* --- Shop Card Design --- */
@@ -264,18 +267,18 @@
 
     <section class="ad-section">
         <div class="banner-track">
-            <div class="banner-slide"><img src="banner1.png" class="banner-img" onerror="this.src='https://via.placeholder.com/250x120?text=VOID+AD+1'"></div>
-            <div class="banner-slide"><img src="banner2.png" class="banner-img" onerror="this.src='https://via.placeholder.com/250x120?text=VOID+AD+2'"></div>
-            <div class="banner-slide"><img src="banner3.png" class="banner-img" onerror="this.src='https://via.placeholder.com/250x120?text=VOID+AD+3'"></div>
-            <div class="banner-slide"><img src="banner4.png" class="banner-img" onerror="this.src='https://via.placeholder.com/250x120?text=VOID+AD+4'"></div>
-            <div class="banner-slide"><img src="banner5.png" class="banner-img" onerror="this.src='https://via.placeholder.com/250x120?text=VOID+AD+5'"></div>
+            <div class="banner-slide"><img src="banner1.png" class="banner-img" onerror="this.src='https://via.placeholder.com/450x200?text=VOID+AD+1'"></div>
+            <div class="banner-slide"><img src="banner2.png" class="banner-img" onerror="this.src='https://via.placeholder.com/450x200?text=VOID+AD+2'"></div>
+            <div class="banner-slide"><img src="banner3.png" class="banner-img" onerror="this.src='https://via.placeholder.com/450x200?text=VOID+AD+3'"></div>
+            <div class="banner-slide"><img src="banner4.png" class="banner-img" onerror="this.src='https://via.placeholder.com/450x200?text=VOID+AD+4'"></div>
+            <div class="banner-slide"><img src="banner5.png" class="banner-img" onerror="this.src='https://via.placeholder.com/450x200?text=VOID+AD+5'"></div>
             <div class="banner-slide"><img src="banner1.png" class="banner-img" onerror="this.style.display='none'"></div>
             <div class="banner-slide"><img src="banner2.png" class="banner-img" onerror="this.style.display='none'"></div>
             <div class="banner-slide"><img src="banner3.png" class="banner-img" onerror="this.style.display='none'"></div>
             <div class="banner-slide"><img src="banner4.png" class="banner-img" onerror="this.style.display='none'"></div>
             <div class="banner-slide"><img src="banner5.png" class="banner-img" onerror="this.style.display='none'"></div>
         </div>
-        <p style="font-size: 10px; color: var(--sub-text); margin-top: 10px; letter-spacing: 2px;">SECURED BY VOID CORP</p>
+        <p style="font-size: 10px; color: var(--sub-text); margin: 20px 0 100px; letter-spacing: 2px;">SECURED BY VOID CORP</p>
     </section>
 
     <div class="character-box">
