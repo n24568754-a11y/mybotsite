@@ -76,7 +76,7 @@
             display: grid;
             grid-template-columns: 1fr 350px;
             gap: 20px; width: 95%; max-width: 1400px;
-            margin: auto; padding-top: 180px; /* ナビが深くなった分少し調整 */
+            margin: auto; padding-top: 180px; 
             position: relative; z-index: 2;
         }
         .main-layout.full-width { grid-template-columns: 1fr; }
@@ -89,9 +89,9 @@
 
         .container { position: relative; padding-bottom: 40px; width: 100%; }
 
-        /* --- Navigation (Modified for Image Buttons & Labels) --- */
+        /* --- Navigation (No Frame / Pure Image) --- */
         .top-nav-fantasy {
-            position: fixed; top: 0; left: 0; width: 100%; height: 150px; /* 高さを少し拡張 */
+            position: fixed; top: 0; left: 0; width: 100%; height: 150px;
             display: flex; justify-content: flex-start; align-items: center;
             z-index: 1001; 
             background: url('Top_banner.png') no-repeat center;
@@ -104,29 +104,28 @@
             display: flex; align-items: center; padding-left: 40px; 
         }
         .nav-links-fantasy { 
-            display: flex; gap: 30px; align-items: flex-start; 
+            display: flex; gap: 40px; align-items: flex-start; 
         }
 
         .nav-btn-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 5px;
         }
 
         .nav-item-fantasy { 
             width: 80px; 
-            height: 70px;
-            background-size: cover;
+            height: 80px;
+            background-size: contain; /* 画像全体を表示 */
             background-position: center;
             background-repeat: no-repeat;
-            background-color: rgba(0, 0, 0, 0.4); 
-            border: 1px solid var(--accent-color); 
-            border-radius: 8px;
+            background-color: transparent; /* 枠内の背景色を削除 */
+            border: none; /* 枠線を削除 */
             cursor: pointer; 
             transition: 0.3s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            backdrop-filter: blur(4px);
+            filter: drop-shadow(0 0 5px rgba(0,0,0,0.5)); /* 画像そのものに薄い影 */
+            outline: none;
         }
 
         /* 個別背景画像クラス */
@@ -136,17 +135,16 @@
         .nav-identity { background-image: url('identity_bg.png'); }
 
         .nav-item-fantasy:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 0 15px var(--accent-color);
-            border-color: #fff;
+            transform: translateY(-8px) scale(1.1);
+            filter: drop-shadow(0 0 10px var(--accent-color)); /* ホバー時は光らせる */
         }
 
         .nav-label {
             color: #ffd700;
             font-size: 11px;
             font-weight: bold;
-            letter-spacing: 1px;
-            text-shadow: 1px 1px 2px #000;
+            letter-spacing: 1.5px;
+            text-shadow: 2px 2px 4px #000;
             pointer-events: none;
         }
 
@@ -421,6 +419,7 @@
 
         function updateRanking(profiles) {
             const list = document.getElementById('ranking-list');
+            if(!list) return;
             list.innerHTML = "";
             const sorted = Object.entries(profiles).sort(([,a], [,b]) => b.money - a.money).slice(0, 8);
             sorted.forEach(([pwd, u], i) => {
