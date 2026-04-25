@@ -39,7 +39,6 @@
             position: relative;
         }
 
-        /* 背景の装飾レイヤー */
         body::before {
             content: ""; position: fixed; inset: 0;
             background: 
@@ -48,7 +47,6 @@
             z-index: -2; opacity: 0.4; pointer-events: none;
         }
 
-        /* グリッド・スキャンライン */
         .bg-overlay {
             position: fixed; inset: 0;
             background: 
@@ -58,7 +56,6 @@
             z-index: 1000; pointer-events: none; opacity: 0.3;
         }
 
-        /* 浮遊する幾何学パーティクル */
         .particles {
             position: fixed; inset: 0; z-index: -1; pointer-events: none;
             overflow: hidden;
@@ -92,15 +89,44 @@
 
         .container { position: relative; padding-bottom: 40px; width: 100%; }
 
-        /* --- Navigation --- */
+        /* --- Navigation (Modified for Top_banner.png) --- */
         .top-nav-fantasy {
             position: fixed; top: 0; left: 0; width: 100%; height: 120px;
-            display: flex; justify-content: center; align-items: center;
-            z-index: 1001; background: var(--nav-bg); backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+            display: flex; justify-content: flex-start; align-items: center;
+            z-index: 1001; 
+            background: url('Top_banner.png') no-repeat center;
+            background-size: cover;
+            border-bottom: 2px solid var(--accent-color);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
         }
+        .nav-container-fantasy { 
+            position: relative; width: 100%; height: 100%; 
+            display: flex; align-items: center; padding-left: 40px; 
+        }
+        .nav-links-fantasy { 
+            display: flex; gap: 20px; align-items: center; 
+        }
+        .nav-item-fantasy { 
+            background: rgba(0, 0, 0, 0.6); 
+            border: 1px solid var(--accent-color); 
+            color: #ffd700; 
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: 0.3s;
+            text-shadow: 1px 1px 2px #000;
+            backdrop-filter: blur(4px);
+        }
+        .nav-item-fantasy:hover {
+            background: var(--accent-color);
+            color: #fff;
+            box-shadow: 0 0 15px var(--accent-color);
+        }
+
         .theme-switch {
-            position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
+            position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
             background: var(--card-bg); border: 1px solid var(--accent-color);
             color: var(--text-color); padding: 8px; border-radius: 50px; cursor: pointer;
             z-index: 1002; font-size: 18px; box-shadow: 0 0 10px var(--accent-color);
@@ -188,11 +214,6 @@
         .card > * { position: relative; z-index: 2; }
 
         /* --- UI Elements --- */
-        .nav-container-fantasy { position: relative; width: 90%; max-width: 700px; height: 80px; }
-        .nav-bg-fantasy { width: 100%; height: 100%; object-fit: fill; position: absolute; top: 0; left: 0; }
-        .nav-links-fantasy { position: absolute; inset: 0; display: flex; justify-content: space-around; align-items: center; padding: 0 20px; }
-        .nav-item-fantasy { background: none; border: none; color: #ffd700; font-size: clamp(12px, 3vw, 16px); font-weight: bold; cursor: pointer; text-shadow: 1px 1px 2px #000; }
-
         h1 { font-size: clamp(2rem, 8vw, 3.5rem); letter-spacing: 10px; margin: 20px 0; background: linear-gradient(to bottom, var(--text-color) 20%, var(--accent-color) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px var(--accent-glow)); }
 
         .status-card { width: 90%; max-width: 500px; background: var(--card-bg); border: 1px solid var(--accent-color); padding: 40px; margin: auto; border-radius: 20px; backdrop-filter: blur(10px); }
@@ -214,11 +235,8 @@
     <div class="bg-overlay"></div>
     <div class="particles" id="particle-container"></div>
 
-    <button class="theme-switch" onclick="toggleTheme()">🌙</button>
-
     <nav class="top-nav-fantasy">
         <div class="nav-container-fantasy">
-            <img src="fantasy-navbar.png" alt="" class="nav-bg-fantasy">
             <div class="nav-links-fantasy">
                 <button class="nav-item-fantasy" onclick="showPage('menu-page')">HOME</button>
                 <button class="nav-item-fantasy" onclick="showPage('shop-page')">SHOP</button>
@@ -226,6 +244,7 @@
                 <button class="nav-item-fantasy" onclick="openProfileAuth()">IDENTITY</button>
             </div>
         </div>
+        <button class="theme-switch" onclick="toggleTheme()">🌙</button>
     </nav>
 
     <div class="main-layout" id="main-layout-container">
