@@ -325,37 +325,78 @@
             "stock": -1
         }
     ],
+    "MISSIONS": {},
     "CURRENCY_NAME": "星",
     "USER_PROFILES": {
         "tenya": {
             "name": "てんや",
             "avatar": "https://cdn.discordapp.com/avatars/1368428956214100062/29a23ac792889cfd274120aa8a823144.png?size=1024",
-            "money": 97648264,
-            "subs_count": 28
+            "money": 97637264,
+            "stats": {
+                "chat": 12,
+                "vc": 9,
+                "daily_chat": 12,
+                "daily_vc": 9,
+                "send_money_total": 0
+            },
+            "inventory": [],
+            "completed_missions": []
         },
         "age0309": {
             "name": "m!dc",
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1387724679225278484/avatars/b6bf077b975eea218fc289855c978d91.png?size=1024",
-            "money": 1839800,
-            "subs_count": 8
+            "money": 1840800,
+            "stats": {
+                "chat": 0,
+                "vc": 9,
+                "daily_chat": 0,
+                "daily_vc": 9,
+                "send_money_total": 0
+            },
+            "inventory": [],
+            "completed_missions": []
         },
         "Sw0623": {
             "name": "愛＄",
             "avatar": "https://cdn.discordapp.com/avatars/1493287369322004643/0fcf097273556a098d5f3fb9814a94fe.png?size=1024",
             "money": 20000,
-            "subs_count": 0
+            "stats": {
+                "chat": 0,
+                "vc": 0,
+                "daily_chat": 0,
+                "daily_vc": 0,
+                "send_money_total": 0
+            },
+            "inventory": [],
+            "completed_missions": []
         },
         "lirve192": {
             "name": "m!p",
             "avatar": "https://cdn.discordapp.com/avatars/1393702468600336586/2811ac501f022fdaf7c7e4c72d2107bb.png?size=1024",
             "money": 30000,
-            "subs_count": 2
+            "stats": {
+                "chat": 0,
+                "vc": 0,
+                "daily_chat": 0,
+                "daily_vc": 0,
+                "send_money_total": 0
+            },
+            "inventory": [],
+            "completed_missions": []
         },
         "kyosuke": {
             "name": "きゅうり",
             "avatar": "https://cdn.discordapp.com/avatars/969995018762850324/7b56462772d94f225c595d6538af8be4.png?size=1024",
             "money": 40000,
-            "subs_count": 1
+            "stats": {
+                "chat": 0,
+                "vc": 0,
+                "daily_chat": 0,
+                "daily_vc": 0,
+                "send_money_total": 0
+            },
+            "inventory": [],
+            "completed_missions": []
         }
     }
 }

@@ -587,11 +587,11 @@
             const u = USER_PROFILES[sessionPassword] || {};
             const completedClaimed = u.completed_missions || []; // 報酬受取済みのミッションIDリスト
 
-            // ミッションデータの構築（Python側のキーと整合性を取る）
+            // ミッションデータの構築（Firebaseの stats 階層に合わせて修正）
             const missionData = [
-                { id: "vc_hours_100", type: "vc", title: "VC滞在時間", current: (u.vc_minutes || 0) / 60, goal: 100, unit: "時間" },
-                { id: "money_send_1M", type: "send", title: "仮想通貨送信額", current: u.send_money_total || 0, goal: 1000000, unit: "Credits" },
-                { id: "chat_chars_50k", type: "chat", title: "総チャット文字数", current: u.chat_chars || 0, goal: 50000, unit: "文字" },
+                { id: "vc_hours_100", type: "vc", title: "VC滞在時間", current: (u.stats?.vc || 0) / 60, goal: 100, unit: "時間" },
+                { id: "money_send_1M", type: "send", title: "仮想通貨送信額", current: u.stats?.send_money_total || 0, goal: 1000000, unit: "Credits" },
+                { id: "chat_chars_50k", type: "chat", title: "総チャット文字数", current: u.stats?.chat || 0, goal: 50000, unit: "文字" },
                 { id: "gacha_count_50", type: "gacha", title: "ガチャを回す", current: u.gacha_count || 0, goal: 50, unit: "回" }
             ];
 
