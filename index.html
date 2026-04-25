@@ -143,9 +143,19 @@
             justify-content: space-between; border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            background-size: cover; background-position: center;
+            box-sizing: border-box;
         }
-        .card h3 { font-size: 22px; margin: 0; color: var(--accent-color); }
-        .card p { font-size: 14px !important; color: var(--text-color) !important; line-height: 1.4; }
+        .card h3 { font-size: 22px; margin: 0; color: var(--accent-color); position: relative; z-index: 2; }
+        .card p { font-size: 14px !important; color: var(--text-color) !important; line-height: 1.4; position: relative; z-index: 2; }
+
+        /* カード内のテキスト可読性を上げるためのオーバーレイ（背景画像がある場合のみ有効） */
+        .card::before {
+            content: ""; position: absolute; inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8));
+            border-radius: 18px; z-index: 1;
+        }
+        .card > * { position: relative; z-index: 2; }
 
         /* --- Navigation Items --- */
         .nav-container-fantasy { position: relative; width: 90%; max-width: 700px; height: 80px; }
@@ -165,8 +175,17 @@
         .modal-input { width: 100%; background: #000; border: 1px solid #333; padding: 12px; color: #fff; text-align: center; font-size: 20px; margin: 20px 0; box-sizing: border-box; }
 
         .hidden { display: none !important; }
-        .main-shop-btn { background: #000; color: #fff; border: 1px solid var(--accent-color); padding: 15px 30px; cursor: pointer; transition: 0.3s; border-radius: 5px; font-weight: bold; }
+        .main-shop-btn { background: #000; color: #fff; border: 1px solid var(--accent-color); padding: 15px 30px; cursor: pointer; transition: 0.3s; border-radius: 5px; font-weight: bold; position: relative; z-index: 2; }
         .main-shop-btn:hover { background: var(--accent-color); box-shadow: 0 0 20px var(--accent-color); }
+
+        /* ガチャ結果カード用 */
+        #result-card-box {
+            position: relative; width: 280px; height: 400px; margin: 20px auto;
+            background-size: cover; background-position: center;
+            border: 2px solid gold; border-radius: 20px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
     </style>
 </head>
 <body id="main-body">
@@ -259,11 +278,14 @@
     <div id="gacha-reveal-modal">
         <div id="chest-container">
             <img id="chest-img" src="closed_chest.png" style="width:200px; cursor:pointer;" onclick="revealGachaResult()">
-            <p>TAP TO UNSEAL</p>
+            <p style="color:gold; letter-spacing:3px;">TAP TO UNSEAL</p>
         </div>
         <div id="gacha-result-area" class="hidden">
-            <h2 id="result-series" style="color: gold;"></h2>
-            <h1 id="result-name"></h1>
+            <div id="result-card-box">
+                <h2 id="result-series" style="color: gold; margin: 0; font-size: 14px; letter-spacing: 2px;"></h2>
+                <h1 id="result-name" style="margin: 10px 0; font-size: 28px; color: #fff;"></h1>
+                <p style="font-size: 12px; color: #00ffcc;">UNSEALED SUCCESSFUL</p>
+            </div>
             <button class="main-shop-btn" onclick="closeGachaReveal()">CLOSE</button>
         </div>
     </div>
@@ -325,7 +347,6 @@
             }
         }
 
-        // --- 表示切り替え機能（ランキング制御追加） ---
         function showPage(id) {
             document.querySelectorAll('main > div').forEach(c => c.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
@@ -351,11 +372,12 @@
             container.innerHTML = ""; 
             if (!window.SHOP_DATA || !window.SHOP_DATA.length) return;
             const step = 360 / SHOP_DATA.length;
-            // カードの間隔を広げるため半径 r を拡大（280 -> 400）
             const r = Math.max(400, 180 / Math.tan(Math.PI / SHOP_DATA.length));
             SHOP_DATA.forEach((item, i) => {
                 const card = document.createElement('div');
                 card.className = 'card';
+                // --- 背景画像指定 ---
+                card.style.backgroundImage = "url('shop_card.png')";
                 card.style.transform = `rotateY(${i * step}deg) translateZ(${r}px)`;
                 card.innerHTML = `
                     <h3>${item.name}</h3>
@@ -427,6 +449,11 @@
         function revealGachaResult() {
             document.getElementById('chest-container').classList.add('hidden');
             document.getElementById('gacha-result-area').classList.remove('hidden');
+
+            const resultBox = document.getElementById('result-card-box');
+            // --- ガチャ背景画像指定 ---
+            resultBox.style.backgroundImage = "url('gacha_card.png')";
+
             document.getElementById('result-series').innerText = gachaResult.series;
             document.getElementById('result-name').innerText = gachaResult.name;
         }
