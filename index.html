@@ -39,7 +39,7 @@
         /* --- Layout --- */
         .main-layout {
             display: grid;
-            grid-template-columns: 1fr 350px; /* HOME用のデフォルト */
+            grid-template-columns: 1fr 350px; /* デフォルト（HOME用） */
             gap: 20px;
             width: 95%;
             max-width: 1400px;
@@ -48,18 +48,18 @@
             transition: all 0.3s ease;
         }
 
-        /* ランキングなし（全画面）状態のクラス */
-        .main-layout.no-sidebar {
+        /* サイドバー非表示時のレイアウト変更 */
+        .main-layout.full-width {
             grid-template-columns: 1fr;
         }
 
         @media (max-width: 900px) {
-            .main-layout { grid-template-columns: 1fr; padding-top: 130px; }
+            .main-layout { grid-template-columns: 1fr !important; padding-top: 130px; }
             .sidebar { order: 2; margin-bottom: 50px; }
             .container { order: 1; }
         }
 
-        .container { position: relative; z-index: 1; padding-bottom: 40px; }
+        .container { position: relative; z-index: 1; padding-bottom: 40px; width: 100%; }
 
         /* --- Navigation & Theme Switch --- */
         .top-nav-fantasy {
@@ -75,7 +75,7 @@
         }
 
         /* --- Ranking Sidebar --- */
-        .sidebar { padding-top: 20px; z-index: 5; }
+        .sidebar { padding-top: 20px; z-index: 5; transition: opacity 0.3s ease; }
         .ranking-board {
             background: var(--rank-bg); border: 1px solid var(--accent-color);
             border-radius: 15px; padding: 20px; text-align: left;
@@ -114,7 +114,7 @@
             50% { transform: translateY(-20px); }
         }
 
-        /* --- Bottom Banner --- */
+        /* --- Bottom Banner (AD Area) --- */
         .ad-section {
             width: 100%; max-width: 1000px; margin: 50px auto 100px;
             padding: 0 20px;
@@ -132,8 +132,8 @@
         }
 
         /* --- Shop Card Design --- */
-        .card-container { height: 500px; perspective: 2000px; display: flex; justify-content: center; align-items: center; touch-action: pan-y; }
-        #shop-items { width: 280px; height: 400px; transform-style: preserve-3d; transition: transform 0.1s; cursor: grab; }
+        .card-container { height: 550px; perspective: 2000px; display: flex; justify-content: center; align-items: center; touch-action: pan-y; }
+        #shop-items { width: 300px; height: 420px; transform-style: preserve-3d; transition: transform 0.1s; cursor: grab; }
         #shop-items:active { cursor: grabbing; }
 
         .card { 
@@ -155,9 +155,9 @@
 
         h1 { font-size: clamp(2rem, 8vw, 3.5rem); letter-spacing: 10px; margin: 20px 0; background: linear-gradient(to bottom, var(--text-color) 20%, var(--accent-color) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .status-card { width: 85%; max-width: 450px; background: var(--card-bg); border: 1px solid var(--accent-color); padding: 30px; margin: auto; border-radius: 20px; }
-        .prof-avatar { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--accent-color); margin-bottom: 20px; }
-        .money-display { font-size: 32px; color: #00ffcc; font-weight: bold; }
+        .status-card { width: 90%; max-width: 500px; background: var(--card-bg); border: 1px solid var(--accent-color); padding: 40px; margin: auto; border-radius: 20px; }
+        .prof-avatar { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--accent-color); margin-bottom: 20px; }
+        .money-display { font-size: 38px; color: #00ffcc; font-weight: bold; }
 
         #auth-modal, #gacha-reveal-modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; pointer-events: none; transition: 0.5s; }
         #auth-modal.active, #gacha-reveal-modal.active { opacity: 1; pointer-events: auto; }
@@ -185,7 +185,7 @@
         </div>
     </nav>
 
-    <div class="main-layout" id="layout-wrapper">
+    <div class="main-layout" id="main-layout-container">
         <main class="container">
             <div id="menu-page">
                 <h1>CAPITALISM</h1>
@@ -325,19 +325,19 @@
             }
         }
 
-        // --- 修正: ランキングをHOME以外で隠し、全幅にする機能 ---
+        // --- 表示切り替え機能（ランキング制御追加） ---
         function showPage(id) {
             document.querySelectorAll('main > div').forEach(c => c.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
 
-            const layout = document.getElementById('layout-wrapper');
+            const layout = document.getElementById('main-layout-container');
             const sidebar = document.getElementById('main-sidebar');
 
             if (id === 'menu-page') {
-                layout.classList.remove('no-sidebar');
+                layout.classList.remove('full-width');
                 sidebar.classList.remove('hidden');
             } else {
-                layout.classList.add('no-sidebar');
+                layout.classList.add('full-width');
                 sidebar.classList.add('hidden');
             }
 
@@ -351,7 +351,7 @@
             container.innerHTML = ""; 
             if (!window.SHOP_DATA || !window.SHOP_DATA.length) return;
             const step = 360 / SHOP_DATA.length;
-            // --- 修正: カード同士の幅を広げる (rを大きく設定) ---
+            // カードの間隔を広げるため半径 r を拡大（280 -> 400）
             const r = Math.max(400, 180 / Math.tan(Math.PI / SHOP_DATA.length));
             SHOP_DATA.forEach((item, i) => {
                 const card = document.createElement('div');
