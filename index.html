@@ -233,6 +233,22 @@
         .claim-btn { background: var(--accent-color); color: #fff; border: none; padding: 4px 10px; border-radius: 4px; font-size: 10px; cursor: pointer; font-weight: bold; }
         .claimed-text { color: #00ffcc; font-size: 10px; font-weight: bold; }
 
+        /* 追加：ミッションカテゴリー・バッジ */
+        .mission-category-title {
+            text-align: left; color: var(--accent-color); font-size: 13px;
+            letter-spacing: 2px; margin: 30px 0 10px; padding-left: 10px;
+            border-left: 3px solid var(--accent-color); text-transform: uppercase;
+            font-weight: bold;
+        }
+        .mission-type-badge {
+            font-size: 9px; padding: 2px 6px; border-radius: 4px;
+            background: rgba(138, 43, 226, 0.2); color: var(--accent-color);
+            margin-right: 8px; border: 1px solid var(--accent-color);
+            display: inline-block; vertical-align: middle;
+        }
+        .type-chat { color: #00ccff; border-color: #00ccff; background: rgba(0, 204, 255, 0.1); }
+        .type-vc { color: #ffcc00; border-color: #ffcc00; background: rgba(255, 204, 0, 0.1); }
+
         /* --- Character Mascot --- */
         .character-box {
             position: fixed; bottom: -20px; right: 20px; z-index: 100;
@@ -597,22 +613,16 @@
             if (!container || !window.USER_PROFILES || !sessionPassword) return;
             container.innerHTML = "";
 
-            // 1. ユーザーの所有アイテムIDをセット化（高速検索用）
             const profile = window.USER_PROFILES[sessionPassword];
             const inventoryData = profile?.inventory ? Object.values(profile.inventory) : [];
             const ownedIds = new Set(inventoryData.map(id => String(id)));
 
-            // 2. マスタデータ(GACHA_DATA)を元に枠を描画
             if (window.GACHA_DATA) {
                 window.GACHA_DATA.forEach(item => {
                     const div = document.createElement('div');
                     const isOwned = ownedIds.has(String(item.id));
-
                     div.className = `archive-item ${isOwned ? 'owned' : ''}`;
-
-                    // 所有していれば名前を表示、未所持なら ???
                     const displayName = isOwned ? item.name : '???';
-
                     div.innerHTML = `
                         <img src="gacha_card.png" class="archive-img">
                         <div class="archive-name">${displayName}</div>
@@ -631,15 +641,29 @@
             const completedMissions = u.completed_missions || [];
             const claimedMissions = u.claimed_missions || [];
 
+            // カテゴリー用コンテナ作成
+            const dailyCont = document.createElement('div');
+            const permanentCont = document.createElement('div');
+            dailyCont.innerHTML = '<div class="mission-category-title">Daily Missions</div>';
+            permanentCont.innerHTML = '<div class="mission-category-title">Permanent Missions</div>';
+
+            let hasDaily = false, hasPermanent = false;
+
             if (window.MISSIONS_DEF) {
                 Object.entries(window.MISSIONS_DEF).forEach(([m_id, m_info]) => {
-                    let key = m_info.type;
-                    if (key === "chat_chars") key = "chat";
-                    if (key === "vc_minutes") key = "vc";
+                    let typeKey = m_info.type;
+                    let typeLabel = "OBJ";
+                    let typeClass = "";
 
-                    const currentVal = u.stats ? (u.stats[key] ?? 0) : 0;
+                    // chat か vc かを判定してラベルをセット
+                    if (typeKey === "chat_chars" || typeKey === "chat") {
+                        typeLabel = "💬 CHAT"; typeKey = "chat"; typeClass = "type-chat";
+                    } else if (typeKey === "vc_minutes" || typeKey === "vc") {
+                        typeLabel = "🔊 VC"; typeKey = "vc"; typeClass = "type-vc";
+                    }
+
+                    const currentVal = u.stats ? (u.stats[typeKey] ?? 0) : 0;
                     const goal = m_info.goal;
-
                     const isReached = completedMissions.includes(m_id) || currentVal >= goal;
                     const isClaimed = claimedMissions.includes(m_id);
                     const percent = Math.min(100, (currentVal / goal) * 100);
@@ -647,26 +671,33 @@
                     const card = document.createElement('div');
                     card.className = `mission-card ${isClaimed ? 'completed-claimed' : ''}`;
 
-                    let actionHtml = "";
-                    if (isClaimed) {
-                        actionHtml = `<span class="claimed-text">RECEIVED</span>`;
-                    } else if (isReached) {
-                        actionHtml = `<button class="claim-btn" onclick="claimMission('${m_id}', event)">CLAIM</button>`;
-                    }
+                    let actionHtml = isClaimed ? `<span class="claimed-text">RECEIVED</span>` 
+                        : (isReached ? `<button class="claim-btn" onclick="claimMission('${m_id}', event)">CLAIM</button>` : "");
 
                     card.innerHTML = `
                         <div class="check-box">${isClaimed ? '✔' : ''}</div>
                         <div class="mission-info">
                             <div class="mission-header">
-                                <div class="mission-title">${m_info.name}</div>
+                                <div style="display:flex; align-items:center;">
+                                    <span class="mission-type-badge ${typeClass}">${typeLabel}</span>
+                                    <span class="mission-title">${m_info.name}</span>
+                                </div>
                                 ${actionHtml}
                             </div>
                             <div class="mission-progress">${Math.floor(currentVal).toLocaleString()} / ${goal.toLocaleString()}</div>
                             <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${percent}%"></div></div>
                         </div>`;
-                    container.appendChild(card);
+
+                    // IDの先頭が d_ ならデイリーへ
+                    if (m_id.startsWith('d_')) {
+                        dailyCont.appendChild(card); hasDaily = true;
+                    } else {
+                        permanentCont.appendChild(card); hasPermanent = true;
+                    }
                 });
             }
+            if (hasDaily) container.appendChild(dailyCont);
+            if (hasPermanent) container.appendChild(permanentCont);
         }
 
         async function claimMission(missionId, event) {
@@ -674,8 +705,7 @@
             if (!url || !sessionPassword) return;
 
             const btn = event.target;
-            btn.disabled = true;
-            btn.innerText = "WAIT...";
+            btn.disabled = true; btn.innerText = "WAIT...";
 
             try {
                 await fetch(url, {
@@ -685,8 +715,7 @@
                 alert("報酬を申請しました。ボットの処理をお待ちください。");
             } catch(e) {
                 alert("通信エラーが発生しました。");
-                btn.disabled = false;
-                btn.innerText = "CLAIM";
+                btn.disabled = false; btn.innerText = "CLAIM";
             }
         }
 
@@ -779,8 +808,7 @@
                 if (!window.USER_PROFILES[pwd]) { alert("ACCESS DENIED"); return; }
                 sessionPassword = pwd;
                 await executeOrderSilent(pwd);
-                closeModal(); 
-                alert("購入リクエストを送信しました。");
+                closeModal(); alert("購入リクエストを送信しました。");
             };
             showModal();
         }
@@ -797,8 +825,7 @@
         }
 
         function updateProfileDisplay(pwd) {
-            const u = USER_PROFILES[pwd];
-            if (!u) return;
+            const u = USER_PROFILES[pwd]; if (!u) return;
             document.getElementById('prof-avatar').src = u.avatar;
             document.getElementById('prof-name').innerText = u.name;
             document.getElementById('prof-money').innerText = Number(u.money).toLocaleString();
