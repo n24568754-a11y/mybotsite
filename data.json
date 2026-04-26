@@ -34,9 +34,9 @@
       "1497206816042647673": "2026-05-26T12:39:12.808972"
     },
     "daily_chat": 819,
-    "daily_vc": 519,
+    "daily_vc": 534,
     "chat_chars": 819,
-    "vc_minutes": 519,
+    "vc_minutes": 534,
     "send_money_total": 1000000,
     "gacha_count": 16,
     "inventory": [
@@ -70,7 +70,7 @@
       "m_daily_vc_3475"
     ],
     "chat": 819,
-    "vc": 519
+    "vc": 534
   },
   "1387724679225278484": {
     "money": 2800800,
@@ -90,8 +90,8 @@
       "1497205425274224821": "2026-05-26T22:45:29.314302"
     },
     "daily_chat": 139,
-    "daily_vc": 212,
-    "vc_minutes": 212,
+    "daily_vc": 227,
+    "vc_minutes": 227,
     "gacha_count": 4,
     "inventory": [
       "1497207151016542349",
@@ -101,7 +101,7 @@
     ],
     "chat_chars": 139,
     "chat": 139,
-    "vc": 212,
+    "vc": 227,
     "completed_missions": [
       "m_chat_chars_6240",
       "m_vc_minutes_7182"
