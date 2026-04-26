@@ -199,9 +199,14 @@
             aspect-ratio: 2/3; background: rgba(255,255,255,0.05); border: 1px solid #333;
             border-radius: 10px; display: flex; flex-direction: column; align-items: center;
             justify-content: center; position: relative; overflow: hidden; transition: 0.3s;
-            filter: grayscale(1) opacity(0.5);
+            filter: brightness(0) opacity(0.5); /* 未所持はシルエット */
         }
-        .archive-item.owned { filter: none; border-color: var(--accent-color); background: var(--card-bg); box-shadow: 0 0 10px var(--accent-glow); }
+        .archive-item.owned { 
+            filter: none; 
+            border-color: var(--accent-color); 
+            background: var(--card-bg); 
+            box-shadow: 0 0 10px var(--accent-glow); 
+        }
         .archive-img { width: 100%; height: 100%; object-fit: cover; }
         .archive-name { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.7); font-size: 10px; padding: 4px 0; }
 
@@ -570,14 +575,30 @@
             const container = document.getElementById('archive-grid');
             if (!container || !window.USER_PROFILES || !sessionPassword) return;
             container.innerHTML = "";
-            const userInventory = Array.from(new Set(USER_PROFILES[sessionPassword]?.inventory || []));
-            GACHA_DATA.forEach(item => {
-                const div = document.createElement('div');
-                const isOwned = userInventory.includes(item.id);
-                div.className = `archive-item ${isOwned ? 'owned' : ''}`;
-                div.innerHTML = `<img src="gacha_card.png" class="archive-img"><div class="archive-name">${isOwned ? item.name : '???' }</div>`;
-                container.appendChild(div);
-            });
+
+            // 1. ユーザーの所有アイテムIDをセット化（高速検索用）
+            const profile = window.USER_PROFILES[sessionPassword];
+            const inventoryData = profile?.inventory ? Object.values(profile.inventory) : [];
+            const ownedIds = new Set(inventoryData.map(id => String(id)));
+
+            // 2. マスタデータ(GACHA_DATA)を元に枠を描画
+            if (window.GACHA_DATA) {
+                window.GACHA_DATA.forEach(item => {
+                    const div = document.createElement('div');
+                    const isOwned = ownedIds.has(String(item.id));
+
+                    div.className = `archive-item ${isOwned ? 'owned' : ''}`;
+
+                    // 所有していれば名前を表示、未所持なら ???
+                    const displayName = isOwned ? item.name : '???';
+
+                    div.innerHTML = `
+                        <img src="gacha_card.png" class="archive-img">
+                        <div class="archive-name">${displayName}</div>
+                    `;
+                    container.appendChild(div);
+                });
+            }
         }
 
         function renderMissions() {
@@ -592,7 +613,6 @@
             if (window.MISSIONS_DEF) {
                 Object.entries(window.MISSIONS_DEF).forEach(([m_id, m_info]) => {
                     let key = m_info.type;
-                    // ボットの stats キーに合わせる
                     if (key === "chat_chars") key = "chat";
                     if (key === "vc_minutes") key = "vc";
 
