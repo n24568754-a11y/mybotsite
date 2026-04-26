@@ -656,9 +656,9 @@
                     let typeClass = "";
 
                     // chat か vc かを判定してラベルをセット
-                    if (typeKey === "chat_chars" || typeKey === "chat") {
+                    if (typeKey === "chat_chars" || typeKey === "chat" || typeKey === "daily_chat") {
                         typeLabel = "💬 CHAT"; typeKey = "chat"; typeClass = "type-chat";
-                    } else if (typeKey === "vc_minutes" || typeKey === "vc") {
+                    } else if (typeKey === "vc_minutes" || typeKey === "vc" || typeKey === "daily_vc") {
                         typeLabel = "🔊 VC"; typeKey = "vc"; typeClass = "type-vc";
                     }
 
@@ -688,8 +688,8 @@
                             <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${percent}%"></div></div>
                         </div>`;
 
-                    // IDの先頭が d_ ならデイリーへ
-                    if (m_id.startsWith('d_')) {
+                    // Firebase上のIDに 'm_daily' が含まれていればデイリーへ
+                    if (m_id.includes('m_daily')) {
                         dailyCont.appendChild(card); hasDaily = true;
                     } else {
                         permanentCont.appendChild(card); hasPermanent = true;

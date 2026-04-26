@@ -26,5 +26,12 @@
     "goal": 300,
     "type": "daily_vc",
     "is_daily": true
+  },
+  "m_daily_vc_8990": {
+    "name": "今日も来てくれたの！？",
+    "reward": 500,
+    "goal": 300,
+    "type": "daily_vc",
+    "is_daily": true
   }
 }
