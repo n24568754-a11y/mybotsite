@@ -11,46 +11,46 @@ const mascotData = {
     'menu-page': {
         defaultImg: 'character.png',
         reactions: [
-            { text: "おかえりなさい、主様。", img: "character.png" },
-            { text: "本日のVoid Protocolを開始しますか？", img: "character.png" },
-            { text: "接続状態、良好です。", img: "character.png" }
+            { text: "おかえりなさいにゃ", img: "character.png" },
+            { text: "おねむかにゃ", img: "character.png" },
+            { text: "いい夢だといいにゃー", img: "character.png" }
         ]
     },
     'shop-page': {
         defaultImg: 'character_shop.png',
         reactions: [
-            { text: "良い掘り出し物があるかもしれませんよ。", img: "character_shop_smile.png" },
-            { text: "軍資金の確認を忘れずに。", img: "character_shop.png" },
-            { text: "迷ったら買う、それが資本主義です。", img: "character_shop.png" }
+            { text: "良い掘り出し物があるかもにゃ?", img: "character_shop_smile.png" },
+            { text: "軍資金の確認を忘れずににゃ", img: "character_shop.png" },
+            { text: "迷ったら買うにゃ！", img: "character_shop.png" }
         ]
     },
     'gacha-menu-page': {
         defaultImg: 'character_gacha.png',
         reactions: [
-            { text: "君の運命を回してみますか？", img: "character_gacha_excited.png" },
-            { text: "特級の気配を感じます...", img: "character_gacha.png" },
-            { text: "深追いは禁物ですよ？", img: "character_gacha.png" }
+            { text: "おまじにゃい！", img: "character_gacha_excited.png" },
+            { text: "きっといいものが出ます...", img: "character_gacha.png" },
+            { text: "深追いは禁物にゃよ？", img: "character_gacha.png" }
         ]
     },
     'archive-page': {
         defaultImg: 'character.png',
         reactions: [
-            { text: "これまでの軌跡ですね。", img: "character.png" },
+            { text: "これまでの軌跡だにゃー", img: "character.png" },
             { text: "コレクション、順調ですか？", img: "character.png" }
         ]
     },
     'tasks-page': {
         defaultImg: 'character.png',
         reactions: [
-            { text: "ミッションをこなして報酬を稼ぎましょう。", img: "character.png" },
-            { text: "勤勉な方は嫌いではありません。", img: "character.png" }
+            { text: "ミッションをこなして報酬を稼ぐにゃ", img: "character.png" },
+            { text: "勤勉だにゃー", img: "character.png" }
         ]
     },
     'profile-page': {
         defaultImg: 'character.png',
         reactions: [
-            { text: "現在のステータスを表示しています。", img: "character.png" },
-            { text: "素晴らしい成績ですね。", img: "character.png" }
+            { text: "現在のステータスを表示してるにゃ", img: "character.png" },
+            { text: "素晴らしい成績だにゃー", img: "character.png" }
         ]
     }
 };

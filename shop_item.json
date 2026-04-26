@@ -367,12 +367,12 @@
         "tenya": {
             "name": "てんや",
             "avatar": "https://cdn.discordapp.com/avatars/1368428956214100062/29a23ac792889cfd274120aa8a823144.png?size=1024",
-            "money": 96471764,
+            "money": 96461764,
             "stats": {
                 "chat": 1003,
-                "vc": 585,
+                "vc": 594,
                 "daily_chat": 88,
-                "daily_vc": 19,
+                "daily_vc": 28,
                 "send_money_total": 1000000
             },
             "inventory": [
@@ -421,7 +421,7 @@
                 "1497622549964656730": "2026-05-26T22:45:35.132664",
                 "1497622624745033849": "2026-05-26T00:44:31.576259",
                 "1497206908006957066": "2026-05-26T23:01:56.627871",
-                "1497206816042647673": "2026-05-26T12:39:12.808972"
+                "1497206816042647673": "2026-05-27T00:32:58.735385"
             },
             "completed_missions": [
                 "m_chat_chars_6240",
@@ -439,10 +439,10 @@
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1387724679225278484/avatars/b6bf077b975eea218fc289855c978d91.png?size=1024",
             "money": 2800800,
             "stats": {
-                "chat": 450,
-                "vc": 278,
-                "daily_chat": 191,
-                "daily_vc": 19,
+                "chat": 577,
+                "vc": 286,
+                "daily_chat": 318,
+                "daily_vc": 27,
                 "send_money_total": 0
             },
             "inventory": [
@@ -467,7 +467,8 @@
             },
             "completed_missions": [
                 "m_chat_chars_6240",
-                "m_vc_minutes_7182"
+                "m_vc_minutes_7182",
+                "m_daily_chat_5230"
             ],
             "claimed_missions": []
         },
