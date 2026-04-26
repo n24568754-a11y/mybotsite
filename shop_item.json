@@ -369,10 +369,10 @@
             "avatar": "https://cdn.discordapp.com/avatars/1368428956214100062/29a23ac792889cfd274120aa8a823144.png?size=1024",
             "money": 96471764,
             "stats": {
-                "chat": 915,
-                "vc": 562,
-                "daily_chat": 915,
-                "daily_vc": 562,
+                "chat": 1003,
+                "vc": 585,
+                "daily_chat": 88,
+                "daily_vc": 19,
                 "send_money_total": 1000000
             },
             "inventory": [
@@ -425,10 +425,7 @@
             },
             "completed_missions": [
                 "m_chat_chars_6240",
-                "m_vc_minutes_7182",
-                "m_daily_chat_5230",
-                "m_daily_vc_3475",
-                "m_daily_vc_8990"
+                "m_vc_minutes_7182"
             ],
             "claimed_missions": [
                 "m_chat_chars_6240",
@@ -442,10 +439,10 @@
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1387724679225278484/avatars/b6bf077b975eea218fc289855c978d91.png?size=1024",
             "money": 2800800,
             "stats": {
-                "chat": 228,
-                "vc": 255,
-                "daily_chat": 228,
-                "daily_vc": 255,
+                "chat": 450,
+                "vc": 278,
+                "daily_chat": 191,
+                "daily_vc": 19,
                 "send_money_total": 0
             },
             "inventory": [
@@ -481,8 +478,8 @@
             "stats": {
                 "chat": 449,
                 "vc": 54,
-                "daily_chat": 449,
-                "daily_vc": 54,
+                "daily_chat": 0,
+                "daily_vc": 0,
                 "send_money_total": 0
             },
             "inventory": [

@@ -6,6 +6,57 @@ const database = firebase.database();
 let GACHA_PRICES = { 'normal': 10000, 'limited_time': 30000, 'limited_stock': 50000 };
 let sessionPassword = "", currentItem = null, rotationY = 0, isDragging = false, startX = 0, gachaResult = null;
 
+// --- キャラクター（マスコット）設定データ ---
+const mascotData = {
+    'menu-page': {
+        defaultImg: 'character.png',
+        reactions: [
+            { text: "おかえりなさい、主様。", img: "character.png" },
+            { text: "本日のVoid Protocolを開始しますか？", img: "character.png" },
+            { text: "接続状態、良好です。", img: "character.png" }
+        ]
+    },
+    'shop-page': {
+        defaultImg: 'character_shop.png',
+        reactions: [
+            { text: "良い掘り出し物があるかもしれませんよ。", img: "character_shop_smile.png" },
+            { text: "軍資金の確認を忘れずに。", img: "character_shop.png" },
+            { text: "迷ったら買う、それが資本主義です。", img: "character_shop.png" }
+        ]
+    },
+    'gacha-menu-page': {
+        defaultImg: 'character_gacha.png',
+        reactions: [
+            { text: "君の運命を回してみますか？", img: "character_gacha_excited.png" },
+            { text: "特級の気配を感じます...", img: "character_gacha.png" },
+            { text: "深追いは禁物ですよ？", img: "character_gacha.png" }
+        ]
+    },
+    'archive-page': {
+        defaultImg: 'character.png',
+        reactions: [
+            { text: "これまでの軌跡ですね。", img: "character.png" },
+            { text: "コレクション、順調ですか？", img: "character.png" }
+        ]
+    },
+    'tasks-page': {
+        defaultImg: 'character.png',
+        reactions: [
+            { text: "ミッションをこなして報酬を稼ぎましょう。", img: "character.png" },
+            { text: "勤勉な方は嫌いではありません。", img: "character.png" }
+        ]
+    },
+    'profile-page': {
+        defaultImg: 'character.png',
+        reactions: [
+            { text: "現在のステータスを表示しています。", img: "character.png" },
+            { text: "素晴らしい成績ですね。", img: "character.png" }
+        ]
+    }
+};
+
+let currentActivePageId = 'menu-page';
+
 // --- マウスの軌跡処理 ---
 let lastMouseX = 0, lastMouseY = 0;
 document.addEventListener('mousemove', (e) => {
@@ -88,6 +139,7 @@ function showPage(id) {
         showModal(); return;
     }
 
+    currentActivePageId = id; // 現在のページを記録
     document.querySelectorAll('main > div').forEach(c => c.classList.add('hidden'));
     document.getElementById(id).classList.remove('hidden');
     const layout = document.getElementById('main-layout-container');
@@ -104,12 +156,43 @@ function showPage(id) {
         ad.classList.add('hidden');
     }
 
+    // --- キャラクターの更新ロジック ---
+    const mData = mascotData[id];
+    if (mData) {
+        const imgEl = document.getElementById('mascot-img');
+        const quoteEl = document.getElementById('char-quote');
+        if(imgEl) imgEl.src = mData.defaultImg;
+        if(quoteEl) quoteEl.innerText = mData.reactions[0].text;
+    }
+
     if(id === 'shop-page') renderShop();
     if(id === 'gacha-menu-page') renderGachaMenu();
     if(id === 'archive-page') renderArchive();
     if(id === 'tasks-page') renderMissions();
     window.scrollTo(0,0);
 }
+
+// キャラクリック時の反応
+document.addEventListener('DOMContentLoaded', () => {
+    const mascotImg = document.getElementById('mascot-img');
+    if(mascotImg) {
+        mascotImg.addEventListener('click', () => {
+            const data = mascotData[currentActivePageId];
+            if (!data) return;
+
+            const random = data.reactions[Math.floor(Math.random() * data.reactions.length)];
+            const imgEl = document.getElementById('mascot-img');
+            const quoteEl = document.getElementById('char-quote');
+
+            imgEl.src = random.img;
+            quoteEl.innerText = random.text;
+
+            // アニメーション適用
+            imgEl.classList.add('bounce-anim');
+            setTimeout(() => imgEl.classList.remove('bounce-anim'), 500);
+        });
+    }
+});
 
 function renderArchive() {
     const container = document.getElementById('archive-grid');

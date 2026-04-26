@@ -33,10 +33,10 @@
       "1497206908006957066": "2026-05-26T23:01:56.627871",
       "1497206816042647673": "2026-05-26T12:39:12.808972"
     },
-    "daily_chat": 915,
-    "daily_vc": 562,
-    "chat_chars": 915,
-    "vc_minutes": 562,
+    "daily_chat": 88,
+    "daily_vc": 19,
+    "chat_chars": 1003,
+    "vc_minutes": 585,
     "send_money_total": 1000000,
     "gacha_count": 16,
     "inventory": [
@@ -58,10 +58,7 @@
     ],
     "completed_missions": [
       "m_chat_chars_6240",
-      "m_vc_minutes_7182",
-      "m_daily_chat_5230",
-      "m_daily_vc_3475",
-      "m_daily_vc_8990"
+      "m_vc_minutes_7182"
     ],
     "claimed_missions": [
       "m_chat_chars_6240",
@@ -69,8 +66,8 @@
       "m_daily_chat_5230",
       "m_daily_vc_3475"
     ],
-    "chat": 915,
-    "vc": 562
+    "chat": 1003,
+    "vc": 585
   },
   "1387724679225278484": {
     "money": 2800800,
@@ -89,9 +86,9 @@
       "1497205158692782172": "2026-05-26T03:48:04.296721",
       "1497205425274224821": "2026-05-26T22:45:29.314302"
     },
-    "daily_chat": 228,
-    "daily_vc": 255,
-    "vc_minutes": 255,
+    "daily_chat": 191,
+    "daily_vc": 19,
+    "vc_minutes": 278,
     "gacha_count": 4,
     "inventory": [
       "1497207151016542349",
@@ -99,9 +96,9 @@
       "1497205158692782172",
       "1497205425274224821"
     ],
-    "chat_chars": 228,
-    "chat": 228,
-    "vc": 255,
+    "chat_chars": 450,
+    "chat": 450,
+    "vc": 278,
     "completed_missions": [
       "m_chat_chars_6240",
       "m_vc_minutes_7182"
@@ -109,8 +106,8 @@
   },
   "1493287369322004643": {
     "money": 51010,
-    "daily_chat": 449,
-    "daily_vc": 54,
+    "daily_chat": 0,
+    "daily_vc": 0,
     "chat_chars": 449,
     "gacha_count": 2,
     "inventory": [
@@ -152,7 +149,7 @@
     "gacha_count": 0,
     "send_money_total": 0,
     "daily_chat": 0,
-    "daily_vc": 41,
+    "daily_vc": 0,
     "completed_missions": [],
     "vc": 41
   }
