@@ -1,4 +1,3 @@
-
 import discord
 from discord import app_commands
 from discord.ext import commands, tasks
@@ -195,7 +194,6 @@ class Economy(commands.Cog):
                         member = g.get_member(int(user_id))
                         if member: break
 
-                    # Web側のstats名をFirebaseの構造（chat, vc）に完全に合わせる
                     profiles[pwd] = {
                         "name": member.display_name if member else f"User_{user_id[-4:]}",
                         "avatar": str(member.display_avatar.url) if member else "",
@@ -245,13 +243,21 @@ class Economy(commands.Cog):
         if uid not in data: data[uid] = self.get_default_user_data()
         length = len(message.content)
 
-        # chat (Firebase用) と chat_chars (旧互換用) の両方を更新
+        # データの更新
         data[uid]['chat'] = data[uid].get('chat', 0) + length
         data[uid]['chat_chars'] = data[uid].get('chat_chars', 0) + length
         data[uid]['daily_chat'] = data[uid].get('daily_chat', 0) + length
 
+        # --- 統計の不整合修正ロジック ---
+        # 累計(chat)がデイリー(daily_chat)より少ない場合、デイリーに合わせる
+        if data[uid]['chat'] < data[uid]['daily_chat']:
+            data[uid]['chat'] = data[uid]['daily_chat']
+            data[uid]['chat_chars'] = data[uid]['daily_chat']
+        # -----------------------------
+
         await self.silent_mission_check(uid, data)
         self.save_data(data)
+        self.update_web_data()
 
     async def silent_mission_check(self, uid, data):
         missions = self.load_missions()
@@ -260,7 +266,6 @@ class Economy(commands.Cog):
         for m_id, m_info in missions.items():
             if m_id in completed: continue
 
-            # ミッションタイプが古い名前(chat_chars)でも新しい名前(chat)でも動くように判定
             m_type = m_info['type']
             if m_type == "chat_chars": m_type = "chat"
             if m_type == "vc_minutes": m_type = "vc"
@@ -337,10 +342,14 @@ class Economy(commands.Cog):
                     uid = str(m.id)
                     if uid not in data: data[uid] = self.get_default_user_data()
 
-                    # vc (Firebase用) と vc_minutes (旧互換用) の両方を更新
                     data[uid]['vc'] = data[uid].get('vc', 0) + 1
                     data[uid]['vc_minutes'] = data[uid].get('vc_minutes', 0) + 1
                     data[uid]['daily_vc'] = data[uid].get('daily_vc', 0) + 1
+
+                    # VCでも不整合修復
+                    if data[uid]['vc'] < data[uid]['daily_vc']:
+                        data[uid]['vc'] = data[uid]['daily_vc']
+                        data[uid]['vc_minutes'] = data[uid]['daily_vc']
 
                     await self.silent_mission_check(uid, data)
                     updated = True
@@ -362,6 +371,30 @@ class Economy(commands.Cog):
         if changed: self.save_data(data); self.update_web_data()
 
     # --- 管理者限定コマンド ---
+
+    @app_commands.command(name="統計修復", description="全ユーザーの統計不整合（累計＜デイリー）を修復します（管理者のみ）")
+    @app_commands.default_permissions(administrator=True)
+    async def fix_stats(self, interaction: discord.Interaction):
+        await interaction.response.defer(ephemeral=True)
+        data = self.load_data()
+        fixed = 0
+        for uid in data:
+            # チャット修復
+            if data[uid].get('chat', 0) < data[uid].get('daily_chat', 0):
+                data[uid]['chat'] = data[uid]['daily_chat']
+                data[uid]['chat_chars'] = data[uid]['daily_chat']
+                fixed += 1
+            # VC修復
+            if data[uid].get('vc', 0) < data[uid].get('daily_vc', 0):
+                data[uid]['vc'] = data[uid]['daily_vc']
+                data[uid]['vc_minutes'] = data[uid]['daily_vc']
+                fixed += 1
+
+        if fixed > 0:
+            self.save_data(data); self.update_web_data()
+            await interaction.followup.send(f"✅ {fixed}件 の不整合を修復しました。", ephemeral=True)
+        else:
+            await interaction.followup.send("不整合は見つかりませんでした。", ephemeral=True)
 
     @app_commands.command(name="図鑑掃除", description="全ユーザーのカード重複を削除します（管理者のみ）")
     @app_commands.default_permissions(administrator=True)
