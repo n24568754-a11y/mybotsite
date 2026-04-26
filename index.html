@@ -298,6 +298,27 @@
         }
         .card > * { position: relative; z-index: 2; }
 
+        /* --- Gacha Result Card Adjustment --- */
+        #result-card-box {
+            width: 280px; 
+            height: 400px; 
+            margin: 0 auto 20px;
+            background-size: contain; 
+            background-position: center; 
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center;
+            position: relative;
+            border-radius: 15px;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        #result-series, #result-name {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+            z-index: 5;
+        }
+
         /* --- UI Elements --- */
         h1 { font-size: clamp(2rem, 8vw, 3.5rem); letter-spacing: 10px; margin: 20px 0; background: linear-gradient(to bottom, var(--text-color) 20%, var(--accent-color) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px var(--accent-glow)); }
 
