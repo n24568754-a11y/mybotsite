@@ -502,7 +502,7 @@
                 window.SHOP_DATA = data.SHOP_DATA || [];
                 window.GACHA_DATA = data.GACHA_DATA || [];
                 window.USER_PROFILES = data.USER_PROFILES || {};
-                window.MISSIONS_DEF = data.MISSIONS || {}; // ミッション定義を取得
+                window.MISSIONS_DEF = data.MISSIONS || {};
                 updateRanking(window.USER_PROFILES);
                 if (sessionPassword) {
                     if (!document.getElementById('profile-page').classList.contains('hidden')) updateProfileDisplay(sessionPassword);
@@ -585,54 +585,64 @@
             container.innerHTML = "";
 
             const u = USER_PROFILES[sessionPassword] || {};
-            const completedClaimed = u.completed_missions || []; // 報酬受取済みのミッションIDリスト
+            const completedMissions = u.completed_missions || [];
+            const claimedMissions = u.claimed_missions || [];
 
-            // ミッションデータの構築（Firebaseの stats 階層に合わせて修正）
-            const missionData = [
-                { id: "vc_hours_100", type: "vc", title: "VC滞在時間", current: (u.stats?.vc || 0) / 60, goal: 100, unit: "時間" },
-                { id: "money_send_1M", type: "send", title: "仮想通貨送信額", current: u.stats?.send_money_total || 0, goal: 1000000, unit: "Credits" },
-                { id: "chat_chars_50k", type: "chat", title: "総チャット文字数", current: u.stats?.chat || 0, goal: 50000, unit: "文字" },
-                { id: "gacha_count_50", type: "gacha", title: "ガチャを回す", current: u.gacha_count || 0, goal: 50, unit: "回" }
-            ];
+            if (window.MISSIONS_DEF) {
+                Object.entries(window.MISSIONS_DEF).forEach(([m_id, m_info]) => {
+                    // 進捗値を取得 (ボットの stats オブジェクトから優先的に取得)
+                    const currentVal = u.stats ? (u.stats[m_info.type] ?? 0) : (u[m_info.type] ?? 0);
+                    const goal = m_info.goal;
 
-            missionData.forEach(m => {
-                const isReached = m.current >= m.goal;
-                const isClaimed = completedClaimed.includes(m.id);
-                const percent = Math.min(100, (m.current / m.goal) * 100);
+                    // ボット側で判定済みのもの、あるいは現在値が目標を超えているもの
+                    const isReached = completedMissions.includes(m_id) || currentVal >= goal;
+                    const isClaimed = claimedMissions.includes(m_id);
+                    const percent = Math.min(100, (currentVal / goal) * 100);
 
-                const card = document.createElement('div');
-                card.className = `mission-card ${isClaimed ? 'completed-claimed' : ''}`;
+                    const card = document.createElement('div');
+                    card.className = `mission-card ${isClaimed ? 'completed-claimed' : ''}`;
 
-                let actionHtml = "";
-                if (isClaimed) {
-                    actionHtml = `<span class="claimed-text">RECEIVED</span>`;
-                } else if (isReached) {
-                    actionHtml = `<button class="claim-btn" onclick="claimMission('${m.id}')">CLAIM</button>`;
-                }
+                    let actionHtml = "";
+                    if (isClaimed) {
+                        actionHtml = `<span class="claimed-text">RECEIVED</span>`;
+                    } else if (isReached) {
+                        actionHtml = `<button class="claim-btn" onclick="claimMission('${m_id}', event)">CLAIM</button>`;
+                    }
 
-                card.innerHTML = `
-                    <div class="check-box">${isClaimed ? '✔' : ''}</div>
-                    <div class="mission-info">
-                        <div class="mission-header">
-                            <div class="mission-title">${m.title} (${m.goal}${m.unit})</div>
-                            ${actionHtml}
-                        </div>
-                        <div class="mission-progress">${Math.floor(m.current).toLocaleString()} / ${m.goal.toLocaleString()} ${m.unit}</div>
-                        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${percent}%"></div></div>
-                    </div>`;
-                container.appendChild(card);
-            });
+                    card.innerHTML = `
+                        <div class="check-box">${isClaimed ? '✔' : ''}</div>
+                        <div class="mission-info">
+                            <div class="mission-header">
+                                <div class="mission-title">${m_info.name}</div>
+                                ${actionHtml}
+                            </div>
+                            <div class="mission-progress">${Math.floor(currentVal).toLocaleString()} / ${goal.toLocaleString()}</div>
+                            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${percent}%"></div></div>
+                        </div>`;
+                    container.appendChild(card);
+                });
+            }
         }
 
-        async function claimMission(missionId) {
+        async function claimMission(missionId, event) {
             const url = (typeof CONFIG !== 'undefined') ? CONFIG.webhookUrl : "";
             if (!url || !sessionPassword) return;
 
-            await fetch(url, {
-                method: "POST", headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ content: `!mission_pay ${sessionPassword} ${missionId}` })
-            });
-            alert("報酬を申請しました。Discordでの反映をお待ちください。");
+            const btn = event.target;
+            btn.disabled = true;
+            btn.innerText = "WAIT...";
+
+            try {
+                await fetch(url, {
+                    method: "POST", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ content: `!mission_pay ${sessionPassword} ${missionId}` })
+                });
+                alert("報酬を申請しました。ボットの処理をお待ちください。");
+            } catch(e) {
+                alert("通信エラーが発生しました。");
+                btn.disabled = false;
+                btn.innerText = "CLAIM";
+            }
         }
 
         function renderShop() {
@@ -743,7 +753,7 @@
             document.getElementById('prof-avatar').src = u.avatar;
             document.getElementById('prof-name').innerText = u.name;
             document.getElementById('prof-money').innerText = Number(u.money).toLocaleString();
-            document.getElementById('prof-subs').innerText = u.subs_count || 0;
+            document.getElementById('prof-subs').innerText = Object.keys(u.subscriptions || {}).length;
             document.getElementById('prof-rank-val').innerText = u.rank_name || "---";
         }
 

@@ -1,0 +1,9 @@
+{
+  "m_chat_chars_6240": {
+    "name": "helloworld",
+    "reward": 1000,
+    "goal": 10,
+    "type": "chat_chars",
+    "is_daily": false
+  }
+}

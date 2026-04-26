@@ -325,7 +325,15 @@
             "stock": -1
         }
     ],
-    "MISSIONS": {},
+    "MISSIONS": {
+        "m_chat_chars_6240": {
+            "name": "helloworld",
+            "reward": 1000,
+            "goal": 10,
+            "type": "chat_chars",
+            "is_daily": false
+        }
+    },
     "CURRENCY_NAME": "星",
     "USER_PROFILES": {
         "tenya": {
@@ -333,9 +341,9 @@
             "avatar": "https://cdn.discordapp.com/avatars/1368428956214100062/29a23ac792889cfd274120aa8a823144.png?size=1024",
             "money": 96597264,
             "stats": {
-                "chat": 103,
+                "chat": 608,
                 "vc": 473,
-                "daily_chat": 103,
+                "daily_chat": 608,
                 "daily_vc": 473,
                 "send_money_total": 1000000
             },
