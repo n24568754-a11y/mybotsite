@@ -370,9 +370,9 @@
             "money": 96461764,
             "stats": {
                 "chat": 1046,
-                "vc": 660,
+                "vc": 673,
                 "daily_chat": 131,
-                "daily_vc": 94,
+                "daily_vc": 107,
                 "send_money_total": 1000000
             },
             "inventory": [
@@ -440,9 +440,9 @@
             "money": 2800800,
             "stats": {
                 "chat": 577,
-                "vc": 352,
+                "vc": 365,
                 "daily_chat": 318,
-                "daily_vc": 93,
+                "daily_vc": 106,
                 "send_money_total": 0
             },
             "inventory": [
