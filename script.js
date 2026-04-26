@@ -146,6 +146,10 @@ function showPage(id) {
     const sidebar = document.getElementById('main-sidebar');
     const ad = document.querySelector('.ad-section');
 
+    // ページ移動時にメニューを自動で閉じる
+    const ring = document.getElementById('holo-ring');
+    if (ring) ring.classList.add('hidden');
+
     if (id === 'menu-page') { 
         layout.classList.remove('full-width'); 
         sidebar.classList.remove('hidden'); 
@@ -421,4 +425,12 @@ async function executeOrderSilent(password) {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: `!pay_req ${password} ${currentItem.id} ${currentItem.price} ${currentItem.name}` })
     });
+}
+
+// --- ホログラムメニュー開閉 ---
+function toggleHoloMenu() {
+    const ring = document.getElementById('holo-ring');
+    if (ring) {
+        ring.classList.toggle('hidden');
+    }
 }

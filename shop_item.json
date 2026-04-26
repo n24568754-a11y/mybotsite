@@ -369,10 +369,10 @@
             "avatar": "https://cdn.discordapp.com/avatars/1368428956214100062/29a23ac792889cfd274120aa8a823144.png?size=1024",
             "money": 96461764,
             "stats": {
-                "chat": 1003,
-                "vc": 594,
-                "daily_chat": 88,
-                "daily_vc": 28,
+                "chat": 1046,
+                "vc": 656,
+                "daily_chat": 131,
+                "daily_vc": 90,
                 "send_money_total": 1000000
             },
             "inventory": [
@@ -440,9 +440,9 @@
             "money": 2800800,
             "stats": {
                 "chat": 577,
-                "vc": 286,
+                "vc": 348,
                 "daily_chat": 318,
-                "daily_vc": 27,
+                "daily_vc": 89,
                 "send_money_total": 0
             },
             "inventory": [

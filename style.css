@@ -1,4 +1,4 @@
-/* --- 変数定義 --- */
+/* --- 変数定義 (既存維持) --- */
 :root {
     --bg-color: #050508;
     --text-color: #ffffff;
@@ -21,7 +21,7 @@
     --rank-bg: rgba(0, 0, 0, 0.05);
 }
 
-/* --- Advanced Background Decor --- */
+/* --- Base Layout --- */
 body { 
     font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif; 
     background: var(--bg-color); color: var(--text-color); text-align: center; 
@@ -48,99 +48,72 @@ body::before {
     z-index: 1000; pointer-events: none; opacity: 0.3;
 }
 
-.particles {
-    position: fixed; inset: 0; z-index: -1; pointer-events: none;
-    overflow: hidden;
-}
+.particles { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
 .particle {
     position: absolute; background: var(--accent-color);
     border-radius: 2px; opacity: 0.15; filter: blur(1px);
     animation: float-particle linear infinite;
 }
+@keyframes float-particle { from { transform: translateY(100vh) rotate(0deg); } to { transform: translateY(-10vh) rotate(360deg); } }
 
-@keyframes float-particle {
-    from { transform: translateY(100vh) rotate(0deg); }
-    to { transform: translateY(-10vh) rotate(360deg); }
-}
-
-/* --- Mouse Trail --- */
-.trail {
+/* --- ホログラムメニュー (左上固定) --- */
+.hologram-menu-container {
     position: fixed;
-    width: 2px;
-    height: 20px;
-    background: var(--accent-color);
-    pointer-events: none;
-    z-index: 9999;
-    border-radius: 1px;
-    filter: blur(1px);
-    box-shadow: 0 0 10px var(--accent-color);
-    animation: fade-trail 0.5s forwards;
-}
-
-@keyframes fade-trail {
-    0% { transform: scale(1); opacity: 0.8; }
-    100% { transform: scale(0); opacity: 0; }
-}
-
-/* --- Layout (キャラクター被り防止のため右余白を調整) --- */
-.main-layout {
-    display: grid;
-    grid-template-columns: 1fr 350px;
-    gap: 20px; width: 95%; max-width: 1400px;
-    margin: auto; padding-top: 180px;
-    padding-right: 250px; /* キャラクター専用スペースを確保 */
-    position: relative; z-index: 2;
-}
-.main-layout.full-width { grid-template-columns: 1fr; }
-
-@media (max-width: 1200px) {
-    .main-layout { padding-right: 0; } /* 画面が狭くなったら余白を解除 */
-}
-
-@media (max-width: 900px) {
-    .main-layout { grid-template-columns: 1fr !important; padding-top: 160px; }
-    .sidebar { order: 2; margin-bottom: 50px; }
-    .container { order: 1; }
-}
-
-.container { position: relative; padding-bottom: 40px; width: 100%; }
-
-/* --- Navigation --- */
-.top-nav-fantasy {
-    position: fixed; top: 0; left: 0; width: 100%; height: 150px;
-    display: flex; justify-content: flex-start; align-items: center;
-    z-index: 1001; 
-    background: url('Top_banner.png') no-repeat center;
-    background-size: cover;
-    border-bottom: 2px solid var(--accent-color);
-    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
-}
-.nav-container-fantasy { 
-    position: relative; width: 100%; height: 100%; 
-    display: flex; align-items: center; padding-left: 40px; 
-}
-.nav-links-fantasy { 
-    display: flex; gap: 20px; align-items: flex-start; 
-}
-
-.nav-btn-wrapper {
+    top: 20px;
+    left: 20px;
+    width: 100px;
+    height: 100px;
+    z-index: 2005; 
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
+    pointer-events: none;
 }
 
-.nav-item-fantasy { 
-    width: 60px; 
-    height: 60px; 
-    background-size: contain; 
-    background-position: center;
-    background-repeat: no-repeat;
-    background-color: transparent; 
-    border: none; 
-    cursor: pointer; 
-    transition: 0.3s;
-    filter: drop-shadow(0 0 5px rgba(0,0,0,0.8)); 
+.holo-core {
+    width: 100%; height: 100%;
+    position: relative; cursor: pointer; pointer-events: auto;
+    filter: drop-shadow(0 0 15px #00ffcc);
+    animation: core-pulsate 2s ease-in-out infinite;
+}
+
+.holo-core-img { width: 100%; height: 100%; object-fit: contain; }
+
+@keyframes core-pulsate { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
+
+.holo-ring-items {
+    position: absolute; top: 50%; left: 50%;
+    width: 0; height: 0; transition: 0.5s ease;
+}
+
+.holo-ring-items:not(.hidden) {
+    width: 300px; height: 300px; pointer-events: auto;
+}
+
+.holo-item {
+    position: absolute; top: 50%; left: 50%;
+    width: 50px; height: 50px;
+    transform: translate(-50%, -50%);
+    background-size: contain; background-position: center; background-repeat: no-repeat;
+    border: 2px solid #00ffcc; border-radius: 50%; cursor: pointer;
+    box-shadow: 0 0 15px rgba(0, 255, 204, 0.5);
+    opacity: 0; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* 左上から扇状（右下方向）に広がる配置 */
+.holo-ring-items:not(.hidden) .holo-item {
+    --r: 110px; /* 半径 */
+    --angle: calc( (90deg / 5) * var(--i) );
+    transform: translate(
+        calc( -50% + (cos(var(--angle)) * var(--r)) ),
+        calc( -50% + (sin(var(--angle)) * var(--r)) )
+    );
+    opacity: 1;
+}
+
+.holo-item:hover { 
+    transform: translate(calc( -50% + (cos(var(--angle)) * (var(--r) + 10px)) ), calc( -50% + (sin(var(--angle)) * (var(--r) + 10px)) )) scale(1.2); 
+    box-shadow: 0 0 25px #00ffcc; 
 }
 
 .nav-home     { background-image: url('home_bg.png'); }
@@ -150,26 +123,24 @@ body::before {
 .nav-tasks    { background-image: url('tasks_bg.png'); }
 .nav-identity { background-image: url('identity_bg.png'); }
 
-.nav-item-fantasy:hover {
-    transform: translateY(-8px) scale(1.1);
-    filter: drop-shadow(0 0 10px var(--accent-color)); 
+.holo-label {
+    position: absolute; top: 110%; left: 50%; transform: translateX(-50%);
+    color: #00ffcc; font-size: 8px; font-weight: bold; text-shadow: 0 0 5px #000;
 }
 
-.nav-label {
-    color: #ffd700;
-    font-size: 10px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    text-shadow: 1px 1px 3px #000;
-    pointer-events: none;
+/* --- Layout 調整 (ヘッダー廃止に伴いpadding-topを調整) --- */
+.main-layout {
+    display: grid; grid-template-columns: 1fr 350px;
+    gap: 20px; width: 95%; max-width: 1400px;
+    margin: auto; padding-top: 50px; /* 180pxから縮小 */
+    padding-right: 250px; position: relative; z-index: 2;
 }
+.main-layout.full-width { grid-template-columns: 1fr; padding-right: 0; }
 
-.theme-switch {
-    position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
-    background: var(--card-bg); border: 1px solid var(--accent-color);
-    color: var(--text-color); padding: 8px; border-radius: 50px; cursor: pointer;
-    z-index: 1002; font-size: 18px; box-shadow: 0 0 10px var(--accent-color);
-}
+@media (max-width: 1200px) { .main-layout { padding-right: 0; } }
+@media (max-width: 900px) { .main-layout { grid-template-columns: 1fr !important; padding-top: 100px; } }
+
+.container { position: relative; padding-bottom: 40px; width: 100%; }
 
 /* --- Ranking Sidebar --- */
 .sidebar { padding-top: 20px; z-index: 5; }
@@ -178,47 +149,23 @@ body::before {
     border-radius: 15px; padding: 20px; text-align: left;
     backdrop-filter: blur(10px); box-shadow: inset 0 0 20px rgba(138, 43, 226, 0.1);
 }
-.rank-item {
-    display: flex; align-items: center; gap: 10px; padding: 10px 0;
-    border-bottom: 1px solid rgba(138, 43, 226, 0.2);
-}
+.rank-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(138, 43, 226, 0.2); }
 .rank-num { font-weight: bold; color: var(--accent-color); width: 25px; }
 .rank-avatar { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 1px solid var(--accent-color); }
 .rank-name { flex-grow: 1; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rank-money { color: #00ffcc; font-weight: bold; font-size: 14px; }
 
-/* --- Archive Styles --- */
-.archive-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 15px; padding: 20px;
-}
-.archive-item {
-    aspect-ratio: 2/3; background: rgba(255,255,255,0.05); border: 1px solid #333;
-    border-radius: 10px; display: flex; flex-direction: column; align-items: center;
-    justify-content: center; position: relative; overflow: hidden; transition: 0.3s;
-    filter: brightness(0) opacity(0.5); 
-}
-.archive-item.owned { 
-    filter: none; 
-    border-color: var(--accent-color); 
-    background: var(--card-bg); 
-    box-shadow: 0 0 10px var(--accent-glow); 
-}
+/* --- Archive & Mission --- */
+.archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 15px; padding: 20px; }
+.archive-item { aspect-ratio: 2/3; background: rgba(255,255,255,0.05); border: 1px solid #333; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; transition: 0.3s; filter: brightness(0) opacity(0.5); }
+.archive-item.owned { filter: none; border-color: var(--accent-color); background: var(--card-bg); box-shadow: 0 0 10px var(--accent-glow); }
 .archive-img { width: 100%; height: 100%; object-fit: cover; }
 .archive-name { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.7); font-size: 10px; padding: 4px 0; }
 
-/* --- Mission Styles --- */
 .mission-list { display: flex; flex-direction: column; gap: 15px; max-width: 600px; margin: 30px auto; }
-.mission-card {
-    background: var(--card-bg); border: 1px solid #333; border-radius: 12px;
-    padding: 15px 20px; display: flex; align-items: center; gap: 15px; text-align: left;
-    transition: 0.3s;
-}
+.mission-card { background: var(--card-bg); border: 1px solid #333; border-radius: 12px; padding: 15px 20px; display: flex; align-items: center; gap: 15px; text-align: left; transition: 0.3s; }
 .mission-card.completed-claimed { border-color: #00ffcc; box-shadow: inset 0 0 10px rgba(0,255,204,0.1); }
-.check-box {
-    width: 24px; height: 24px; border: 2px solid #555; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center; font-size: 14px;
-}
+.check-box { width: 24px; height: 24px; border: 2px solid #555; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
 .completed-claimed .check-box { background: #00ffcc; border-color: #00ffcc; color: #000; }
 .mission-info { flex-grow: 1; }
 .mission-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
@@ -230,131 +177,50 @@ body::before {
 .claim-btn { background: var(--accent-color); color: #fff; border: none; padding: 4px 10px; border-radius: 4px; font-size: 10px; cursor: pointer; font-weight: bold; }
 .claimed-text { color: #00ffcc; font-size: 10px; font-weight: bold; }
 
-/* --- Character Mascot (追加・修正) --- */
-.character-box {
-    position: fixed; 
-    bottom: 20px; 
-    right: 20px; 
-    z-index: 1000;
-    pointer-events: none; 
-    transition: 0.5s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.mascot-img {
-    width: 280px; 
-    filter: drop-shadow(0 0 15px var(--accent-color));
-    animation: floating 4s ease-in-out infinite;
-    pointer-events: auto;
-    cursor: pointer;
-    transition: 0.3s;
-}
+/* --- Mascot --- */
+.character-box { position: fixed; bottom: 20px; right: 20px; z-index: 1000; pointer-events: none; transition: 0.5s; display: flex; flex-direction: column; align-items: center; }
+.mascot-img { width: 280px; filter: drop-shadow(0 0 15px var(--accent-color)); animation: floating 4s ease-in-out infinite; pointer-events: auto; cursor: pointer; transition: 0.3s; }
+@keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+.bounce-anim { animation: bounce-mascot 0.5s ease !important; }
+@keyframes bounce-mascot { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-20px) scale(1.05); } }
+.chat-bubble { background: rgba(255, 255, 255, 0.9); color: black; padding: 10px 20px; border-radius: 20px; margin-bottom: 10px; font-size: 12px; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.3); border: 2px solid var(--accent-color); pointer-events: auto; }
 
-/* クリックした時の跳ねる動き */
-.bounce-anim {
-    animation: bounce-mascot 0.5s ease !important;
-}
-@keyframes bounce-mascot {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-20px) scale(1.05); }
-}
-
-.chat-bubble {
-    background: rgba(255, 255, 255, 0.9); 
-    color: black; 
-    padding: 10px 20px;
-    border-radius: 20px; 
-    margin-bottom: 10px;
-    font-size: 12px; 
-    font-weight: bold;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3); 
-    opacity: 1; /* 最初から見えるように変更（またはJSで制御） */
-    transition: 0.3s;
-    pointer-events: auto;
-    border: 2px solid var(--accent-color);
-}
-
-@keyframes floating {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-15px); }
-}
-
-/* --- Banner Slider --- */
-.ad-section {
-    width: 100%; max-width: 1400px; 
-    margin: 100px auto 150px; padding: 0;
-    overflow: hidden; position: relative; z-index: 2;
-}
-.banner-track {
-    display: flex; width: calc(450px * 10);
-    animation: scroll-loop 40s linear infinite;
-}
-.banner-slide { width: 450px; flex-shrink: 0; padding: 0 20px; box-sizing: border-box; }
-.banner-img {
-    width: 100%; height: auto; border-radius: 15px;
-    border: 2px solid rgba(138, 43, 226, 0.4);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-    transition: 0.4s;
-}
-.banner-img:hover { transform: scale(1.08); border-color: var(--accent-color); box-shadow: 0 0 30px var(--accent-color); }
-
-@keyframes scroll-loop {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(calc(-450px * 5)); }
-}
-
-/* --- Shop Card --- */
+/* --- Shop & Gacha UI --- */
 .card-container { height: 550px; perspective: 2000px; display: flex; justify-content: center; align-items: center; }
 #shop-items { width: 300px; height: 420px; transform-style: preserve-3d; transition: transform 0.1s; cursor: grab; }
-.card { 
-    position: absolute; inset: 0; background: var(--card-bg); 
-    border: 2px solid var(--accent-color); padding: 30px 20px; 
-    backface-visibility: hidden; display: flex; flex-direction: column; 
-    justify-content: space-between; border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    background-size: cover; background-position: center;
-}
-.card::before {
-    content: ""; position: absolute; inset: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8));
-    border-radius: 18px; z-index: 1;
-}
+.card { position: absolute; inset: 0; background: var(--card-bg); border: 2px solid var(--accent-color); padding: 30px 20px; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: space-between; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); background-size: cover; background-position: center; }
+.card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8)); border-radius: 18px; z-index: 1; }
 .card > * { position: relative; z-index: 2; }
 
-/* --- Gacha Result Card Adjustment --- */
-#result-card-box {
-    width: 280px; 
-    height: 400px; 
-    margin: 0 auto 20px;
-    background-size: contain; 
-    background-position: center; 
-    background-repeat: no-repeat;
-    display: flex;
-    flex-direction: column;
-    justify-content: center; 
-    align-items: center;
-    position: relative;
-    border-radius: 15px;
-    box-shadow: 0 0 20px var(--accent-glow);
-}
-#result-series, #result-name {
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
-    z-index: 5;
-}
+#result-card-box { width: 280px; height: 400px; margin: 0 auto 20px; background-size: contain; background-position: center; background-repeat: no-repeat; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; border-radius: 15px; box-shadow: 0 0 20px var(--accent-glow); }
+#result-series, #result-name { text-shadow: 2px 2px 4px rgba(0,0,0,0.9); z-index: 5; }
 
-/* --- UI Elements --- */
+.main-shop-btn { background: #000; color: #fff; border: 1px solid var(--accent-color); padding: 15px 30px; cursor: pointer; transition: 0.3s; border-radius: 5px; font-weight: bold; }
+.main-shop-btn:hover { background: var(--accent-color); box-shadow: 0 0 20px var(--accent-color); }
+
+/* --- UI Elements & Modals --- */
 h1 { font-size: clamp(2rem, 8vw, 3.5rem); letter-spacing: 10px; margin: 20px 0; background: linear-gradient(to bottom, var(--text-color) 20%, var(--accent-color) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px var(--accent-glow)); }
-
 .status-card { width: 90%; max-width: 500px; background: var(--card-bg); border: 1px solid var(--accent-color); padding: 40px; margin: auto; border-radius: 20px; backdrop-filter: blur(10px); }
 .prof-avatar { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--accent-color); margin-bottom: 20px; }
 .money-display { font-size: 38px; color: #00ffcc; font-weight: bold; }
 
-#auth-modal, #gacha-reveal-modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; pointer-events: none; transition: 0.5s; }
+#auth-modal, #gacha-reveal-modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); display: flex; align-items: center; justify-content: center; z-index: 3000; opacity: 0; pointer-events: none; transition: 0.5s; }
 #auth-modal.active, #gacha-reveal-modal.active { opacity: 1; pointer-events: auto; }
 .modal-content { background: var(--bg-color); border: 2px solid var(--accent-color); padding: 30px; width: 80%; max-width: 320px; color: var(--text-color); border-radius: 15px; box-shadow: 0 0 30px var(--accent-glow); }
 .modal-input { width: 100%; background: #000; border: 1px solid #333; padding: 12px; color: #fff; text-align: center; font-size: 20px; margin: 20px 0; box-sizing: border-box; }
 
 .hidden { display: none !important; }
-.main-shop-btn { background: #000; color: #fff; border: 1px solid var(--accent-color); padding: 15px 30px; cursor: pointer; transition: 0.3s; border-radius: 5px; font-weight: bold; }
-.main-shop-btn:hover { background: var(--accent-color); box-shadow: 0 0 20px var(--accent-color); }
+
+/* --- Mouse Trail --- */
+.trail { position: fixed; width: 2px; height: 20px; background: var(--accent-color); pointer-events: none; z-index: 9999; border-radius: 1px; filter: blur(1px); box-shadow: 0 0 10px var(--accent-color); animation: fade-trail 0.5s forwards; }
+@keyframes fade-trail { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(0); opacity: 0; } }
+
+/* --- Banner Slider --- */
+.ad-section { width: 100%; max-width: 1400px; margin: 50px auto 100px; overflow: hidden; position: relative; z-index: 2; }
+.banner-track { display: flex; width: calc(450px * 10); animation: scroll-loop 40s linear infinite; }
+.banner-slide { width: 450px; flex-shrink: 0; padding: 0 20px; }
+.banner-img { width: 100%; height: auto; border-radius: 15px; border: 2px solid rgba(138, 43, 226, 0.4); box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); transition: 0.4s; }
+@keyframes scroll-loop { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-450px * 5)); } }
+
+/* --- Theme Switch --- */
+.theme-switch { position: fixed; bottom: 20px; left: 20px; z-index: 1002; background: var(--card-bg); border: 1px solid var(--accent-color); color: var(--text-color); padding: 8px; border-radius: 50px; cursor: pointer; font-size: 18px; box-shadow: 0 0 10px var(--accent-color); }

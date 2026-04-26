@@ -12,37 +12,34 @@
     <div class="bg-overlay"></div>
     <div class="particles" id="particle-container"></div>
 
-    <nav class="top-nav-fantasy">
-        <div class="nav-container-fantasy">
-            <div class="nav-links-fantasy">
-                <div class="nav-btn-wrapper">
-                    <button class="nav-item-fantasy nav-home" onclick="showPage('menu-page')"></button>
-                    <span class="nav-label">HOME</span>
-                </div>
-                <div class="nav-btn-wrapper">
-                    <button class="nav-item-fantasy nav-shop" onclick="showPage('shop-page')"></button>
-                    <span class="nav-label">SHOP</span>
-                </div>
-                <div class="nav-btn-wrapper">
-                    <button class="nav-item-fantasy nav-gacha" onclick="showPage('gacha-menu-page')"></button>
-                    <span class="nav-label">GACHA</span>
-                </div>
-                <div class="nav-btn-wrapper">
-                    <button class="nav-item-fantasy nav-archive" onclick="showPage('archive-page')"></button>
-                    <span class="nav-label">ARCHIVE</span>
-                </div>
-                <div class="nav-btn-wrapper">
-                    <button class="nav-item-fantasy nav-tasks" onclick="showPage('tasks-page')"></button>
-                    <span class="nav-label">TASKS</span>
-                </div>
-                <div class="nav-btn-wrapper">
-                    <button class="nav-item-fantasy nav-identity" onclick="openProfileAuth()"></button>
-                    <span class="nav-label">IDENTITY</span>
-                </div>
+    <button class="theme-switch" onclick="toggleTheme()">🌙</button>
+
+    <div class="hologram-menu-container">
+        <div class="holo-core" onclick="toggleHoloMenu()">
+            <img src="home_bg.png" class="holo-core-img" alt="Core">
+        </div>
+
+        <div id="holo-ring" class="holo-ring-items hidden">
+            <div class="holo-item nav-home" style="--i:0" onclick="showPage('menu-page')">
+                <span class="holo-label">HOME</span>
+            </div>
+            <div class="holo-item nav-shop" style="--i:1" onclick="showPage('shop-page')">
+                <span class="holo-label">SHOP</span>
+            </div>
+            <div class="holo-item nav-gacha" style="--i:2" onclick="showPage('gacha-menu-page')">
+                <span class="holo-label">GACHA</span>
+            </div>
+            <div class="holo-item nav-archive" style="--i:3" onclick="showPage('archive-page')">
+                <span class="holo-label">ARCHIVE</span>
+            </div>
+            <div class="holo-item nav-tasks" style="--i:4" onclick="showPage('tasks-page')">
+                <span class="holo-label">TASKS</span>
+            </div>
+            <div class="holo-item nav-identity" style="--i:5" onclick="openProfileAuth()">
+                <span class="holo-label">IDENTITY</span>
             </div>
         </div>
-        <button class="theme-switch" onclick="toggleTheme()">🌙</button>
-    </nav>
+    </div>
 
     <div class="main-layout" id="main-layout-container">
         <main class="container">
@@ -110,11 +107,6 @@
             <div class="banner-slide"><img src="banner3.png" class="banner-img" onerror="this.src='https://via.placeholder.com/450x200?text=VOID+AD+3'"></div>
             <div class="banner-slide"><img src="banner4.png" class="banner-img" onerror="this.src='https://via.placeholder.com/450x200?text=VOID+AD+4'"></div>
             <div class="banner-slide"><img src="banner5.png" class="banner-img" onerror="this.src='https://via.placeholder.com/450x200?text=VOID+AD+5'"></div>
-            <div class="banner-slide"><img src="banner1.png" class="banner-img" onerror="this.style.display='none'"></div>
-            <div class="banner-slide"><img src="banner2.png" class="banner-img" onerror="this.style.display='none'"></div>
-            <div class="banner-slide"><img src="banner3.png" class="banner-img" onerror="this.style.display='none'"></div>
-            <div class="banner-slide"><img src="banner4.png" class="banner-img" onerror="this.style.display='none'"></div>
-            <div class="banner-slide"><img src="banner5.png" class="banner-img" onerror="this.style.display='none'"></div>
         </div>
         <p style="font-size: 10px; color: var(--sub-text); margin: 20px 0 100px; letter-spacing: 2px;">SECURED BY VOID CORP</p>
     </section>
