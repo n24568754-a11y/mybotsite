@@ -249,9 +249,12 @@ class Economy(commands.Cog):
         completed = u_data.get('completed_missions', [])
         for m_id, m_info in missions.items():
             if m_id in completed: continue
+            # 内部名(chat_chars等)でデータを探す
             current = u_data.get(m_info['type'], 0)
             if current >= m_info['goal']:
-                u_data.setdefault('completed_missions', []).append(m_id)
+                if m_id not in completed:
+                    completed.append(m_id)
+                    u_data['completed_missions'] = completed
 
     async def handle_mission_reward(self, message):
         try:
@@ -272,7 +275,7 @@ class Economy(commands.Cog):
                 if m_id not in u_data.get('completed_missions', []):
                     u_data.setdefault('completed_missions', []).append(m_id)
                 self.save_data(data); self.update_web_data()
-                await message.channel.send(f"💰 <@{uid}> がミッション「{m_info['name']}」の報酬を獲得！")
+                await message.channel.send(f"💰 <@{uid}> がミッション「{m_info['name']}」の報酬獲得！")
         except: pass
 
     async def handle_web_payment(self, message):
@@ -334,7 +337,6 @@ class Economy(commands.Cog):
 
     @app_commands.command(name="図鑑掃除", description="全ユーザーのカード重複を削除します（管理者のみ）")
     @app_commands.default_permissions(administrator=True)
-    @app_commands.checks.has_permissions(administrator=True)
     async def cleanup_inventory_cmd(self, interaction: discord.Interaction):
         await interaction.response.defer(ephemeral=True)
         data = self.load_data()
@@ -355,7 +357,6 @@ class Economy(commands.Cog):
 
     @app_commands.command(name="ミッション追加", description="新しいミッションと報酬を登録します（管理者のみ）")
     @app_commands.default_permissions(administrator=True)
-    @app_commands.checks.has_permissions(administrator=True)
     @app_commands.choices(タイプ=[
         app_commands.Choice(name="累計チャット文字数", value="chat_chars"),
         app_commands.Choice(name="デイリーチャット文字数", value="daily_chat"),
@@ -373,7 +374,6 @@ class Economy(commands.Cog):
 
     @app_commands.command(name="ミッション削除", description="ミッションを削除します（管理者のみ）")
     @app_commands.default_permissions(administrator=True)
-    @app_commands.checks.has_permissions(administrator=True)
     async def delete_mission(self, interaction: discord.Interaction, ミッション名: str):
         await interaction.response.defer(ephemeral=True)
         missions = self.load_missions()
@@ -391,7 +391,6 @@ class Economy(commands.Cog):
 
     @app_commands.command(name="ガチャ追加", description="Web用ガチャを登録します（管理者のみ）")
     @app_commands.default_permissions(administrator=True)
-    @app_commands.checks.has_permissions(administrator=True)
     @app_commands.choices(種別=[
         app_commands.Choice(name="通常", value="normal"),
         app_commands.Choice(name="期間限定", value="limited_time"),
@@ -406,7 +405,6 @@ class Economy(commands.Cog):
 
     @app_commands.command(name="通貨発行", description="指定したユーザーに通貨を付与します（管理者のみ）")
     @app_commands.default_permissions(administrator=True)
-    @app_commands.checks.has_permissions(administrator=True)
     async def mint_money(self, interaction: discord.Interaction, 相手: discord.Member, 金額: int):
         await interaction.response.defer(ephemeral=True)
         data = self.load_data()
@@ -418,7 +416,6 @@ class Economy(commands.Cog):
 
     @app_commands.command(name="通貨名変更", description="通貨の単位を変更します（管理者のみ）")
     @app_commands.default_permissions(administrator=True)
-    @app_commands.checks.has_permissions(administrator=True)
     async def set_currency_name(self, interaction: discord.Interaction, 新名称: str):
         self.config["currency_name"] = 新名称
         self._save_config(); self.update_web_data()
@@ -426,7 +423,6 @@ class Economy(commands.Cog):
 
     @app_commands.command(name="設置_デイリー", description="デイリー報酬ボタンを設置します（管理者のみ）")
     @app_commands.default_permissions(administrator=True)
-    @app_commands.checks.has_permissions(administrator=True)
     async def setup_daily(self, interaction: discord.Interaction, 画像: discord.Attachment = None):
         view = DailyButton(self)
         embed = discord.Embed(title="✨ デイリー報酬 ✨", description="ボタンを押して報酬をゲット！", color=discord.Color.gold())
@@ -477,7 +473,6 @@ class Economy(commands.Cog):
 
     @app_commands.command(name="ショップ追加", description="Webサイト用販売ロールを登録します（管理者のみ）")
     @app_commands.default_permissions(administrator=True)
-    @app_commands.checks.has_permissions(administrator=True)
     async def add_shop(self, interaction: discord.Interaction, ロール: discord.Role, 価格: int, 説明: str):
         await interaction.response.defer(ephemeral=True)
         shop_data = self.load_shop()
@@ -487,7 +482,6 @@ class Economy(commands.Cog):
 
     @app_commands.command(name="購入案内送信", description="手動でロール購入ボタンをDMします（管理者のみ）")
     @app_commands.default_permissions(administrator=True)
-    @app_commands.checks.has_permissions(administrator=True)
     async def send_shop_bill(self, interaction: discord.Interaction, 相手: discord.Member, ロールid: str):
         shop_data = self.load_shop()
         item = next((i for i in shop_data if i['id'] == ロールid), None)

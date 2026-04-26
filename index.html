@@ -590,11 +590,14 @@
 
             if (window.MISSIONS_DEF) {
                 Object.entries(window.MISSIONS_DEF).forEach(([m_id, m_info]) => {
-                    // 進捗値を取得 (ボットの stats オブジェクトから優先的に取得)
-                    const currentVal = u.stats ? (u.stats[m_info.type] ?? 0) : (u[m_info.type] ?? 0);
+                    // ミッションタイプに応じてボット側の stats オブジェクトから値を取得
+                    let key = m_info.type;
+                    if (key === "chat_chars") key = "chat";
+                    if (key === "vc_minutes") key = "vc";
+
+                    const currentVal = u.stats ? (u.stats[key] ?? 0) : 0;
                     const goal = m_info.goal;
 
-                    // ボット側で判定済みのもの、あるいは現在値が目標を超えているもの
                     const isReached = completedMissions.includes(m_id) || currentVal >= goal;
                     const isClaimed = claimedMissions.includes(m_id);
                     const percent = Math.min(100, (currentVal / goal) * 100);
