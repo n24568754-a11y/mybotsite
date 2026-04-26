@@ -369,10 +369,10 @@
             "avatar": "https://cdn.discordapp.com/avatars/1368428956214100062/29a23ac792889cfd274120aa8a823144.png?size=1024",
             "money": 96471764,
             "stats": {
-                "chat": 819,
-                "vc": 534,
-                "daily_chat": 819,
-                "daily_vc": 534,
+                "chat": 915,
+                "vc": 562,
+                "daily_chat": 915,
+                "daily_vc": 562,
                 "send_money_total": 1000000
             },
             "inventory": [
@@ -442,10 +442,10 @@
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1387724679225278484/avatars/b6bf077b975eea218fc289855c978d91.png?size=1024",
             "money": 2800800,
             "stats": {
-                "chat": 139,
-                "vc": 227,
-                "daily_chat": 139,
-                "daily_vc": 227,
+                "chat": 228,
+                "vc": 255,
+                "daily_chat": 228,
+                "daily_vc": 255,
                 "send_money_total": 0
             },
             "inventory": [
