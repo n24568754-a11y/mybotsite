@@ -160,7 +160,7 @@ class Economy(commands.Cog):
     def get_default_user_data(self):
         return {
             'money': 0, 'last_daily': None, 'subscriptions': {}, 'inventory': [],
-            'chat_chars': 0, 'vc_minutes': 0, 'gacha_count': 0, 'send_money_total': 0,
+            'chat': 0, 'vc': 0, 'gacha_count': 0, 'send_money_total': 0,
             'daily_chat': 0, 'daily_vc': 0, 'completed_missions': [], 'claimed_missions': []
         }
 
@@ -194,16 +194,19 @@ class Economy(commands.Cog):
                     for g in self.bot.guilds:
                         member = g.get_member(int(user_id))
                         if member: break
+
+                    # Web側のstats名をFirebaseの構造（chat, vc）に完全に合わせる
                     profiles[pwd] = {
                         "name": member.display_name if member else f"User_{user_id[-4:]}",
                         "avatar": str(member.display_avatar.url) if member else "",
                         "money": info.get('money', 0),
                         "stats": {
-                            "chat": info.get('chat_chars', 0), "vc": info.get('vc_minutes', 0),
-                            "daily_chat": info.get('daily_chat', 0), "daily_vc": info.get('daily_vc', 0),
+                            "chat": info.get('chat', 0) or info.get('chat_chars', 0), 
+                            "vc": info.get('vc', 0) or info.get('vc_minutes', 0),
+                            "daily_chat": info.get('daily_chat', 0), 
+                            "daily_vc": info.get('daily_vc', 0),
                             "send_money_total": info.get('send_money_total', 0)
                         },
-                        # インベントリをWebに送る際にも重複を排除
                         "inventory": list(dict.fromkeys(info.get('inventory', []))),
                         "subscriptions": info.get('subscriptions', {}),
                         "completed_missions": info.get('completed_missions', []),
@@ -241,8 +244,12 @@ class Economy(commands.Cog):
         uid = str(message.author.id)
         if uid not in data: data[uid] = self.get_default_user_data()
         length = len(message.content)
+
+        # chat (Firebase用) と chat_chars (旧互換用) の両方を更新
+        data[uid]['chat'] = data[uid].get('chat', 0) + length
         data[uid]['chat_chars'] = data[uid].get('chat_chars', 0) + length
         data[uid]['daily_chat'] = data[uid].get('daily_chat', 0) + length
+
         await self.silent_mission_check(uid, data)
         self.save_data(data)
 
@@ -252,7 +259,13 @@ class Economy(commands.Cog):
         completed = u_data.get('completed_missions', [])
         for m_id, m_info in missions.items():
             if m_id in completed: continue
-            current = u_data.get(m_info['type'], 0)
+
+            # ミッションタイプが古い名前(chat_chars)でも新しい名前(chat)でも動くように判定
+            m_type = m_info['type']
+            if m_type == "chat_chars": m_type = "chat"
+            if m_type == "vc_minutes": m_type = "vc"
+
+            current = u_data.get(m_type, 0)
             if current >= m_info['goal']:
                 if m_id not in completed:
                     completed.append(m_id)
@@ -270,7 +283,12 @@ class Economy(commands.Cog):
             if m_id in claimed: return
             if m_id not in missions: return
             m_info = missions[m_id]
-            current = u_data.get(m_info['type'], 0)
+
+            m_type = m_info['type']
+            if m_type == "chat_chars": m_type = "chat"
+            if m_type == "vc_minutes": m_type = "vc"
+
+            current = u_data.get(m_type, 0)
             if current >= m_info['goal']:
                 u_data['money'] += m_info['reward']
                 u_data.setdefault('claimed_missions', []).append(m_id)
@@ -295,7 +313,6 @@ class Economy(commands.Cog):
                 data[uid]['gacha_count'] = data[uid].get('gacha_count', 0) + 1
                 inventory = data[uid].get('inventory', [])
                 target_id_str = str(role_id)
-                # インベントリ追加時の重複チェックを強化
                 if target_id_str not in inventory:
                     inventory.append(target_id_str)
                     data[uid]['inventory'] = inventory
@@ -319,8 +336,12 @@ class Economy(commands.Cog):
                     if m.bot: continue
                     uid = str(m.id)
                     if uid not in data: data[uid] = self.get_default_user_data()
+
+                    # vc (Firebase用) と vc_minutes (旧互換用) の両方を更新
+                    data[uid]['vc'] = data[uid].get('vc', 0) + 1
                     data[uid]['vc_minutes'] = data[uid].get('vc_minutes', 0) + 1
                     data[uid]['daily_vc'] = data[uid].get('daily_vc', 0) + 1
+
                     await self.silent_mission_check(uid, data)
                     updated = True
         if updated: self.save_data(data); self.update_web_data()
@@ -340,7 +361,7 @@ class Economy(commands.Cog):
                     del data[uid]['subscriptions'][rid]; changed = True
         if changed: self.save_data(data); self.update_web_data()
 
-    # --- 管理者限定コマンド（一般ユーザーには見えない設定） ---
+    # --- 管理者限定コマンド ---
 
     @app_commands.command(name="図鑑掃除", description="全ユーザーのカード重複を削除します（管理者のみ）")
     @app_commands.default_permissions(administrator=True)
@@ -365,9 +386,9 @@ class Economy(commands.Cog):
     @app_commands.command(name="ミッション追加", description="新しいミッションと報酬を登録します（管理者のみ）")
     @app_commands.default_permissions(administrator=True)
     @app_commands.choices(タイプ=[
-        app_commands.Choice(name="累計チャット文字数", value="chat_chars"),
+        app_commands.Choice(name="累計チャット文字数", value="chat"),
         app_commands.Choice(name="デイリーチャット文字数", value="daily_chat"),
-        app_commands.Choice(name="累計VC時間(分)", value="vc_minutes"),
+        app_commands.Choice(name="累計VC時間(分)", value="vc"),
         app_commands.Choice(name="デイリーVC時間(分)", value="daily_vc"),
         app_commands.Choice(name="累計ガチャ回数", value="gacha_count")
     ])
@@ -377,7 +398,7 @@ class Economy(commands.Cog):
         m_id = f"m_{タイプ}_{random.randint(1000, 9999)}"
         missions[m_id] = {"name": 名前, "reward": 報酬金額, "goal": 目標値, "type": タイプ, "is_daily": デイリー設定}
         self.save_missions(missions); self.update_web_data()
-        await interaction.followup.send(f"✅ ミッション「{名前}」を追加しました。\n報酬: {報酬金額} {self.currency} / 目標: {目標値}", ephemeral=True)
+        await interaction.followup.send(f"✅ ミッション「{名前}」を追加しました。", ephemeral=True)
 
     @app_commands.command(name="ミッション削除", description="ミッションを削除します（管理者のみ）")
     @app_commands.default_permissions(administrator=True)
@@ -494,7 +515,6 @@ class Economy(commands.Cog):
 
     @app_commands.command(name="請求書", description="相手にDMで請求書を送ります")
     async def bill(self, interaction: discord.Interaction, 相手: discord.Member, 金額: int):
-        # 請求書は管理者以外も使う可能性があるためそのまま（必要なら permission を追加してください）
         if 金額 <= 0 or 相手.id == interaction.user.id: return
         view = BillView(self, 金額, interaction.user)
         embed = discord.Embed(title="📄 請求書", description=f"金額: {金額}{self.currency}\n請求者: {interaction.user.display_name}", color=discord.Color.red())
