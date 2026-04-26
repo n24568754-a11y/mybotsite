@@ -1,4 +1,3 @@
-
 import discord
 from discord import app_commands
 from discord.ext import commands, tasks
@@ -161,7 +160,7 @@ class Economy(commands.Cog):
         return {
             'money': 0, 'last_daily': None, 'subscriptions': {}, 'inventory': [],
             'chat_chars': 0, 'vc_minutes': 0, 'gacha_count': 0, 'send_money_total': 0,
-            'daily_chat': 0, 'daily_vc': 0, 'completed_missions': []
+            'daily_chat': 0, 'daily_vc': 0, 'completed_missions': [], 'claimed_missions': []
         }
 
     @property
@@ -204,7 +203,8 @@ class Economy(commands.Cog):
                             "send_money_total": info.get('send_money_total', 0)
                         },
                         "inventory": info.get('inventory', []),
-                        "completed_missions": info.get('completed_missions', [])
+                        "completed_missions": info.get('completed_missions', []),
+                        "claimed_missions": info.get('claimed_missions', [])
                     }
             web_json = {"SHOP_DATA": shop_data, "GACHA_DATA": gacha_data, "MISSIONS": missions, "CURRENCY_NAME": self.currency, "USER_PROFILES": profiles}
             db.reference('/').set(web_json)
@@ -240,7 +240,18 @@ class Economy(commands.Cog):
         length = len(message.content)
         data[uid]['chat_chars'] = data[uid].get('chat_chars', 0) + length
         data[uid]['daily_chat'] = data[uid].get('daily_chat', 0) + length
+        await self.silent_mission_check(uid, data)
         self.save_data(data)
+
+    async def silent_mission_check(self, uid, data):
+        missions = self.load_missions()
+        u_data = data[uid]
+        completed = u_data.get('completed_missions', [])
+        for m_id, m_info in missions.items():
+            if m_id in completed: continue
+            current = u_data.get(m_info['type'], 0)
+            if current >= m_info['goal']:
+                u_data.setdefault('completed_missions', []).append(m_id)
 
     async def handle_mission_reward(self, message):
         try:
@@ -249,14 +260,19 @@ class Economy(commands.Cog):
             uid = next((u for u, p in self.load_auth().items() if p == pwd), None)
             if not uid: return
             data, missions = self.load_data(), self.load_missions()
-            if m_id not in missions or m_id in data[uid].get('completed_missions', []): return
+            u_data = data[uid]
+            claimed = u_data.get('claimed_missions', [])
+            if m_id in claimed: return
+            if m_id not in missions: return
             m_info = missions[m_id]
-            current = data[uid].get(m_info['type'], 0)
+            current = u_data.get(m_info['type'], 0)
             if current >= m_info['goal']:
-                data[uid]['money'] += m_info['reward']
-                data[uid].setdefault('completed_missions', []).append(m_id)
+                u_data['money'] += m_info['reward']
+                u_data.setdefault('claimed_missions', []).append(m_id)
+                if m_id not in u_data.get('completed_missions', []):
+                    u_data.setdefault('completed_missions', []).append(m_id)
                 self.save_data(data); self.update_web_data()
-                await message.channel.send(f"🎊 <@{uid}> がミッション「{m_info['name']}」を達成！")
+                await message.channel.send(f"💰 <@{uid}> がミッション「{m_info['name']}」の報酬を獲得！")
         except: pass
 
     async def handle_web_payment(self, message):
@@ -271,8 +287,11 @@ class Economy(commands.Cog):
             data[uid]['money'] -= price
             if "ガチャ" in item_name:
                 data[uid]['gacha_count'] = data[uid].get('gacha_count', 0) + 1
-                if str(role_id) not in data[uid].get('inventory', []):
-                    data[uid].setdefault('inventory', []).append(str(role_id))
+                inventory = data[uid].get('inventory', [])
+                target_id_str = str(role_id)
+                if target_id_str not in inventory:
+                    inventory.append(target_id_str)
+                    data[uid]['inventory'] = inventory
             expiry = (datetime.now() + timedelta(days=30)).isoformat()
             data[uid].setdefault('subscriptions', {})[str(role_id)] = expiry
             self.save_data(data); self.update_web_data()
@@ -294,6 +313,7 @@ class Economy(commands.Cog):
                     if uid not in data: data[uid] = self.get_default_user_data()
                     data[uid]['vc_minutes'] = data[uid].get('vc_minutes', 0) + 1
                     data[uid]['daily_vc'] = data[uid].get('daily_vc', 0) + 1
+                    await self.silent_mission_check(uid, data)
                     updated = True
         if updated: self.save_data(data); self.update_web_data()
 
@@ -312,8 +332,29 @@ class Economy(commands.Cog):
                     del data[uid]['subscriptions'][rid]; changed = True
         if changed: self.save_data(data); self.update_web_data()
 
-    # --- ミッション管理 ---
-    @app_commands.command(name="ミッション追加", description="新しいミッションを登録します")
+    @app_commands.command(name="図鑑掃除", description="全ユーザーのカード重複を削除します（管理者のみ）")
+    @app_commands.default_permissions(administrator=True)
+    @app_commands.checks.has_permissions(administrator=True)
+    async def cleanup_inventory_cmd(self, interaction: discord.Interaction):
+        await interaction.response.defer(ephemeral=True)
+        data = self.load_data()
+        total_removed = 0
+        for uid in data:
+            if 'inventory' in data[uid] and isinstance(data[uid]['inventory'], list):
+                old_list = data[uid]['inventory']
+                new_list = list(dict.fromkeys(old_list))
+                diff = len(old_list) - len(new_list)
+                if diff > 0:
+                    data[uid]['inventory'] = new_list
+                    total_removed += diff
+        if total_removed > 0:
+            self.save_data(data); self.update_web_data()
+            await interaction.followup.send(f"✅ 合計 {total_removed} 個の重複アイテムを掃除しました。", ephemeral=True)
+        else:
+            await interaction.followup.send("重複は見つかりませんでした。", ephemeral=True)
+
+    @app_commands.command(name="ミッション追加", description="新しいミッションと報酬を登録します（管理者のみ）")
+    @app_commands.default_permissions(administrator=True)
     @app_commands.checks.has_permissions(administrator=True)
     @app_commands.choices(タイプ=[
         app_commands.Choice(name="累計チャット文字数", value="chat_chars"),
@@ -322,15 +363,16 @@ class Economy(commands.Cog):
         app_commands.Choice(name="デイリーVC時間(分)", value="daily_vc"),
         app_commands.Choice(name="累計ガチャ回数", value="gacha_count")
     ])
-    async def add_mission(self, interaction: discord.Interaction, 名前: str, 報酬: int, 目標値: int, タイプ: str, デイリー: bool):
+    async def add_mission(self, interaction: discord.Interaction, 名前: str, 報酬金額: int, 目標値: int, タイプ: str, デイリー設定: bool):
         await interaction.response.defer(ephemeral=True)
         missions = self.load_missions()
-        m_id = str(random.randint(100000, 999999))
-        missions[m_id] = {"name": 名前, "reward": 報酬, "goal": 目標値, "type": タイプ, "is_daily": デイリー}
+        m_id = f"m_{タイプ}_{random.randint(1000, 9999)}"
+        missions[m_id] = {"name": 名前, "reward": 報酬金額, "goal": 目標値, "type": タイプ, "is_daily": デイリー設定}
         self.save_missions(missions); self.update_web_data()
-        await interaction.followup.send(f"✅ ミッション「{名前}」を追加しました。", ephemeral=True)
+        await interaction.followup.send(f"✅ ミッション「{名前}」を追加しました。\n報酬: {報酬金額} {self.currency} / 目標: {目標値}", ephemeral=True)
 
-    @app_commands.command(name="ミッション削除", description="ミッションを削除します")
+    @app_commands.command(name="ミッション削除", description="ミッションを削除します（管理者のみ）")
+    @app_commands.default_permissions(administrator=True)
     @app_commands.checks.has_permissions(administrator=True)
     async def delete_mission(self, interaction: discord.Interaction, ミッション名: str):
         await interaction.response.defer(ephemeral=True)
@@ -347,7 +389,8 @@ class Economy(commands.Cog):
         missions = self.load_missions()
         return [app_commands.Choice(name=m['name'], value=m['name']) for m in missions.values() if current.lower() in m['name'].lower()][:25]
 
-    @app_commands.command(name="ガチャ追加", description="Web用ガチャを登録します")
+    @app_commands.command(name="ガチャ追加", description="Web用ガチャを登録します（管理者のみ）")
+    @app_commands.default_permissions(administrator=True)
     @app_commands.checks.has_permissions(administrator=True)
     @app_commands.choices(種別=[
         app_commands.Choice(name="通常", value="normal"),
@@ -361,7 +404,8 @@ class Economy(commands.Cog):
         self.save_gacha(gacha_data); self.update_web_data()
         await interaction.followup.send(f"✅ ガチャに「{ロール.name}」を登録しました。", ephemeral=True)
 
-    @app_commands.command(name="通貨発行", description="指定したユーザーに通貨を付与します")
+    @app_commands.command(name="通貨発行", description="指定したユーザーに通貨を付与します（管理者のみ）")
+    @app_commands.default_permissions(administrator=True)
     @app_commands.checks.has_permissions(administrator=True)
     async def mint_money(self, interaction: discord.Interaction, 相手: discord.Member, 金額: int):
         await interaction.response.defer(ephemeral=True)
@@ -372,14 +416,16 @@ class Economy(commands.Cog):
         self.save_data(data); self.update_web_data()
         await interaction.followup.send(f"✅ {相手.display_name} に {金額}{self.currency} 発行しました。", ephemeral=True)
 
-    @app_commands.command(name="通貨名変更", description="通貨の単位を変更します")
+    @app_commands.command(name="通貨名変更", description="通貨の単位を変更します（管理者のみ）")
+    @app_commands.default_permissions(administrator=True)
     @app_commands.checks.has_permissions(administrator=True)
     async def set_currency_name(self, interaction: discord.Interaction, 新名称: str):
         self.config["currency_name"] = 新名称
         self._save_config(); self.update_web_data()
         await interaction.response.send_message(f"✅ 通貨単位を {新名称} に変更しました。", ephemeral=True)
 
-    @app_commands.command(name="設置_デイリー", description="デイリー報酬ボタンを設置します")
+    @app_commands.command(name="設置_デイリー", description="デイリー報酬ボタンを設置します（管理者のみ）")
+    @app_commands.default_permissions(administrator=True)
     @app_commands.checks.has_permissions(administrator=True)
     async def setup_daily(self, interaction: discord.Interaction, 画像: discord.Attachment = None):
         view = DailyButton(self)
@@ -413,14 +459,9 @@ class Economy(commands.Cog):
         if 金額 <= 0 or sid == rid or data.get(sid, {}).get('money', 0) < 金額:
             await interaction.followup.send("無効な操作です。", ephemeral=True); return
         if rid not in data: data[rid] = self.get_default_user_data()
-
-        # お金の移動
         data[sid]['money'] -= 金額
         data[rid]['money'] += 金額
-
-        # 送金累計の加算
         data[sid]['send_money_total'] = data[sid].get('send_money_total', 0) + 金額
-
         self.save_data(data); self.update_web_data()
         await interaction.followup.send(f"✅ {相手.display_name} へ送金しました。", ephemeral=True)
 
@@ -434,7 +475,8 @@ class Economy(commands.Cog):
             await interaction.response.send_message(f"✅ {相手.display_name} さんに送信しました。", ephemeral=True)
         except: await interaction.response.send_message("❌ DM送信に失敗しました。", ephemeral=True)
 
-    @app_commands.command(name="ショップ追加", description="Webサイト用販売ロールを登録します")
+    @app_commands.command(name="ショップ追加", description="Webサイト用販売ロールを登録します（管理者のみ）")
+    @app_commands.default_permissions(administrator=True)
     @app_commands.checks.has_permissions(administrator=True)
     async def add_shop(self, interaction: discord.Interaction, ロール: discord.Role, 価格: int, 説明: str):
         await interaction.response.defer(ephemeral=True)
@@ -443,7 +485,8 @@ class Economy(commands.Cog):
         self.save_shop(shop_data); self.update_web_data()
         await interaction.followup.send(f"✅ 「{ロール.name}」を登録しました。", ephemeral=True)
 
-    @app_commands.command(name="購入案内送信", description="手動でロール購入ボタンをDMします")
+    @app_commands.command(name="購入案内送信", description="手動でロール購入ボタンをDMします（管理者のみ）")
+    @app_commands.default_permissions(administrator=True)
     @app_commands.checks.has_permissions(administrator=True)
     async def send_shop_bill(self, interaction: discord.Interaction, 相手: discord.Member, ロールid: str):
         shop_data = self.load_shop()

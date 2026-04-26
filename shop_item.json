@@ -331,44 +331,58 @@
         "tenya": {
             "name": "てんや",
             "avatar": "https://cdn.discordapp.com/avatars/1368428956214100062/29a23ac792889cfd274120aa8a823144.png?size=1024",
-            "money": 97637264,
+            "money": 96607264,
             "stats": {
-                "chat": 12,
-                "vc": 9,
-                "daily_chat": 12,
-                "daily_vc": 9,
-                "send_money_total": 0
+                "chat": 103,
+                "vc": 473,
+                "daily_chat": 103,
+                "daily_vc": 473,
+                "send_money_total": 1000000
             },
-            "inventory": [],
-            "completed_missions": []
+            "inventory": [
+                "1497207010721136691",
+                "1497206499506786436",
+                "1497205518870249512"
+            ],
+            "completed_missions": [],
+            "claimed_missions": []
         },
         "age0309": {
             "name": "m!dc",
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1387724679225278484/avatars/b6bf077b975eea218fc289855c978d91.png?size=1024",
-            "money": 1840800,
+            "money": 2810800,
             "stats": {
-                "chat": 0,
-                "vc": 9,
-                "daily_chat": 0,
-                "daily_vc": 9,
+                "chat": 139,
+                "vc": 174,
+                "daily_chat": 139,
+                "daily_vc": 174,
                 "send_money_total": 0
             },
-            "inventory": [],
-            "completed_missions": []
+            "inventory": [
+                "1497207151016542349",
+                "1497205518870249512",
+                "1497205158692782172"
+            ],
+            "completed_missions": [],
+            "claimed_missions": []
         },
-        "Sw0623": {
+        "xx1104": {
             "name": "愛＄",
             "avatar": "https://cdn.discordapp.com/avatars/1493287369322004643/0fcf097273556a098d5f3fb9814a94fe.png?size=1024",
-            "money": 20000,
+            "money": 499,
             "stats": {
-                "chat": 0,
-                "vc": 0,
-                "daily_chat": 0,
-                "daily_vc": 0,
+                "chat": 449,
+                "vc": 54,
+                "daily_chat": 449,
+                "daily_vc": 54,
                 "send_money_total": 0
             },
-            "inventory": [],
-            "completed_missions": []
+            "inventory": [
+                "1497207507528192031",
+                "1497207225255727224"
+            ],
+            "completed_missions": [],
+            "claimed_missions": []
         },
         "lirve192": {
             "name": "m!p",
@@ -382,7 +396,8 @@
                 "send_money_total": 0
             },
             "inventory": [],
-            "completed_missions": []
+            "completed_missions": [],
+            "claimed_missions": []
         },
         "kyosuke": {
             "name": "きゅうり",
@@ -396,7 +411,8 @@
                 "send_money_total": 0
             },
             "inventory": [],
-            "completed_missions": []
+            "completed_missions": [],
+            "claimed_missions": []
         }
     }
 }
