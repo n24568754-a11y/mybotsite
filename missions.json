@@ -5,5 +5,26 @@
     "goal": 10,
     "type": "chat_chars",
     "is_daily": false
+  },
+  "m_vc_minutes_7182": {
+    "name": "FIRSTCONTACT",
+    "reward": 10000,
+    "goal": 120,
+    "type": "vc_minutes",
+    "is_daily": false
+  },
+  "m_daily_chat_5230": {
+    "name": "今日の調子はどう？",
+    "reward": 500,
+    "goal": 300,
+    "type": "daily_chat",
+    "is_daily": true
+  },
+  "m_daily_vc_3475": {
+    "name": "今日も会えて嬉しいよ♡",
+    "reward": 3000,
+    "goal": 300,
+    "type": "daily_vc",
+    "is_daily": true
   }
 }

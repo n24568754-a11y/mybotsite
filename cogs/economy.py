@@ -1,3 +1,4 @@
+
 import discord
 from discord import app_commands
 from discord.ext import commands, tasks
@@ -202,7 +203,9 @@ class Economy(commands.Cog):
                             "daily_chat": info.get('daily_chat', 0), "daily_vc": info.get('daily_vc', 0),
                             "send_money_total": info.get('send_money_total', 0)
                         },
-                        "inventory": info.get('inventory', []),
+                        # インベントリをWebに送る際にも重複を排除
+                        "inventory": list(dict.fromkeys(info.get('inventory', []))),
+                        "subscriptions": info.get('subscriptions', {}),
                         "completed_missions": info.get('completed_missions', []),
                         "claimed_missions": info.get('claimed_missions', [])
                     }
@@ -249,7 +252,6 @@ class Economy(commands.Cog):
         completed = u_data.get('completed_missions', [])
         for m_id, m_info in missions.items():
             if m_id in completed: continue
-            # 内部名(chat_chars等)でデータを探す
             current = u_data.get(m_info['type'], 0)
             if current >= m_info['goal']:
                 if m_id not in completed:
@@ -288,13 +290,16 @@ class Economy(commands.Cog):
             data = self.load_data()
             if data.get(uid, {}).get('money', 0) < price: return
             data[uid]['money'] -= price
+
             if "ガチャ" in item_name:
                 data[uid]['gacha_count'] = data[uid].get('gacha_count', 0) + 1
                 inventory = data[uid].get('inventory', [])
                 target_id_str = str(role_id)
+                # インベントリ追加時の重複チェックを強化
                 if target_id_str not in inventory:
                     inventory.append(target_id_str)
                     data[uid]['inventory'] = inventory
+
             expiry = (datetime.now() + timedelta(days=30)).isoformat()
             data[uid].setdefault('subscriptions', {})[str(role_id)] = expiry
             self.save_data(data); self.update_web_data()
@@ -334,6 +339,8 @@ class Economy(commands.Cog):
                             except: pass
                     del data[uid]['subscriptions'][rid]; changed = True
         if changed: self.save_data(data); self.update_web_data()
+
+    # --- 管理者限定コマンド（一般ユーザーには見えない設定） ---
 
     @app_commands.command(name="図鑑掃除", description="全ユーザーのカード重複を削除します（管理者のみ）")
     @app_commands.default_permissions(administrator=True)
@@ -430,6 +437,30 @@ class Economy(commands.Cog):
         await interaction.response.send_message("設置完了", ephemeral=True)
         await interaction.channel.send(embed=embed, view=view)
 
+    @app_commands.command(name="ショップ追加", description="Webサイト用販売ロールを登録します（管理者のみ）")
+    @app_commands.default_permissions(administrator=True)
+    async def add_shop(self, interaction: discord.Interaction, ロール: discord.Role, 価格: int, 説明: str):
+        await interaction.response.defer(ephemeral=True)
+        shop_data = self.load_shop()
+        shop_data.append({"id": str(ロール.id), "name": ロール.name, "price": 価格, "desc": 説明})
+        self.save_shop(shop_data); self.update_web_data()
+        await interaction.followup.send(f"✅ 「{ロール.name}」を登録しました。", ephemeral=True)
+
+    @app_commands.command(name="購入案内送信", description="手動でロール購入ボタンをDMします（管理者のみ）")
+    @app_commands.default_permissions(administrator=True)
+    async def send_shop_bill(self, interaction: discord.Interaction, 相手: discord.Member, ロールid: str):
+        shop_data = self.load_shop()
+        item = next((i for i in shop_data if i['id'] == ロールid), None)
+        if not item: return
+        view = ShopBillView(self, item['id'], item['price'], item['name'])
+        embed = discord.Embed(title="🛒 購入手続き", description=f"商品: **{item['name']}**\n価格: **{item['price']}{self.currency}**", color=discord.Color.green())
+        try:
+            await 相手.send(embed=embed, view=view)
+            await interaction.response.send_message(f"✅ {相手.display_name} さんに送信しました。", ephemeral=True)
+        except: await interaction.response.send_message("❌ DM送信に失敗しました。", ephemeral=True)
+
+    # --- 一般ユーザー向けコマンド ---
+
     @app_commands.command(name="所持金", description="所持金を確認します")
     async def wallet(self, interaction: discord.Interaction):
         data = self.load_data()
@@ -463,31 +494,10 @@ class Economy(commands.Cog):
 
     @app_commands.command(name="請求書", description="相手にDMで請求書を送ります")
     async def bill(self, interaction: discord.Interaction, 相手: discord.Member, 金額: int):
+        # 請求書は管理者以外も使う可能性があるためそのまま（必要なら permission を追加してください）
         if 金額 <= 0 or 相手.id == interaction.user.id: return
         view = BillView(self, 金額, interaction.user)
         embed = discord.Embed(title="📄 請求書", description=f"金額: {金額}{self.currency}\n請求者: {interaction.user.display_name}", color=discord.Color.red())
-        try:
-            await 相手.send(embed=embed, view=view)
-            await interaction.response.send_message(f"✅ {相手.display_name} さんに送信しました。", ephemeral=True)
-        except: await interaction.response.send_message("❌ DM送信に失敗しました。", ephemeral=True)
-
-    @app_commands.command(name="ショップ追加", description="Webサイト用販売ロールを登録します（管理者のみ）")
-    @app_commands.default_permissions(administrator=True)
-    async def add_shop(self, interaction: discord.Interaction, ロール: discord.Role, 価格: int, 説明: str):
-        await interaction.response.defer(ephemeral=True)
-        shop_data = self.load_shop()
-        shop_data.append({"id": str(ロール.id), "name": ロール.name, "price": 価格, "desc": 説明})
-        self.save_shop(shop_data); self.update_web_data()
-        await interaction.followup.send(f"✅ 「{ロール.name}」を登録しました。", ephemeral=True)
-
-    @app_commands.command(name="購入案内送信", description="手動でロール購入ボタンをDMします（管理者のみ）")
-    @app_commands.default_permissions(administrator=True)
-    async def send_shop_bill(self, interaction: discord.Interaction, 相手: discord.Member, ロールid: str):
-        shop_data = self.load_shop()
-        item = next((i for i in shop_data if i['id'] == ロールid), None)
-        if not item: return
-        view = ShopBillView(self, item['id'], item['price'], item['name'])
-        embed = discord.Embed(title="🛒 購入手続き", description=f"商品: **{item['name']}**\n価格: **{item['price']}{self.currency}**", color=discord.Color.green())
         try:
             await 相手.send(embed=embed, view=view)
             await interaction.response.send_message(f"✅ {相手.display_name} さんに送信しました。", ephemeral=True)

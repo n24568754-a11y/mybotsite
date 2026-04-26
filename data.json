@@ -1,6 +1,6 @@
 {
   "1368428956214100062": {
-    "money": 96587264,
+    "money": 96598264,
     "last_daily": "2026-04-23T17:55:14.174242",
     "subscriptions": {
       "1496835446448066560": "2026-05-24T01:27:22.210750",
@@ -47,7 +47,12 @@
       "1497206816042647673"
     ],
     "completed_missions": [
-      "m_chat_chars_6240"
+      "m_chat_chars_6240",
+      "m_vc_minutes_7182"
+    ],
+    "claimed_missions": [
+      "m_chat_chars_6240",
+      "m_vc_minutes_7182"
     ]
   },
   "1387724679225278484": {
@@ -78,7 +83,7 @@
     "chat_chars": 139
   },
   "1493287369322004643": {
-    "money": 499,
+    "money": 50499,
     "daily_chat": 449,
     "daily_vc": 54,
     "chat_chars": 449,

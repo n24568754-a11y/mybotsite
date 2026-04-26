@@ -388,7 +388,8 @@
                     <div class="money-display" id="prof-money">0</div>
                     <div style="display: flex; justify-content: space-around; margin-top: 20px; border-top: 1px solid #333; padding-top: 20px;">
                         <div><small>SUBS</small><div id="prof-subs">0</div></div>
-                        <div><small>RANK</small><div id="prof-rank-val">---</div></div>
+                        <div><small>CHAT</small><div id="prof-chat">0</div></div>
+                        <div><small>VC(min)</small><div id="prof-vc">0</div></div>
                     </div>
                     <button class="main-shop-btn" style="margin-top:20px; width:100%;" onclick="showPage('menu-page')">BACK</button>
                 </div>
@@ -569,7 +570,7 @@
             const container = document.getElementById('archive-grid');
             if (!container || !window.USER_PROFILES || !sessionPassword) return;
             container.innerHTML = "";
-            const userInventory = USER_PROFILES[sessionPassword]?.inventory || [];
+            const userInventory = Array.from(new Set(USER_PROFILES[sessionPassword]?.inventory || []));
             GACHA_DATA.forEach(item => {
                 const div = document.createElement('div');
                 const isOwned = userInventory.includes(item.id);
@@ -590,8 +591,8 @@
 
             if (window.MISSIONS_DEF) {
                 Object.entries(window.MISSIONS_DEF).forEach(([m_id, m_info]) => {
-                    // ミッションタイプに応じてボット側の stats オブジェクトから値を取得
                     let key = m_info.type;
+                    // ボットの stats キーに合わせる
                     if (key === "chat_chars") key = "chat";
                     if (key === "vc_minutes") key = "vc";
 
@@ -702,6 +703,7 @@
             if (!pool.length) return alert("EMPTY.");
             document.getElementById('modal-confirm-btn').onclick = async () => { 
                 const pwd = document.getElementById('password-input').value;
+                if (!window.USER_PROFILES[pwd]) { alert("ACCESS DENIED"); return; }
                 sessionPassword = pwd;
                 gachaResult = pool[Math.floor(Math.random() * pool.length)];
                 currentItem = { name: "ガチャ召喚", price: price, id: gachaResult.id };
@@ -733,8 +735,11 @@
             currentItem = { name, price, id };
             document.getElementById('modal-confirm-btn').onclick = async () => { 
                 const pwd = document.getElementById('password-input').value;
-                if(pwd) { sessionPassword = pwd; await executeOrderSilent(pwd); }
+                if (!window.USER_PROFILES[pwd]) { alert("ACCESS DENIED"); return; }
+                sessionPassword = pwd;
+                await executeOrderSilent(pwd);
                 closeModal(); 
+                alert("購入リクエストを送信しました。");
             };
             showModal();
         }
@@ -757,7 +762,8 @@
             document.getElementById('prof-name').innerText = u.name;
             document.getElementById('prof-money').innerText = Number(u.money).toLocaleString();
             document.getElementById('prof-subs').innerText = Object.keys(u.subscriptions || {}).length;
-            document.getElementById('prof-rank-val').innerText = u.rank_name || "---";
+            document.getElementById('prof-chat').innerText = (u.stats?.chat || 0).toLocaleString();
+            document.getElementById('prof-vc').innerText = (u.stats?.vc || 0).toLocaleString();
         }
 
         async function executeOrderSilent(password) {

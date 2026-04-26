@@ -332,6 +332,27 @@
             "goal": 10,
             "type": "chat_chars",
             "is_daily": false
+        },
+        "m_vc_minutes_7182": {
+            "name": "FIRSTCONTACT",
+            "reward": 10000,
+            "goal": 120,
+            "type": "vc_minutes",
+            "is_daily": false
+        },
+        "m_daily_chat_5230": {
+            "name": "今日の調子はどう？",
+            "reward": 500,
+            "goal": 300,
+            "type": "daily_chat",
+            "is_daily": true
+        },
+        "m_daily_vc_3475": {
+            "name": "今日も会えて嬉しいよ♡",
+            "reward": 3000,
+            "goal": 300,
+            "type": "daily_vc",
+            "is_daily": true
         }
     },
     "CURRENCY_NAME": "星",
@@ -339,7 +360,7 @@
         "tenya": {
             "name": "てんや",
             "avatar": "https://cdn.discordapp.com/avatars/1368428956214100062/29a23ac792889cfd274120aa8a823144.png?size=1024",
-            "money": 96587264,
+            "money": 96598264,
             "stats": {
                 "chat": 617,
                 "vc": 473,
@@ -355,9 +376,13 @@
                 "1497206816042647673"
             ],
             "completed_missions": [
-                "m_chat_chars_6240"
+                "m_chat_chars_6240",
+                "m_vc_minutes_7182"
             ],
-            "claimed_missions": []
+            "claimed_missions": [
+                "m_chat_chars_6240",
+                "m_vc_minutes_7182"
+            ]
         },
         "age0309": {
             "name": "m!dc",
@@ -381,7 +406,7 @@
         "xx1104": {
             "name": "愛＄",
             "avatar": "https://cdn.discordapp.com/avatars/1493287369322004643/0fcf097273556a098d5f3fb9814a94fe.png?size=1024",
-            "money": 499,
+            "money": 50499,
             "stats": {
                 "chat": 449,
                 "vc": 54,
