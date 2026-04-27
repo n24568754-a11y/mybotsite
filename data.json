@@ -33,10 +33,10 @@
       "1497206908006957066": "2026-05-26T23:01:56.627871",
       "1497206816042647673": "2026-05-27T00:32:58.735385"
     },
-    "daily_chat": 131,
-    "daily_vc": 107,
-    "chat_chars": 1046,
-    "vc_minutes": 673,
+    "daily_chat": 183,
+    "daily_vc": 363,
+    "chat_chars": 1098,
+    "vc_minutes": 929,
     "send_money_total": 1000000,
     "gacha_count": 17,
     "inventory": [
@@ -58,7 +58,9 @@
     ],
     "completed_missions": [
       "m_chat_chars_6240",
-      "m_vc_minutes_7182"
+      "m_vc_minutes_7182",
+      "m_daily_vc_3475",
+      "m_daily_vc_8990"
     ],
     "claimed_missions": [
       "m_chat_chars_6240",
@@ -66,8 +68,8 @@
       "m_daily_chat_5230",
       "m_daily_vc_3475"
     ],
-    "chat": 1046,
-    "vc": 673
+    "chat": 1098,
+    "vc": 929
   },
   "1387724679225278484": {
     "money": 2800800,
@@ -87,8 +89,8 @@
       "1497205425274224821": "2026-05-26T22:45:29.314302"
     },
     "daily_chat": 318,
-    "daily_vc": 106,
-    "vc_minutes": 365,
+    "daily_vc": 367,
+    "vc_minutes": 626,
     "gacha_count": 4,
     "inventory": [
       "1497207151016542349",
@@ -98,18 +100,20 @@
     ],
     "chat_chars": 577,
     "chat": 577,
-    "vc": 365,
+    "vc": 626,
     "completed_missions": [
       "m_chat_chars_6240",
       "m_vc_minutes_7182",
-      "m_daily_chat_5230"
+      "m_daily_chat_5230",
+      "m_daily_vc_3475",
+      "m_daily_vc_8990"
     ]
   },
   "1493287369322004643": {
     "money": 51010,
-    "daily_chat": 0,
-    "daily_vc": 0,
-    "chat_chars": 449,
+    "daily_chat": 552,
+    "daily_vc": 80,
+    "chat_chars": 1001,
     "gacha_count": 2,
     "inventory": [
       "1497207507528192031",
@@ -119,9 +123,14 @@
       "1497207507528192031": "2026-05-26T05:08:13.974547",
       "1497207225255727224": "2026-05-26T05:08:32.853244"
     },
-    "vc_minutes": 54,
-    "chat": 449,
-    "vc": 54
+    "vc_minutes": 134,
+    "chat": 1001,
+    "vc": 134,
+    "completed_missions": [
+      "m_chat_chars_6240",
+      "m_daily_chat_5230",
+      "m_vc_minutes_7182"
+    ]
   },
   "1393702468600336586": {
     "money": 30000,

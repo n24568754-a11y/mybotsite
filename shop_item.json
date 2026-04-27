@@ -369,10 +369,10 @@
             "avatar": "https://cdn.discordapp.com/avatars/1368428956214100062/29a23ac792889cfd274120aa8a823144.png?size=1024",
             "money": 96461764,
             "stats": {
-                "chat": 1046,
-                "vc": 673,
-                "daily_chat": 131,
-                "daily_vc": 107,
+                "chat": 1098,
+                "vc": 929,
+                "daily_chat": 183,
+                "daily_vc": 363,
                 "send_money_total": 1000000
             },
             "inventory": [
@@ -425,7 +425,9 @@
             },
             "completed_missions": [
                 "m_chat_chars_6240",
-                "m_vc_minutes_7182"
+                "m_vc_minutes_7182",
+                "m_daily_vc_3475",
+                "m_daily_vc_8990"
             ],
             "claimed_missions": [
                 "m_chat_chars_6240",
@@ -440,9 +442,9 @@
             "money": 2800800,
             "stats": {
                 "chat": 577,
-                "vc": 365,
+                "vc": 626,
                 "daily_chat": 318,
-                "daily_vc": 106,
+                "daily_vc": 367,
                 "send_money_total": 0
             },
             "inventory": [
@@ -468,7 +470,9 @@
             "completed_missions": [
                 "m_chat_chars_6240",
                 "m_vc_minutes_7182",
-                "m_daily_chat_5230"
+                "m_daily_chat_5230",
+                "m_daily_vc_3475",
+                "m_daily_vc_8990"
             ],
             "claimed_missions": []
         },
@@ -477,10 +481,10 @@
             "avatar": "https://cdn.discordapp.com/avatars/1493287369322004643/0fcf097273556a098d5f3fb9814a94fe.png?size=1024",
             "money": 51010,
             "stats": {
-                "chat": 449,
-                "vc": 54,
-                "daily_chat": 0,
-                "daily_vc": 0,
+                "chat": 1001,
+                "vc": 134,
+                "daily_chat": 552,
+                "daily_vc": 80,
                 "send_money_total": 0
             },
             "inventory": [
@@ -491,7 +495,11 @@
                 "1497207507528192031": "2026-05-26T05:08:13.974547",
                 "1497207225255727224": "2026-05-26T05:08:32.853244"
             },
-            "completed_missions": [],
+            "completed_missions": [
+                "m_chat_chars_6240",
+                "m_daily_chat_5230",
+                "m_vc_minutes_7182"
+            ],
             "claimed_missions": []
         },
         "lirve192": {
