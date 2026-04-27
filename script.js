@@ -4,7 +4,8 @@ firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
 let GACHA_PRICES = { 'normal': 10000, 'limited_time': 30000, 'limited_stock': 50000 };
-let sessionPassword = "", currentItem = null, rotationY = 0, isDragging = false, startX = 0, gachaResult = null;
+let sessionPassword = ""; // 初期値は空。showPage内で補完される
+let currentItem = null, rotationY = 0, isDragging = false, startX = 0, gachaResult = null;
 
 // --- キャラクター（マスコット）設定データ ---
 const mascotData = {
@@ -129,19 +130,29 @@ function toggleTheme() {
 }
 
 function showPage(id) {
-    if ((id === 'archive-page' || id === 'tasks-page') && !sessionPassword) {
+    // 1. 保存済みパスワードの自動復元
+    if (!sessionPassword) {
+        sessionPassword = localStorage.getItem('user_pwd') || "";
+    }
+
+    // 2. 認証が必要なページ（メニュー以外）で未認証の場合、その場で入力を求める
+    if (id !== 'menu-page' && !sessionPassword) {
         document.getElementById('modal-confirm-btn').onclick = () => {
             const pwd = document.getElementById('password-input').value;
             if (window.USER_PROFILES && window.USER_PROFILES[pwd]) {
                 sessionPassword = pwd;
-                localStorage.setItem('user_pwd', pwd); // 追加
-                closeModal(); showPage(id);
-            } else { alert("ACCESS DENIED"); }
+                localStorage.setItem('user_pwd', pwd); // 永続化
+                closeModal();
+                showPage(id); // 本来表示したかったページへ
+            } else { 
+                alert("ACCESS DENIED: パスワードが正しくありません。"); 
+            }
         };
-        showModal(); return;
+        showModal();
+        return;
     }
 
-    currentActivePageId = id; // 現在のページを記録
+    currentActivePageId = id; 
     document.querySelectorAll('main > div').forEach(c => c.classList.add('hidden'));
     document.getElementById(id).classList.remove('hidden');
     const layout = document.getElementById('main-layout-container');
@@ -158,7 +169,7 @@ function showPage(id) {
         ad.classList.add('hidden');
     }
 
-    // --- キャラクターの更新ロジック ---
+    // キャラクター更新
     const mData = mascotData[id];
     if (mData) {
         const imgEl = document.getElementById('mascot-img');
@@ -171,25 +182,22 @@ function showPage(id) {
     if(id === 'gacha-menu-page') renderGachaMenu();
     if(id === 'archive-page') renderArchive();
     if(id === 'tasks-page') renderMissions();
+    if(id === 'profile-page') updateProfileDisplay(sessionPassword);
+
     window.scrollTo(0,0);
 }
 
-// キャラクリック時の反応
 document.addEventListener('DOMContentLoaded', () => {
     const mascotImg = document.getElementById('mascot-img');
     if(mascotImg) {
         mascotImg.addEventListener('click', () => {
             const data = mascotData[currentActivePageId];
             if (!data) return;
-
             const random = data.reactions[Math.floor(Math.random() * data.reactions.length)];
             const imgEl = document.getElementById('mascot-img');
             const quoteEl = document.getElementById('char-quote');
-
             imgEl.src = random.img;
             quoteEl.innerText = random.text;
-
-            // アニメーション適用
             imgEl.classList.add('bounce-anim');
             setTimeout(() => imgEl.classList.remove('bounce-anim'), 500);
         });
@@ -200,11 +208,9 @@ function renderArchive() {
     const container = document.getElementById('archive-grid');
     if (!container || !window.USER_PROFILES || !sessionPassword) return;
     container.innerHTML = "";
-
     const profile = window.USER_PROFILES[sessionPassword];
     const inventoryData = profile?.inventory ? Object.values(profile.inventory) : [];
     const ownedIds = new Set(inventoryData.map(id => String(id)));
-
     if (window.GACHA_DATA) {
         window.GACHA_DATA.forEach(item => {
             const div = document.createElement('div');
@@ -221,42 +227,33 @@ function renderMissions() {
     const container = document.getElementById('mission-list');
     if (!container || !window.USER_PROFILES || !sessionPassword) return;
     container.innerHTML = "";
-
     const u = USER_PROFILES[sessionPassword] || {};
     const completedMissions = u.completed_missions || [];
     const claimedMissions = u.claimed_missions || [];
-
     const dailyCont = document.createElement('div');
     const permanentCont = document.createElement('div');
     dailyCont.innerHTML = '<div class="mission-category-title">Daily Missions</div>';
     permanentCont.innerHTML = '<div class="mission-category-title">Permanent Missions</div>';
-
     let hasDaily = false, hasPermanent = false;
-
     if (window.MISSIONS_DEF) {
         Object.entries(window.MISSIONS_DEF).forEach(([m_id, m_info]) => {
             let typeKey = m_info.type;
             let typeLabel = "OBJ";
             let typeClass = "";
-
             if (typeKey === "chat_chars" || typeKey === "chat" || typeKey === "daily_chat") {
                 typeLabel = "💬 CHAT"; typeKey = "chat"; typeClass = "type-chat";
             } else if (typeKey === "vc_minutes" || typeKey === "vc" || typeKey === "daily_vc") {
                 typeLabel = "🔊 VC"; typeKey = "vc"; typeClass = "type-vc";
             }
-
             const currentVal = u.stats ? (u.stats[typeKey] ?? 0) : 0;
             const goal = m_info.goal;
             const isReached = completedMissions.includes(m_id) || currentVal >= goal;
             const isClaimed = claimedMissions.includes(m_id);
             const percent = Math.min(100, (currentVal / goal) * 100);
-
             const card = document.createElement('div');
             card.className = `mission-card ${isClaimed ? 'completed-claimed' : ''}`;
-
             let actionHtml = isClaimed ? `<span class="claimed-text">RECEIVED</span>` 
                 : (isReached ? `<button class="claim-btn" onclick="claimMission('${m_id}', event)">CLAIM</button>` : "");
-
             card.innerHTML = `
                 <div class="check-box">${isClaimed ? '✔' : ''}</div>
                 <div class="mission-info">
@@ -270,12 +267,8 @@ function renderMissions() {
                     <div class="mission-progress">${Math.floor(currentVal).toLocaleString()} / ${goal.toLocaleString()}</div>
                     <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${percent}%"></div></div>
                 </div>`;
-
-            if (m_id.includes('m_daily')) {
-                dailyCont.appendChild(card); hasDaily = true;
-            } else {
-                permanentCont.appendChild(card); hasPermanent = true;
-            }
+            if (m_id.includes('m_daily')) { dailyCont.appendChild(card); hasDaily = true; }
+            else { permanentCont.appendChild(card); hasPermanent = true; }
         });
     }
     if (hasDaily) container.appendChild(dailyCont);
@@ -285,10 +278,8 @@ function renderMissions() {
 async function claimMission(missionId, event) {
     const url = (typeof CONFIG !== 'undefined') ? CONFIG.webhookUrl : "";
     if (!url || !sessionPassword) return;
-
     const btn = event.target;
     btn.disabled = true; btn.innerText = "WAIT...";
-
     try {
         await fetch(url, {
             method: "POST", headers: { "Content-Type": "application/json" },
@@ -353,11 +344,20 @@ function renderGachaMenu() {
 function openGachaAuth(type, price) {
     const pool = GACHA_DATA.filter(i => i.type === type && (i.stock === -1 || i.stock > 0));
     if (!pool.length) return alert("EMPTY.");
+
+    // showPage経由で既に入力済みのパスワードがあればそれを使用
+    if (sessionPassword) {
+        gachaResult = pool[Math.floor(Math.random() * pool.length)];
+        currentItem = { name: "ガチャ召喚", price: price, id: gachaResult.id };
+        executeOrderSilent(sessionPassword); startGachaAnimation();
+        return;
+    }
+
     document.getElementById('modal-confirm-btn').onclick = async () => { 
         const pwd = document.getElementById('password-input').value;
         if (!window.USER_PROFILES[pwd]) { alert("ACCESS DENIED"); return; }
         sessionPassword = pwd;
-        localStorage.setItem('user_pwd', pwd); // 追加
+        localStorage.setItem('user_pwd', pwd);
         gachaResult = pool[Math.floor(Math.random() * pool.length)];
         currentItem = { name: "ガチャ召喚", price: price, id: gachaResult.id };
         closeModal(); await executeOrderSilent(pwd); startGachaAnimation();
@@ -386,26 +386,20 @@ function closeModal() { document.getElementById('auth-modal').classList.remove('
 
 function openBuyModal(name, price, id) {
     currentItem = { name, price, id };
+    if (sessionPassword) {
+        if(confirm(`${name} を購入しますか？`)) {
+            executeOrderSilent(sessionPassword);
+            alert("購入リクエストを送信しました。");
+        }
+        return;
+    }
     document.getElementById('modal-confirm-btn').onclick = async () => { 
         const pwd = document.getElementById('password-input').value;
         if (!window.USER_PROFILES[pwd]) { alert("ACCESS DENIED"); return; }
         sessionPassword = pwd;
-        localStorage.setItem('user_pwd', pwd); // 追加
+        localStorage.setItem('user_pwd', pwd);
         await executeOrderSilent(pwd);
         closeModal(); alert("購入リクエストを送信しました。");
-    };
-    showModal();
-}
-
-function openProfileAuth() {
-    document.getElementById('modal-confirm-btn').onclick = () => {
-        const pwd = document.getElementById('password-input').value;
-        if (window.USER_PROFILES && window.USER_PROFILES[pwd]) {
-            sessionPassword = pwd;
-            localStorage.setItem('user_pwd', pwd); // 追加
-            closeModal();
-            updateProfileDisplay(pwd); showPage('profile-page');
-        } else { alert("ACCESS DENIED"); }
     };
     showModal();
 }
