@@ -367,11 +367,11 @@
         "tenya": {
             "name": "てんや",
             "avatar": "https://cdn.discordapp.com/avatars/1368428956214100062/29a23ac792889cfd274120aa8a823144.png?size=1024",
-            "money": 96452264,
+            "money": 96448264,
             "stats": {
-                "chat": 1098,
+                "chat": 1454,
                 "vc": 929,
-                "daily_chat": 183,
+                "daily_chat": 539,
                 "daily_vc": 363,
                 "send_money_total": 1000000
             },
@@ -428,7 +428,8 @@
                 "m_chat_chars_6240",
                 "m_vc_minutes_7182",
                 "m_daily_vc_3475",
-                "m_daily_vc_8990"
+                "m_daily_vc_8990",
+                "m_daily_chat_5230"
             ],
             "claimed_missions": [
                 "m_chat_chars_6240",

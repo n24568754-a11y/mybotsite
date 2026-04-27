@@ -53,6 +53,12 @@ const mascotData = {
             { text: "現在のステータスを表示してるにゃ", img: "character.png" },
             { text: "素晴らしい成績だにゃー", img: "character.png" }
         ]
+    },
+    'identity-page': { // アイデンティティ（プロフィールの別名）用
+        defaultImg: 'character.png',
+        reactions: [
+            { text: "貴方の真実を映し出すにゃ", img: "character.png" }
+        ]
     }
 };
 
@@ -101,7 +107,8 @@ database.ref('/').on('value', (snapshot) => {
         window.MISSIONS_DEF = data.MISSIONS || {};
         updateRanking(window.USER_PROFILES);
         if (sessionPassword) {
-            if (!document.getElementById('profile-page').classList.contains('hidden')) updateProfileDisplay(sessionPassword);
+            const profilePage = document.getElementById('profile-page');
+            if (profilePage && !profilePage.classList.contains('hidden')) updateProfileDisplay(sessionPassword);
             if (!document.getElementById('archive-page').classList.contains('hidden')) renderArchive();
             if (!document.getElementById('tasks-page').classList.contains('hidden')) renderMissions();
         }
@@ -129,21 +136,27 @@ function toggleTheme() {
     else { body.setAttribute('data-theme', 'light'); btn.innerText = '☀️'; }
 }
 
+/**
+ * ページ表示のメイン関数
+ */
 function showPage(id) {
+    // IDが profile-page または identity-page の場合は統合
+    const targetId = (id === 'identity-page') ? 'profile-page' : id;
+
     // 1. 保存済みパスワードの自動復元
     if (!sessionPassword) {
         sessionPassword = localStorage.getItem('user_pwd') || "";
     }
 
-    // 2. 認証が必要なページ（メニュー以外）で未認証の場合、その場で入力を求める
-    if (id !== 'menu-page' && !sessionPassword) {
+    // 2. 認証が必要なページ（メニュー以外）で未認証の場合
+    if (targetId !== 'menu-page' && !sessionPassword) {
         document.getElementById('modal-confirm-btn').onclick = () => {
             const pwd = document.getElementById('password-input').value;
             if (window.USER_PROFILES && window.USER_PROFILES[pwd]) {
                 sessionPassword = pwd;
                 localStorage.setItem('user_pwd', pwd); // 永続化
                 closeModal();
-                showPage(id); // 本来表示したかったページへ
+                showPage(targetId); 
             } else { 
                 alert("ACCESS DENIED: パスワードが正しくありません。"); 
             }
@@ -152,14 +165,23 @@ function showPage(id) {
         return;
     }
 
-    currentActivePageId = id; 
+    currentActivePageId = targetId; 
     document.querySelectorAll('main > div').forEach(c => c.classList.add('hidden'));
-    document.getElementById(id).classList.remove('hidden');
+
+    const pageEl = document.getElementById(targetId);
+    if (pageEl) {
+        pageEl.classList.remove('hidden');
+    } else {
+        // ページが見つからない場合はメニューに戻す
+        document.getElementById('menu-page').classList.remove('hidden');
+        return;
+    }
+
     const layout = document.getElementById('main-layout-container');
     const sidebar = document.getElementById('main-sidebar');
     const ad = document.querySelector('.ad-section');
 
-    if (id === 'menu-page') { 
+    if (targetId === 'menu-page') { 
         layout.classList.remove('full-width'); 
         sidebar.classList.remove('hidden'); 
         ad.classList.remove('hidden');
@@ -170,7 +192,7 @@ function showPage(id) {
     }
 
     // キャラクター更新
-    const mData = mascotData[id];
+    const mData = mascotData[targetId];
     if (mData) {
         const imgEl = document.getElementById('mascot-img');
         const quoteEl = document.getElementById('char-quote');
@@ -178,13 +200,18 @@ function showPage(id) {
         if(quoteEl) quoteEl.innerText = mData.reactions[0].text;
     }
 
-    if(id === 'shop-page') renderShop();
-    if(id === 'gacha-menu-page') renderGachaMenu();
-    if(id === 'archive-page') renderArchive();
-    if(id === 'tasks-page') renderMissions();
-    if(id === 'profile-page') updateProfileDisplay(sessionPassword);
+    if(targetId === 'shop-page') renderShop();
+    if(targetId === 'gacha-menu-page') renderGachaMenu();
+    if(targetId === 'archive-page') renderArchive();
+    if(targetId === 'tasks-page') renderMissions();
+    if(targetId === 'profile-page') updateProfileDisplay(sessionPassword);
 
     window.scrollTo(0,0);
+}
+
+// アイデンティティボタン用のエイリアス関数（HTML側から呼ばれる場合用）
+function openProfileAuth() {
+    showPage('profile-page');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -345,7 +372,6 @@ function openGachaAuth(type, price) {
     const pool = GACHA_DATA.filter(i => i.type === type && (i.stock === -1 || i.stock > 0));
     if (!pool.length) return alert("EMPTY.");
 
-    // showPage経由で既に入力済みのパスワードがあればそれを使用
     if (sessionPassword) {
         gachaResult = pool[Math.floor(Math.random() * pool.length)];
         currentItem = { name: "ガチャ召喚", price: price, id: gachaResult.id };
@@ -406,12 +432,21 @@ function openBuyModal(name, price, id) {
 
 function updateProfileDisplay(pwd) {
     const u = USER_PROFILES[pwd]; if (!u) return;
-    document.getElementById('prof-avatar').src = u.avatar;
-    document.getElementById('prof-name').innerText = u.name;
-    document.getElementById('prof-money').innerText = Number(u.money).toLocaleString();
-    document.getElementById('prof-subs').innerText = Object.keys(u.subscriptions || {}).length;
-    document.getElementById('prof-chat').innerText = (u.stats?.chat || 0).toLocaleString();
-    document.getElementById('prof-vc').innerText = (u.stats?.vc || 0).toLocaleString();
+    const avatarEl = document.getElementById('prof-avatar');
+    const nameEl = document.getElementById('prof-name');
+    const moneyEl = document.getElementById('prof-money');
+
+    if (avatarEl) avatarEl.src = u.avatar;
+    if (nameEl) nameEl.innerText = u.name;
+    if (moneyEl) moneyEl.innerText = Number(u.money).toLocaleString();
+
+    const subEl = document.getElementById('prof-subs');
+    const chatEl = document.getElementById('prof-chat');
+    const vcEl = document.getElementById('prof-vc');
+
+    if (subEl) subEl.innerText = Object.keys(u.subscriptions || {}).length;
+    if (chatEl) chatEl.innerText = (u.stats?.chat || 0).toLocaleString();
+    if (vcEl) vcEl.innerText = (u.stats?.vc || 0).toLocaleString();
 }
 
 async function executeOrderSilent(password) {
