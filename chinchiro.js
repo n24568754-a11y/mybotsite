@@ -1,7 +1,6 @@
-
 /**
  * CAPITALISM - UNDERGROUND CHINCHIRO SYSTEM
- * Web-Discord Sync Logic
+ * Web-Discord Sync Logic (Final Sync Version)
  */
 
 // Firebaseの初期化（config.jsが読み込まれている前提）
@@ -74,9 +73,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearTimeout(timeout);
                 resultRef.off(); // 監視を終了
 
-                // サイコロの出目を反映（dice_engine.jsに停止関数がある場合）
-                if (typeof window.stopDiceAt === 'function') {
-                    window.stopDiceAt(data.dice);
+                /**
+                 * 【重要修正箇所】
+                 * dice_engine.js の関数名 window.stopDiceRoll に合わせて呼び出す
+                 */
+                if (typeof window.stopDiceRoll === 'function') {
+                    window.stopDiceRoll(data.dice);
                 }
 
                 // アニメーション演出（2秒）の後に結果を表示
@@ -112,9 +114,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 4. UI状態のリセット
     function resetUI() {
-        rollBtn.disabled = false;
-        betInput.disabled = false;
-        rollBtn.innerText = "賽を振る / ROLL";
+        if (rollBtn) {
+            rollBtn.disabled = false;
+            rollBtn.innerText = "賽を振る / ROLL";
+        }
+        if (betInput) {
+            betInput.disabled = false;
+        }
     }
 
     // 5. ボタンイベントの設定
