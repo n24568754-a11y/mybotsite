@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 /**
- * VOID PLATFORM - 3D DICE ENGINE (Image-free Version)
+ * VOID PLATFORM - 3D DICE ENGINE (High-Visibility Version)
  */
 
 const scene = new THREE.Scene();
@@ -15,36 +15,30 @@ renderer.setSize(container.clientWidth, container.clientHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 container.appendChild(renderer.domElement);
 
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+// ライトを少し強めに調整
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
 scene.add(ambientLight);
 
-const purpleLight = new THREE.PointLight(0x8a2be2, 3, 15);
+const purpleLight = new THREE.PointLight(0x8a2be2, 5, 20);
 purpleLight.position.set(2, 3, 4);
 scene.add(purpleLight);
 
 const diceArray = [];
 const geometry = new THREE.BoxGeometry(1, 1, 1);
 
-// 各面に対応する回転角度（ボットの結果を上に向けるための定義）
 const faceRotations = {
-    1: { x: 0,           y: 0 },             // 前面
-    2: { x: -Math.PI / 2, y: 0 },            // 底面が前にくる -> 上が2
-    3: { x: 0,           y: Math.PI / 2 },    // 右面が前にくる -> 上が3
-    4: { x: 0,           y: -Math.PI / 2 },   // 左面が前にくる -> 上が4
-    5: { x: Math.PI / 2,  y: 0 },            // 天面が前にくる -> 上が5
-    6: { x: Math.PI,      y: 0 }             // 背面が前にくる -> 上が6
+    1: { x: 0,           y: 0 },             
+    2: { x: -Math.PI / 2, y: 0 },            
+    3: { x: 0,           y: Math.PI / 2 },    
+    4: { x: 0,           y: -Math.PI / 2 },   
+    5: { x: Math.PI / 2,  y: 0 },            
+    6: { x: Math.PI,      y: 0 }             
 };
 
 /**
- * 画像を使わずにサイコロのテクスチャをCanvasで生成する
+ * 目をハッキリと発光させるマテリアル作成
  */
 function createDiceMaterials() {
-    const canvas = document.createElement('canvas');
-    canvas.width = 128;
-    canvas.height = 128;
-    const ctx = canvas.getContext('2d');
-
-    // サイコロの目の配置データ
     const dotPositions = [
         [], // 0
         [[64, 64]], // 1
@@ -55,36 +49,40 @@ function createDiceMaterials() {
         [[32, 32], [32, 64], [32, 96], [96, 32], [96, 64], [96, 96]] // 6
     ];
 
-    // 各面のテクスチャを生成（全6面）
     return dotPositions.slice(1).map((dots) => {
-        // 背景（漆黒）
-        ctx.fillStyle = '#0a0a0a';
+        const canvas = document.createElement('canvas');
+        canvas.width = 128;
+        canvas.height = 128;
+        const ctx = canvas.getContext('2d');
+
+        // 背景：完全な黒
+        ctx.fillStyle = '#000000';
         ctx.fillRect(0, 0, 128, 128);
 
-        // 枠線（魔力的な紫）
+        // 枠線：紫
         ctx.strokeStyle = '#8a2be2';
-        ctx.lineWidth = 6;
-        ctx.strokeRect(4, 4, 120, 120);
+        ctx.lineWidth = 10;
+        ctx.strokeRect(5, 5, 118, 118);
 
-        // 目（白点）
+        // 目：白（少し大きく、ハッキリと）
         ctx.fillStyle = '#ffffff';
         dots.forEach(([x, y]) => {
             ctx.beginPath();
-            ctx.arc(x, y, 12, 0, Math.PI * 2);
+            ctx.arc(x, y, 16, 0, Math.PI * 2);
             ctx.fill();
-            // 目の周りにかすかな光
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = '#8a2be2';
         });
-        ctx.shadowBlur = 0; // リセット
 
-        const texture = new THREE.CanvasTexture(canvas.cloneNode(true));
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.needsUpdate = true; // 確実にテクスチャを更新
+
         return new THREE.MeshStandardMaterial({
             map: texture,
-            emissive: 0x8a2be2,
-            emissiveIntensity: 0.2,
+            emissiveMap: texture, // 白い目の部分を自ら光らせる
+            emissive: 0xffffff,   // 発光色を白に
+            emissiveIntensity: 0.4,
             roughness: 0.1,
-            metalness: 0.5
+            metalness: 0.5,
+            side: THREE.DoubleSide // 面が裏返っていても表示する
         });
     });
 }
@@ -94,13 +92,11 @@ function spawnDice(x) {
     const mesh = new THREE.Mesh(geometry, materials);
     mesh.position.x = x;
     mesh.position.y = 0;
-    // 初期角度をランダムに
     mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
     scene.add(mesh);
     return mesh;
 }
 
-// 3つのサイコロを配置
 diceArray.push(spawnDice(-1.8));
 diceArray.push(spawnDice(0));
 diceArray.push(spawnDice(1.8));
@@ -117,11 +113,9 @@ function animate() {
             d.rotation.x += rollSpeed;
             d.rotation.y += rollSpeed * 1.2;
             d.rotation.z += rollSpeed * 0.8;
-            // 跳ねる動き
             d.position.y = Math.abs(Math.sin(Date.now() * 0.015 + i)) * 0.5;
         } else {
             rollSpeed = 0;
-            // 待機中のゆらゆらした動き
             d.rotation.y += 0.005 * (i + 1);
             d.position.y = Math.sin(Date.now() * 0.001 + i) * 0.1;
         }
@@ -142,20 +136,16 @@ window.startDiceRoll = function() {
 
 window.stopDiceRoll = function(resultDice) {
     isRolling = false;
-
     if (resultDice && Array.isArray(resultDice)) {
         diceArray.forEach((d, i) => {
             const val = resultDice[i];
             const rot = faceRotations[val];
             if (rot) {
-                // 結果の角度へ固定
                 d.rotation.set(rot.x, rot.y, 0);
                 d.position.y = 0; 
             }
         });
         console.log(`🎲 結果固定: ${resultDice}`);
-    } else {
-        console.log("🎲 演出停止");
     }
 };
 
