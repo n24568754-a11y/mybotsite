@@ -6,6 +6,14 @@
     <link rel="icon" href="data:,">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.150.1/build/three.module.js"
+        }
+      }
+    </script>
 </head>
 <body>
 
@@ -26,6 +34,10 @@
                 <div class="nav-btn-wrapper">
                     <button class="nav-item-fantasy nav-gacha" onclick="showPage('gacha-menu-page')"></button>
                     <span class="nav-label">GACHA</span>
+                </div>
+                <div class="nav-btn-wrapper">
+                    <button class="nav-item-fantasy nav-chinchiro" onclick="location.href='chinchiro.html'"></button>
+                    <span class="nav-label">CHINCHIRO</span>
                 </div>
                 <div class="nav-btn-wrapper">
                     <button class="nav-item-fantasy nav-archive" onclick="showPage('archive-page')"></button>

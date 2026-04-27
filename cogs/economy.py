@@ -144,6 +144,7 @@ class Economy(commands.Cog):
         self.check_subs.start()
         self.vc_tracking.start()
         self.daily_reset_task.start()
+        self.web_request_watcher.start() # Web監視タスクの開始
         self._load_config()
 
     def _load_config(self):
@@ -237,6 +238,8 @@ class Economy(commands.Cog):
         if message.author.bot:
             if message.content.startswith("!pay_req"): await self.handle_web_payment(message)
             elif message.content.startswith("!mission_pay"): await self.handle_mission_reward(message)
+            # --- チンチロリクエストの追加 ---
+            elif message.content.startswith("!chinchiro_req"): await self.handle_chinchiro_payment(message)
             return
         data = self.load_data()
         uid = str(message.author.id)
@@ -249,7 +252,6 @@ class Economy(commands.Cog):
         data[uid]['daily_chat'] = data[uid].get('daily_chat', 0) + length
 
         # --- 統計の不整合修正ロジック ---
-        # 累計(chat)がデイリー(daily_chat)より少ない場合、デイリーに合わせる
         if data[uid]['chat'] < data[uid]['daily_chat']:
             data[uid]['chat'] = data[uid]['daily_chat']
             data[uid]['chat_chars'] = data[uid]['daily_chat']
@@ -332,6 +334,75 @@ class Economy(commands.Cog):
             await message.channel.send(f"💳 <@{uid}> が {item_name} を購入！")
         except: pass
 
+    # --- チンチロリクエスト処理 ---
+    async def handle_chinchiro_payment(self, message):
+        try:
+            # 形式: !chinchiro_req パスワード BET額
+            parts = message.content.split()
+            if len(parts) < 3: return
+            pwd, bet_amount = parts[1], int(parts[2])
+
+            auth_data = self.load_auth()
+            uid = next((u for u, p in auth_data.items() if p == pwd), None)
+            if not uid: return
+
+            data = self.load_data()
+            if data.get(uid, {}).get('money', 0) < bet_amount:
+                await message.channel.send(f"❌ <@{uid}> 所持金が足りません！")
+                return
+
+            # ダイスを振る
+            dice = [random.randint(1, 6) for _ in range(3)]
+            dice.sort()
+
+            result_text = "役なし"
+            multiplier = -1 # 基本は没収
+
+            # 判定ロジック
+            if dice == [1, 1, 1]:
+                result_text = "ピンゾロ (5倍)"
+                multiplier = 5
+            elif dice[0] == dice[1] == dice[2]:
+                result_text = f"ゾロ目({dice[0]}) (3倍)"
+                multiplier = 3
+            elif dice == [4, 5, 6]:
+                result_text = "シゴロ (2倍)"
+                multiplier = 2
+            elif dice == [1, 2, 3]:
+                result_text = "ヒフミ (2倍払い)"
+                multiplier = -2
+            elif dice[0] == dice[1]: # 2つ一致
+                point = dice[2]
+                result_text = f"{point}の目"
+                multiplier = 1 if point >= 4 else -1
+            elif dice[1] == dice[2]: # 2つ一致
+                point = dice[0]
+                result_text = f"{point}の目"
+                multiplier = 1 if point >= 4 else -1
+
+            change = bet_amount * multiplier
+            data[uid]['money'] += change
+
+            self.save_data(data)
+            self.update_web_data()
+
+            # Firebaseの特定のパスに結果を書き込む（Web側でのアニメーション同期用）
+            db.reference(f'CHINCHIRO_LAST_RESULT/{pwd}').set({
+                "dice": dice,
+                "result": result_text,
+                "change": change,
+                "timestamp": datetime.now().isoformat()
+            })
+
+            await message.channel.send(
+                f"🎲 **UNDERGROUND CHINCHIRO** 🎲\n"
+                f"Player: <@{uid}>\n"
+                f"Dices: [{', '.join(map(str, dice))}]\n"
+                f"Result: **{result_text}**\n"
+                f"Payout: **{change} {self.currency}**"
+            )
+        except Exception as e: print(f"Chinchiro Error: {e}")
+
     @tasks.loop(minutes=1)
     async def vc_tracking(self):
         data, updated = self.load_data(), False
@@ -346,7 +417,6 @@ class Economy(commands.Cog):
                     data[uid]['vc_minutes'] = data[uid].get('vc_minutes', 0) + 1
                     data[uid]['daily_vc'] = data[uid].get('daily_vc', 0) + 1
 
-                    # VCでも不整合修復
                     if data[uid]['vc'] < data[uid]['daily_vc']:
                         data[uid]['vc'] = data[uid]['daily_vc']
                         data[uid]['vc_minutes'] = data[uid]['daily_vc']
@@ -379,12 +449,10 @@ class Economy(commands.Cog):
         data = self.load_data()
         fixed = 0
         for uid in data:
-            # チャット修復
             if data[uid].get('chat', 0) < data[uid].get('daily_chat', 0):
                 data[uid]['chat'] = data[uid]['daily_chat']
                 data[uid]['chat_chars'] = data[uid]['daily_chat']
                 fixed += 1
-            # VC修復
             if data[uid].get('vc', 0) < data[uid].get('daily_vc', 0):
                 data[uid]['vc'] = data[uid]['daily_vc']
                 data[uid]['vc_minutes'] = data[uid]['daily_vc']
@@ -555,6 +623,38 @@ class Economy(commands.Cog):
             await 相手.send(embed=embed, view=view)
             await interaction.response.send_message(f"✅ {相手.display_name} さんに送信しました。", ephemeral=True)
         except: await interaction.response.send_message("❌ DM送信に失敗しました。", ephemeral=True)
+
+    # --- Webリクエスト監視タスク ---
+    @tasks.loop(seconds=1)
+    async def web_request_watcher(self):
+        try:
+            ref = db.reference('CHINCHIRO_SYSTEM/REQUESTS')
+            requests = ref.get()
+            if not requests: return
+
+            for req_key, val in requests.items():
+                pwd = val.get('pwd')
+                bet = val.get('bet')
+
+                # handle_chinchiro_paymentを再利用するための疑似メッセージ作成
+                class MockMessage:
+                    def __init__(self, content):
+                        self.content = content
+                        self.channel = None
+                        self.author = self # author.bot判定をパスするため
+                        self.bot = True
+
+                    async def send(self, content, **kwargs):
+                        # チャンネル送信の代わりにログ出力（必要なら特定チャンネルへ）
+                        print(f"[WebChinchiro Log]: {content}")
+
+                mock_msg = MockMessage(f"!chinchiro_req {pwd} {bet}")
+                await self.handle_chinchiro_payment(mock_msg)
+
+                # 処理済みリクエストを削除
+                ref.child(req_key).delete()
+        except Exception as e:
+            print(f"Watcher Error: {e}")
 
 async def setup(bot):
     await bot.add_cog(Auth(bot))

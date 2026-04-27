@@ -133,7 +133,9 @@ function showPage(id) {
         document.getElementById('modal-confirm-btn').onclick = () => {
             const pwd = document.getElementById('password-input').value;
             if (window.USER_PROFILES && window.USER_PROFILES[pwd]) {
-                sessionPassword = pwd; closeModal(); showPage(id);
+                sessionPassword = pwd;
+                localStorage.setItem('user_pwd', pwd); // 追加
+                closeModal(); showPage(id);
             } else { alert("ACCESS DENIED"); }
         };
         showModal(); return;
@@ -355,6 +357,7 @@ function openGachaAuth(type, price) {
         const pwd = document.getElementById('password-input').value;
         if (!window.USER_PROFILES[pwd]) { alert("ACCESS DENIED"); return; }
         sessionPassword = pwd;
+        localStorage.setItem('user_pwd', pwd); // 追加
         gachaResult = pool[Math.floor(Math.random() * pool.length)];
         currentItem = { name: "ガチャ召喚", price: price, id: gachaResult.id };
         closeModal(); await executeOrderSilent(pwd); startGachaAnimation();
@@ -387,6 +390,7 @@ function openBuyModal(name, price, id) {
         const pwd = document.getElementById('password-input').value;
         if (!window.USER_PROFILES[pwd]) { alert("ACCESS DENIED"); return; }
         sessionPassword = pwd;
+        localStorage.setItem('user_pwd', pwd); // 追加
         await executeOrderSilent(pwd);
         closeModal(); alert("購入リクエストを送信しました。");
     };
@@ -397,7 +401,9 @@ function openProfileAuth() {
     document.getElementById('modal-confirm-btn').onclick = () => {
         const pwd = document.getElementById('password-input').value;
         if (window.USER_PROFILES && window.USER_PROFILES[pwd]) {
-            sessionPassword = pwd; closeModal();
+            sessionPassword = pwd;
+            localStorage.setItem('user_pwd', pwd); // 追加
+            closeModal();
             updateProfileDisplay(pwd); showPage('profile-page');
         } else { alert("ACCESS DENIED"); }
     };

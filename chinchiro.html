@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>CHINCHIRO - Void Platform</title>
+    <link rel="icon" href="data:,">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.150.1/build/three.module.js"
+        }
+      }
+    </script>
+</head>
+<body>
+
+    <div class="bg-overlay"></div>
+    <div class="particles" id="particle-container"></div>
+
+    <nav class="top-nav-fantasy">
+        <div class="nav-container-fantasy">
+            <div class="nav-links-fantasy">
+                <div class="nav-btn-wrapper">
+                    <button class="nav-item-fantasy nav-home" onclick="location.href='index.html'"></button>
+                    <span class="nav-label">HOME</span>
+                </div>
+                <div class="nav-btn-wrapper">
+                    <button class="nav-item-fantasy nav-shop" onclick="location.href='index.html?page=shop'"></button>
+                    <span class="nav-label">SHOP</span>
+                </div>
+                <div class="nav-btn-wrapper">
+                    <button class="nav-item-fantasy nav-gacha" onclick="location.href='index.html?page=gacha'"></button>
+                    <span class="nav-label">GACHA</span>
+                </div>
+                <div class="nav-btn-wrapper">
+                    <button class="nav-item-fantasy nav-chinchiro active" onclick="location.href='chinchiro.html'"></button>
+                    <span class="nav-label">CHINCHIRO</span>
+                </div>
+                <div class="nav-btn-wrapper">
+                    <button class="nav-item-fantasy nav-archive" onclick="location.href='index.html?page=archive'"></button>
+                    <span class="nav-label">ARCHIVE</span>
+                </div>
+                <div class="nav-btn-wrapper">
+                    <button class="nav-item-fantasy nav-identity" onclick="location.href='index.html?page=profile'"></button>
+                    <span class="nav-label">IDENTITY</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-layout full-width">
+        <main class="container">
+            <h1 class="glitch-text">UNDERGROUND CHINCHIRO</h1>
+            <p style="color: var(--accent-color); letter-spacing: 3px; font-size: 12px;">VOID PROTOCOL // GAMBLE_UNIT</p>
+
+            <div class="chinchiro-container" style="margin-top: 30px;">
+                <div id="dice-container" style="width: 100%; height: 350px; position: relative; background: radial-gradient(circle, #1a1a1a 0%, #000 70%); border-radius: 50%; border: 2px solid var(--accent-color); box-shadow: 0 0 30px rgba(138, 43, 226, 0.3); overflow: hidden; margin: 0 auto;">
+                </div>
+
+                <div class="bet-controls" style="margin-top: 30px; text-align: center;">
+                    <div style="margin-bottom: 15px;">
+                        <span style="color: var(--sub-text); font-size: 14px;">WALLET: </span>
+                        <span id="display-money" style="color: gold; font-family: monospace; font-size: 18px;">0</span> <small>CPL</small>
+                    </div>
+
+                    <input type="number" id="bet-input" class="modal-input" placeholder="BET AMOUNT (CPL)" style="width: 200px; text-align: center; margin-bottom: 20px;">
+                    <br>
+                    <button id="roll-button" class="main-shop-btn" style="padding: 15px 50px;">賽を振る / ROLL</button>
+                </div>
+
+                <div id="result-display" class="status-card hidden" style="margin-top: 20px; animation: fadeIn 0.5s;">
+                    <h2 id="result-rank" style="color: gold; margin: 0;">役名</h2>
+                    <p id="result-detail" style="margin: 5px 0; color: #fff;">出目: 1, 2, 3</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="character-box">
+        <div class="chat-bubble" id="char-quote">さあ、賭け狂いましょう。</div>
+        <img id="mascot-img" src="character.png" class="mascot-img" onerror="this.src='https://via.placeholder.com/280x400?text=Dealer'">
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="config.js"></script>
+
+    <script type="module" src="dice_engine.js"></script>
+
+    <script src="script.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const rollBtn = document.getElementById('roll-button');
+            const betInput = document.getElementById('bet-input');
+            const displayMoney = document.getElementById('display-money');
+            const resultArea = document.getElementById('result-display');
+            const resultRank = document.getElementById('result-rank');
+            const resultDetail = document.getElementById('result-detail');
+
+            // 1. ローカルストレージからパスワードを取得
+            const userPwd = localStorage.getItem('user_pwd');
+
+            // 2. 所持金とボット結果のリアルタイム監視
+            if (userPwd) {
+                // 所持金表示
+                firebase.database().ref(`USER_PROFILES/${userPwd}`).on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        displayMoney.innerText = data.money.toLocaleString();
+                    }
+                });
+
+                // ボットの結果を監視
+                firebase.database().ref(`CHINCHIRO_LAST_RESULT/${userPwd}`).on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (!data) return;
+
+                    // 10秒以上前の古いデータは無視
+                    const resTime = new Date(data.timestamp).getTime();
+                    if (Date.now() - resTime > 10000) return;
+
+                    // 結果が届いたら演出を終了させる
+                    setTimeout(() => {
+                        // dice_engineの停止（機能があれば）
+                        if (window.stopDiceRoll && data.dice) {
+                            window.stopDiceRoll(data.dice);
+                        }
+
+                        resultArea.classList.remove('hidden');
+                        resultRank.innerText = data.result;
+                        resultDetail.innerText = `出目: ${data.dice.join(', ')} / 収支: ${data.change >= 0 ? '+' : ''}${data.change} CPL`;
+
+                        rollBtn.disabled = false;
+                        rollBtn.innerText = "賽を振る / ROLL";
+                    }, 2000); // 最低2秒は回す
+                });
+            }
+
+            // 3. 実行処理
+            rollBtn.addEventListener('click', () => {
+                const amount = parseInt(betInput.value);
+
+                if (!userPwd) {
+                    alert("IDENTITY画面でパスワードを設定してください。");
+                    return;
+                }
+                if (!amount || amount <= 0) {
+                    alert("有効な賭け金を入力してください。");
+                    return;
+                }
+
+                const currentMoney = parseInt(displayMoney.innerText.replace(/,/g, ''));
+                if (amount > currentMoney) {
+                    alert("所持金が足りません！");
+                    return;
+                }
+
+                // 演出開始
+                rollBtn.disabled = true;
+                rollBtn.innerText = "ボットが確認中...";
+                resultArea.classList.add('hidden');
+
+                if (typeof window.startDiceRoll === 'function') {
+                    window.startDiceRoll();
+                }
+
+                // Firebaseにリクエストを送信
+                firebase.database().ref('CHINCHIRO_SYSTEM/REQUESTS').push({
+                    pwd: userPwd,
+                    bet: amount,
+                    timestamp: Date.now()
+                });
+
+                // タイムアウト監視
+                setTimeout(() => {
+                    if (rollBtn.disabled && rollBtn.innerText === "ボットが確認中...") {
+                        alert("ボットからの反応がありません。Discordボットが起動しているか確認してください。");
+                        rollBtn.disabled = false;
+                        rollBtn.innerText = "賽を振る / ROLL";
+                    }
+                }, 8000);
+            });
+        });
+    </script>
+</body>
+</html>
+
