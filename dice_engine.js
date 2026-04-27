@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 /**
- * VOID PLATFORM - 3D DICE ENGINE (Visual Result Version)
+ * VOID PLATFORM - 3D DICE ENGINE (Perfect Rotation Sync)
  */
 
 const scene = new THREE.Scene();
@@ -26,16 +26,16 @@ const diceArray = [];
 const geometry = new THREE.BoxGeometry(1, 1, 1);
 
 /**
- * 視覚的に結果がわかる「正面向き」の回転定義
- * ボットからの数字をカメラ側にピタッと向けるための座標データ
+ * 【完全修正版】出目を正面に向けるための回転定義
+ * Three.jsのMeshFaceMaterialのインデックス順(右, 左, 上, 下, 前, 後)に対応
  */
 const faceRotations = {
-    1: { x: 0,            y: 0 },              // 1: 正面
-    2: { x: 0,            y: -Math.PI / 2 },   // 2: 右面を正面へ
-    3: { x: Math.PI / 2,  y: 0 },              // 3: 底面を正面へ
-    4: { x: -Math.PI / 2, y: 0 },              // 4: 天面を正面へ
-    5: { x: 0,            y: Math.PI / 2 },    // 5: 左面を正面へ
-    6: { x: Math.PI,      y: 0 }               // 6: 背面を正面へ
+    1: { x: 0,            y: 0 },               // 5番目(前面): そのまま
+    2: { x: 0,            y: Math.PI },         // 6番目(背面): 180度回転
+    3: { x: Math.PI / 2,  y: 0 },               // 4番目(底面): 上に90度回転して底を前に
+    4: { x: -Math.PI / 2, y: 0 },               // 3番目(天面): 下に90度回転して天を前に
+    5: { x: 0,            y: -Math.PI / 2 },    // 1番目(右面): 左に90度回転して右を前に
+    6: { x: 0,            y: Math.PI / 2 }      // 2番目(左面): 右に90度回転して左を前に
 };
 
 function createDiceMaterials() {
@@ -46,18 +46,22 @@ function createDiceMaterials() {
         [[32, 32], [32, 64], [32, 96], [96, 32], [96, 64], [96, 96]]
     ];
 
-    return dotPositions.slice(1).map((dots) => {
+    // マテリアルを配列で返す (Three.jsの仕様: 右, 左, 上, 下, 前, 後 の順)
+    // 今回の定義に合わせて[5, 6, 4, 3, 1, 2]の順でテクスチャを生成
+    const materialOrder = [5, 6, 4, 3, 1, 2]; 
+
+    return materialOrder.map((num) => {
+        const dots = dotPositions[num];
         const canvas = document.createElement('canvas');
         canvas.width = 128; canvas.height = 128;
         const ctx = canvas.getContext('2d');
+
         ctx.fillStyle = '#000000'; ctx.fillRect(0, 0, 128, 128);
         ctx.strokeStyle = '#8a2be2'; ctx.lineWidth = 10; ctx.strokeRect(5, 5, 118, 118);
         ctx.fillStyle = '#ffffff';
         dots.forEach(([x, y]) => { ctx.beginPath(); ctx.arc(x, y, 16, 0, Math.PI * 2); ctx.fill(); });
 
         const texture = new THREE.CanvasTexture(canvas);
-        texture.needsUpdate = true;
-
         return new THREE.MeshStandardMaterial({
             map: texture, emissiveMap: texture, emissive: 0xffffff,
             emissiveIntensity: 0.5, roughness: 0.1, metalness: 0.5, side: THREE.DoubleSide
@@ -77,7 +81,7 @@ function spawnDice(x) {
 diceArray.push(spawnDice(-1.8), spawnDice(0), spawnDice(1.8));
 
 let isRolling = false;
-let isFixed = false; // 10秒間ピタッと止めるためのフラグ
+let isFixed = false; 
 let rollSpeed = 0;
 let stopTimeout = null;
 
@@ -92,11 +96,9 @@ function animate() {
             d.rotation.z += rollSpeed * 0.8;
             d.position.y = Math.abs(Math.sin(Date.now() * 0.015 + i)) * 0.5;
         } else if (!isFixed) {
-            // 通常待機時はゆっくり回転して浮遊
             d.rotation.y += 0.005 * (i + 1);
             d.position.y = Math.sin(Date.now() * 0.001 + i) * 0.1;
         }
-        // isFixedがtrueの時は、d.rotationもd.positionも更新しない（完全に静止）
     });
 
     renderer.render(scene, camera);
@@ -117,19 +119,18 @@ window.stopDiceRoll = function(resultDice) {
     isRolling = false;
 
     if (resultDice && Array.isArray(resultDice)) {
-        isFixed = true; // アニメーションを停止フラグ
+        isFixed = true; 
         diceArray.forEach((d, i) => {
             const val = resultDice[i];
             const rot = faceRotations[val];
             if (rot) {
-                // 結果の数字をカメラ（正面）へ向ける
+                // z軸の回転もリセットして、目を真っ直ぐにする
                 d.rotation.set(rot.x, rot.y, 0);
                 d.position.y = 0; 
             }
         });
         console.log(`🎲 結果固定(10秒間): ${resultDice}`);
 
-        // 10秒後に「ゆらゆら待機モード」に戻る
         stopTimeout = setTimeout(() => {
             isFixed = false;
         }, 10000); 
