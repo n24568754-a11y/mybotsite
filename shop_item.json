@@ -366,13 +366,13 @@
     "USER_PROFILES": {
         "tenya": {
             "name": "てんや",
-            "avatar": "https://cdn.discordapp.com/avatars/1368428956214100062/29a23ac792889cfd274120aa8a823144.png?size=1024",
-            "money": 96427266,
+            "avatar": "https://cdn.discordapp.com/avatars/1368428956214100062/f574ebfb0368b83ee006dd93f90037ab.png?size=1024",
+            "money": 93415850,
             "stats": {
-                "chat": 1454,
-                "vc": 929,
-                "daily_chat": 539,
-                "daily_vc": 363,
+                "chat": 12720,
+                "vc": 1564,
+                "daily_chat": 482,
+                "daily_vc": 192,
                 "send_money_total": 1000000
             },
             "inventory": [
@@ -427,34 +427,31 @@
             "completed_missions": [
                 "m_chat_chars_6240",
                 "m_vc_minutes_7182",
-                "m_daily_vc_3475",
-                "m_daily_vc_8990",
                 "m_daily_chat_5230"
             ],
             "claimed_missions": [
                 "m_chat_chars_6240",
-                "m_vc_minutes_7182",
-                "m_daily_chat_5230",
-                "m_daily_vc_3475",
-                "m_daily_vc_8990"
+                "m_vc_minutes_7182"
             ]
         },
         "age0309": {
-            "name": "m!dc",
+            "name": "真宵",
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1387724679225278484/avatars/b6bf077b975eea218fc289855c978d91.png?size=1024",
-            "money": 2800800,
+            "money": 2548800,
             "stats": {
-                "chat": 584,
-                "vc": 626,
-                "daily_chat": 325,
-                "daily_vc": 367,
-                "send_money_total": 0
+                "chat": 832,
+                "vc": 1477,
+                "daily_chat": 0,
+                "daily_vc": 144,
+                "send_money_total": 150000
             },
             "inventory": [
                 "1497207151016542349",
                 "1497205518870249512",
                 "1497205158692782172",
-                "1497205425274224821"
+                "1497205425274224821",
+                "1497204858204323980",
+                "1497206816042647673"
             ],
             "subscriptions": {
                 "1496835446448066560": "2026-05-23T21:59:00.610868",
@@ -468,26 +465,25 @@
                 "1497207151016542349": "2026-05-26T03:46:27.716479",
                 "1497205518870249512": "2026-05-26T03:46:52.695026",
                 "1497205158692782172": "2026-05-26T03:48:04.296721",
-                "1497205425274224821": "2026-05-26T22:45:29.314302"
+                "1497205425274224821": "2026-05-26T22:45:29.314302",
+                "1497204858204323980": "2026-05-30T05:18:47.063012",
+                "1497206816042647673": "2026-06-04T00:40:33.022737"
             },
             "completed_missions": [
                 "m_chat_chars_6240",
-                "m_vc_minutes_7182",
-                "m_daily_chat_5230",
-                "m_daily_vc_3475",
-                "m_daily_vc_8990"
+                "m_vc_minutes_7182"
             ],
             "claimed_missions": []
         },
         "xx1104": {
-            "name": "愛＄",
-            "avatar": "https://cdn.discordapp.com/avatars/1493287369322004643/0fcf097273556a098d5f3fb9814a94fe.png?size=1024",
+            "name": "User_4643",
+            "avatar": "",
             "money": 51010,
             "stats": {
-                "chat": 1032,
-                "vc": 134,
-                "daily_chat": 583,
-                "daily_vc": 80,
+                "chat": 1126,
+                "vc": 150,
+                "daily_chat": 0,
+                "daily_vc": 0,
                 "send_money_total": 0
             },
             "inventory": [
@@ -500,7 +496,6 @@
             },
             "completed_missions": [
                 "m_chat_chars_6240",
-                "m_daily_chat_5230",
                 "m_vc_minutes_7182"
             ],
             "claimed_missions": []
@@ -510,8 +505,8 @@
             "avatar": "https://cdn.discordapp.com/avatars/1393702468600336586/2811ac501f022fdaf7c7e4c72d2107bb.png?size=1024",
             "money": 30000,
             "stats": {
-                "chat": 0,
-                "vc": 0,
+                "chat": 895,
+                "vc": 335,
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "send_money_total": 0
@@ -521,16 +516,19 @@
                 "1497204858204323980": "2026-05-25T18:07:31.678154",
                 "1497206499506786436": "2026-05-25T18:08:04.746985"
             },
-            "completed_missions": [],
+            "completed_missions": [
+                "m_chat_chars_6240",
+                "m_vc_minutes_7182"
+            ],
             "claimed_missions": []
         },
         "kyosuke": {
             "name": "きゅうり",
-            "avatar": "https://cdn.discordapp.com/avatars/969995018762850324/7b56462772d94f225c595d6538af8be4.png?size=1024",
+            "avatar": "https://cdn.discordapp.com/avatars/969995018762850324/6128b2e56fb52a727fb7d81e9b3d5272.png?size=1024",
             "money": 40000,
             "stats": {
-                "chat": 0,
-                "vc": 0,
+                "chat": 79,
+                "vc": 49,
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "send_money_total": 0
@@ -539,7 +537,53 @@
             "subscriptions": {
                 "1497207225255727224": "2026-05-25T22:13:00.899271"
             },
-            "completed_missions": [],
+            "completed_missions": [
+                "m_chat_chars_6240"
+            ],
+            "claimed_missions": []
+        },
+        "asyu321": {
+            "name": "ごんたうろす",
+            "avatar": "https://cdn.discordapp.com/avatars/528917146659717122/664a083102f202aee1cd9c948acb4661.png?size=1024",
+            "money": 30000,
+            "stats": {
+                "chat": 152,
+                "vc": 0,
+                "daily_chat": 0,
+                "daily_vc": 0,
+                "send_money_total": 0
+            },
+            "inventory": [
+                "1497206816042647673"
+            ],
+            "subscriptions": {
+                "1497206816042647673": "2026-05-30T05:19:42.371157"
+            },
+            "completed_missions": [
+                "m_chat_chars_6240"
+            ],
+            "claimed_missions": []
+        },
+        "nerorin59": {
+            "name": "ねろ",
+            "avatar": "https://cdn.discordapp.com/avatars/728110487753195581/36aad665047681d5222f1a97580ff822.png?size=1024",
+            "money": 40000,
+            "stats": {
+                "chat": 68,
+                "vc": 81,
+                "daily_chat": 0,
+                "daily_vc": 0,
+                "send_money_total": 0
+            },
+            "inventory": [
+                "1497207225255727224"
+            ],
+            "subscriptions": {
+                "1497207225255727224": "2026-06-04T00:41:06.470811"
+            },
+            "completed_missions": [
+                "m_chat_chars_6240"
+            ],
             "claimed_missions": []
         }
     }

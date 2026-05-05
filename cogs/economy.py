@@ -217,21 +217,32 @@ class Economy(commands.Cog):
             return True
         except Exception as e: print(f"Update Error: {e}"); return False
 
-    @tasks.loop(minutes=30)
+    @tasks.loop(minutes=1)
     async def daily_reset_task(self):
         current_date = datetime.now().date().isoformat()
         if self.config.get("last_reset_date") != current_date:
             data, missions = self.load_data(), self.load_missions()
+            # is_dailyがTrueのミッションIDをすべて取得
             daily_ids = [m_id for m_id, m in missions.items() if m.get('is_daily')]
+
             for uid in data:
+                # デイリー進捗数値のリセット
                 data[uid]['daily_chat'] = 0
                 data[uid]['daily_vc'] = 0
+
+                # 達成済みリスト(completed)からデイリーミッションIDを削除
                 if 'completed_missions' in data[uid]:
                     data[uid]['completed_missions'] = [m_id for m_id in data[uid]['completed_missions'] if m_id not in daily_ids]
+
+                # 受取済みリスト(claimed)からデイリーミッションIDを削除（Web表示のリセットに必要）
+                if 'claimed_missions' in data[uid]:
+                    data[uid]['claimed_missions'] = [m_id for m_id in data[uid]['claimed_missions'] if m_id not in daily_ids]
+
             self.save_data(data)
             self.config["last_reset_date"] = current_date
-            self._save_config(); self.update_web_data()
-            print("📅 デイリー進捗をリセットしました。")
+            self._save_config()
+            self.update_web_data()
+            print(f"📅 デイリー進捗と報酬受取状況をリセットしました: {current_date}")
 
     @commands.Cog.listener()
     async def on_message(self, message):
