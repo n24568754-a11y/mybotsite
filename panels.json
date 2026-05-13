@@ -13,5 +13,74 @@
         "vc_name": "卓",
         "user_limit": 0,
         "cost": 0
+    },
+    "1502639656951611572": {
+        "vc_name": "裏宵宿",
+        "user_limit": 0,
+        "cost": 5000,
+        "is_private": true
+    },
+    "1502639956990890097": {
+        "vc_name": "宵宿",
+        "user_limit": 2,
+        "cost": 1000,
+        "is_private": false
+    },
+    "1502640189389148260": {
+        "vc_name": "ゲーム",
+        "user_limit": 0,
+        "cost": 0,
+        "is_private": false
+    },
+    "1502640333295583353": {
+        "vc_name": "カジノ",
+        "user_limit": 0,
+        "cost": 0,
+        "is_private": false
+    },
+    "1502640871428980778": {
+        "vc_name": "裏宵宿",
+        "user_limit": 0,
+        "cost": 10000,
+        "is_private": true
+    },
+    "log_config": {
+        "1496790362294063114": 1502771003489652868
+    },
+    "1502775215241822300": {
+        "vc_name": "宵宿-",
+        "user_limit": 2,
+        "cost": 10000,
+        "is_private": false
+    },
+    "1502775487804473445": {
+        "vc_name": "宵宿-",
+        "user_limit": 2,
+        "cost": 100000,
+        "is_private": false
+    },
+    "1502775764679000185": {
+        "vc_name": "宵宿-",
+        "user_limit": 2,
+        "cost": 10000,
+        "is_private": false
+    },
+    "1502776816316977292": {
+        "vc_name": "裏宵宿-",
+        "user_limit": 0,
+        "cost": 50000,
+        "is_private": true
+    },
+    "1503743857622384650": {
+        "vc_name": "宵宿-",
+        "user_limit": 2,
+        "cost": 0,
+        "is_private": false
+    },
+    "1503744077022232607": {
+        "vc_name": "宵宿-",
+        "user_limit": 2,
+        "cost": 10000,
+        "is_private": false
     }
 }

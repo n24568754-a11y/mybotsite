@@ -73,11 +73,8 @@ class BillView(discord.ui.View):
             return
         if receiver_id not in data: data[receiver_id] = self.cog.get_default_user_data()
 
-        # お金の移動
         data[payer_id]['money'] -= self.amount
         data[receiver_id]['money'] += self.amount
-
-        # 送金累計の加算
         data[payer_id]['send_money_total'] = data[payer_id].get('send_money_total', 0) + self.amount
 
         self.cog.save_data(data); self.cog.update_web_data()
@@ -144,7 +141,7 @@ class Economy(commands.Cog):
         self.check_subs.start()
         self.vc_tracking.start()
         self.daily_reset_task.start()
-        self.web_request_watcher.start() # Web監視タスクの開始
+        self.web_request_watcher.start() 
         self._load_config()
 
     def _load_config(self):
@@ -200,10 +197,11 @@ class Economy(commands.Cog):
                         "avatar": str(member.display_avatar.url) if member else "",
                         "money": info.get('money', 0),
                         "stats": {
-                            "chat": info.get('chat', 0) or info.get('chat_chars', 0), 
-                            "vc": info.get('vc', 0) or info.get('vc_minutes', 0),
+                            "chat": info.get('chat', 0), 
+                            "vc": info.get('vc', 0),
                             "daily_chat": info.get('daily_chat', 0), 
                             "daily_vc": info.get('daily_vc', 0),
+                            "gacha_count": info.get('gacha_count', 0),
                             "send_money_total": info.get('send_money_total', 0)
                         },
                         "inventory": list(dict.fromkeys(info.get('inventory', []))),
@@ -212,7 +210,7 @@ class Economy(commands.Cog):
                         "claimed_missions": info.get('claimed_missions', [])
                     }
             web_json = {"SHOP_DATA": shop_data, "GACHA_DATA": gacha_data, "MISSIONS": missions, "CURRENCY_NAME": self.currency, "USER_PROFILES": profiles}
-            db.reference('/').set(web_json)
+            db.reference('/').update(web_json)
             with open(WEB_JSON_FILE, 'w', encoding='utf-8') as f: json.dump(web_json, f, indent=4, ensure_ascii=False)
             return True
         except Exception as e: print(f"Update Error: {e}"); return False
@@ -222,34 +220,28 @@ class Economy(commands.Cog):
         current_date = datetime.now().date().isoformat()
         if self.config.get("last_reset_date") != current_date:
             data, missions = self.load_data(), self.load_missions()
-            # is_dailyがTrueのミッションIDをすべて取得
             daily_ids = [m_id for m_id, m in missions.items() if m.get('is_daily')]
 
             for uid in data:
-                # デイリー進捗数値のリセット
                 data[uid]['daily_chat'] = 0
                 data[uid]['daily_vc'] = 0
-
-                # 達成済みリスト(completed)からデイリーミッションIDを削除
+                # デイリー関連ミッションの達成・受取履歴をリセット
                 if 'completed_missions' in data[uid]:
-                    data[uid]['completed_missions'] = [m_id for m_id in data[uid]['completed_missions'] if m_id not in daily_ids]
-
-                # 受取済みリスト(claimed)からデイリーミッションIDを削除（Web表示のリセットに必要）
+                    data[uid]['completed_missions'] = [m for m in data[uid]['completed_missions'] if m not in daily_ids]
                 if 'claimed_missions' in data[uid]:
-                    data[uid]['claimed_missions'] = [m_id for m_id in data[uid]['claimed_missions'] if m_id not in daily_ids]
+                    data[uid]['claimed_missions'] = [m for m in data[uid]['claimed_missions'] if m not in daily_ids]
 
             self.save_data(data)
             self.config["last_reset_date"] = current_date
             self._save_config()
             self.update_web_data()
-            print(f"📅 デイリー進捗と報酬受取状況をリセットしました: {current_date}")
+            print(f"📅 Daily Reset Complete: {current_date}")
 
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.bot:
             if message.content.startswith("!pay_req"): await self.handle_web_payment(message)
             elif message.content.startswith("!mission_pay"): await self.handle_mission_reward(message)
-            # --- チンチロリクエストの追加 ---
             elif message.content.startswith("!chinchiro_req"): await self.handle_chinchiro_payment(message)
             return
         data = self.load_data()
@@ -257,16 +249,12 @@ class Economy(commands.Cog):
         if uid not in data: data[uid] = self.get_default_user_data()
         length = len(message.content)
 
-        # データの更新
         data[uid]['chat'] = data[uid].get('chat', 0) + length
-        data[uid]['chat_chars'] = data[uid].get('chat_chars', 0) + length
         data[uid]['daily_chat'] = data[uid].get('daily_chat', 0) + length
 
-        # --- 統計の不整合修正ロジック ---
+        # 念のための不整合修正
         if data[uid]['chat'] < data[uid]['daily_chat']:
             data[uid]['chat'] = data[uid]['daily_chat']
-            data[uid]['chat_chars'] = data[uid]['daily_chat']
-        # -----------------------------
 
         await self.silent_mission_check(uid, data)
         self.save_data(data)
@@ -279,19 +267,22 @@ class Economy(commands.Cog):
         for m_id, m_info in missions.items():
             if m_id in completed: continue
 
+            # ミッションのタイプ（chat, daily_chat等）を取得し、ユーザーデータから値を取り出す
             m_type = m_info['type']
-            if m_type == "chat_chars": m_type = "chat"
-            if m_type == "vc_minutes": m_type = "vc"
-
             current = u_data.get(m_type, 0)
+
+            # 旧キー(chat_chars/vc_minutes)との互換性
+            if m_type == "chat_chars" and current == 0: current = u_data.get("chat", 0)
+            if m_type == "vc_minutes" and current == 0: current = u_data.get("vc", 0)
+
             if current >= m_info['goal']:
-                if m_id not in completed:
-                    completed.append(m_id)
-                    u_data['completed_missions'] = completed
+                completed.append(m_id)
+                u_data['completed_missions'] = completed
 
     async def handle_mission_reward(self, message):
         try:
             parts = message.content.split()
+            if len(parts) < 3: return
             pwd, m_id = parts[1], parts[2]
             uid = next((u for u, p in self.load_auth().items() if p == pwd), None)
             if not uid: return
@@ -302,11 +293,14 @@ class Economy(commands.Cog):
             if m_id not in missions: return
             m_info = missions[m_id]
 
+            # 報酬支払い時の再チェック：必ずミッションタイプに合わせた現在の値で判定
             m_type = m_info['type']
-            if m_type == "chat_chars": m_type = "chat"
-            if m_type == "vc_minutes": m_type = "vc"
-
             current = u_data.get(m_type, 0)
+
+            # 互換性維持
+            if m_type == "chat_chars" and current == 0: current = u_data.get("chat", 0)
+            if m_type == "vc_minutes" and current == 0: current = u_data.get("vc", 0)
+
             if current >= m_info['goal']:
                 u_data['money'] += m_info['reward']
                 u_data.setdefault('claimed_missions', []).append(m_id)
@@ -345,10 +339,8 @@ class Economy(commands.Cog):
             await message.channel.send(f"💳 <@{uid}> が {item_name} を購入！")
         except: pass
 
-    # --- チンチロリクエスト処理 ---
     async def handle_chinchiro_payment(self, message):
         try:
-            # 形式: !chinchiro_req パスワード BET額
             parts = message.content.split()
             if len(parts) < 3: return
             pwd, bet_amount = parts[1], int(parts[2])
@@ -362,47 +354,27 @@ class Economy(commands.Cog):
                 await message.channel.send(f"❌ <@{uid}> 所持金が足りません！")
                 return
 
-            # ダイスを振る
             dice = [random.randint(1, 6) for _ in range(3)]
             dice.sort()
+            result_text, multiplier = "役なし", -1
 
-            result_text = "役なし"
-            multiplier = -1 # 基本は没収
-
-            # 判定ロジック
-            if dice == [1, 1, 1]:
-                result_text = "ピンゾロ (5倍)"
-                multiplier = 5
-            elif dice[0] == dice[1] == dice[2]:
-                result_text = f"ゾロ目({dice[0]}) (3倍)"
-                multiplier = 3
-            elif dice == [4, 5, 6]:
-                result_text = "シゴロ (2倍)"
-                multiplier = 2
-            elif dice == [1, 2, 3]:
-                result_text = "ヒフミ (2倍払い)"
-                multiplier = -2
-            elif dice[0] == dice[1]: # 2つ一致
+            if dice == [1, 1, 1]: result_text, multiplier = "ピンゾロ (5倍)", 5
+            elif dice[0] == dice[1] == dice[2]: result_text, multiplier = f"ゾロ目({dice[0]}) (3倍)", 3
+            elif dice == [4, 5, 6]: result_text, multiplier = "シゴロ (2倍)", 2
+            elif dice == [1, 2, 3]: result_text, multiplier = "ヒフミ (2倍払い)", -2
+            elif dice[0] == dice[1]:
                 point = dice[2]
-                result_text = f"{point}の目"
-                multiplier = 1 if point >= 4 else -1
-            elif dice[1] == dice[2]: # 2つ一致
+                result_text, multiplier = f"{point}の目", 1 if point >= 4 else -1
+            elif dice[1] == dice[2]:
                 point = dice[0]
-                result_text = f"{point}の目"
-                multiplier = 1 if point >= 4 else -1
+                result_text, multiplier = f"{point}の目", 1 if point >= 4 else -1
 
             change = bet_amount * multiplier
             data[uid]['money'] += change
+            self.save_data(data); self.update_web_data()
 
-            self.save_data(data)
-            self.update_web_data()
-
-            # Firebaseの特定のパスに結果を書き込む（Web側でのアニメーション同期用）
             db.reference(f'CHINCHIRO_LAST_RESULT/{pwd}').set({
-                "dice": dice,
-                "result": result_text,
-                "change": change,
-                "timestamp": datetime.now().isoformat()
+                "dice": dice, "result": result_text, "change": change, "timestamp": datetime.now().isoformat()
             })
 
             await message.channel.send(
@@ -425,12 +397,10 @@ class Economy(commands.Cog):
                     if uid not in data: data[uid] = self.get_default_user_data()
 
                     data[uid]['vc'] = data[uid].get('vc', 0) + 1
-                    data[uid]['vc_minutes'] = data[uid].get('vc_minutes', 0) + 1
                     data[uid]['daily_vc'] = data[uid].get('daily_vc', 0) + 1
 
                     if data[uid]['vc'] < data[uid]['daily_vc']:
                         data[uid]['vc'] = data[uid]['daily_vc']
-                        data[uid]['vc_minutes'] = data[uid]['daily_vc']
 
                     await self.silent_mission_check(uid, data)
                     updated = True
@@ -451,36 +421,28 @@ class Economy(commands.Cog):
                     del data[uid]['subscriptions'][rid]; changed = True
         if changed: self.save_data(data); self.update_web_data()
 
-    # --- 管理者限定コマンド ---
-
     @app_commands.command(name="統計修復", description="全ユーザーの統計不整合（累計＜デイリー）を修復します（管理者のみ）")
     @app_commands.default_permissions(administrator=True)
     async def fix_stats(self, interaction: discord.Interaction):
         await interaction.response.defer(ephemeral=True)
-        data = self.load_data()
-        fixed = 0
+        data, fixed = self.load_data(), 0
         for uid in data:
             if data[uid].get('chat', 0) < data[uid].get('daily_chat', 0):
                 data[uid]['chat'] = data[uid]['daily_chat']
-                data[uid]['chat_chars'] = data[uid]['daily_chat']
                 fixed += 1
             if data[uid].get('vc', 0) < data[uid].get('daily_vc', 0):
                 data[uid]['vc'] = data[uid]['daily_vc']
-                data[uid]['vc_minutes'] = data[uid]['daily_vc']
                 fixed += 1
-
         if fixed > 0:
             self.save_data(data); self.update_web_data()
             await interaction.followup.send(f"✅ {fixed}件 の不整合を修復しました。", ephemeral=True)
-        else:
-            await interaction.followup.send("不整合は見つかりませんでした。", ephemeral=True)
+        else: await interaction.followup.send("不整合は見つかりませんでした。", ephemeral=True)
 
     @app_commands.command(name="図鑑掃除", description="全ユーザーのカード重複を削除します（管理者のみ）")
     @app_commands.default_permissions(administrator=True)
     async def cleanup_inventory_cmd(self, interaction: discord.Interaction):
         await interaction.response.defer(ephemeral=True)
-        data = self.load_data()
-        total_removed = 0
+        data, total_removed = self.load_data(), 0
         for uid in data:
             if 'inventory' in data[uid] and isinstance(data[uid]['inventory'], list):
                 old_list = data[uid]['inventory']
@@ -492,8 +454,7 @@ class Economy(commands.Cog):
         if total_removed > 0:
             self.save_data(data); self.update_web_data()
             await interaction.followup.send(f"✅ 合計 {total_removed} 個の重複アイテムを掃除しました。", ephemeral=True)
-        else:
-            await interaction.followup.send("重複は見つかりませんでした。", ephemeral=True)
+        else: await interaction.followup.send("重複は見つかりませんでした。", ephemeral=True)
 
     @app_commands.command(name="ミッション追加", description="新しいミッションと報酬を登録します（管理者のみ）")
     @app_commands.default_permissions(administrator=True)
@@ -592,8 +553,6 @@ class Economy(commands.Cog):
             await interaction.response.send_message(f"✅ {相手.display_name} さんに送信しました。", ephemeral=True)
         except: await interaction.response.send_message("❌ DM送信に失敗しました。", ephemeral=True)
 
-    # --- 一般ユーザー向けコマンド ---
-
     @app_commands.command(name="所持金", description="所持金を確認します")
     async def wallet(self, interaction: discord.Interaction):
         data = self.load_data()
@@ -603,10 +562,9 @@ class Economy(commands.Cog):
     @app_commands.command(name="働く", description="お金を稼ぎます")
     async def work(self, interaction: discord.Interaction):
         await interaction.response.defer(ephemeral=True)
-        data = self.load_data()
+        data, earned = self.load_data(), random.randint(10, 100)
         u_id = str(interaction.user.id)
         if u_id not in data: data[u_id] = self.get_default_user_data()
-        earned = random.randint(10, 100)
         data[u_id]['money'] += earned
         self.save_data(data); self.update_web_data()
         await interaction.followup.send(f'**{earned}{self.currency}** 稼ぎました！', ephemeral=True)
@@ -635,37 +593,21 @@ class Economy(commands.Cog):
             await interaction.response.send_message(f"✅ {相手.display_name} さんに送信しました。", ephemeral=True)
         except: await interaction.response.send_message("❌ DM送信に失敗しました。", ephemeral=True)
 
-    # --- Webリクエスト監視タスク ---
     @tasks.loop(seconds=1)
     async def web_request_watcher(self):
         try:
             ref = db.reference('CHINCHIRO_SYSTEM/REQUESTS')
             requests = ref.get()
             if not requests: return
-
             for req_key, val in requests.items():
-                pwd = val.get('pwd')
-                bet = val.get('bet')
-
-                # handle_chinchiro_paymentを再利用するための疑似メッセージ作成
+                pwd, bet = val.get('pwd'), val.get('bet')
                 class MockMessage:
                     def __init__(self, content):
-                        self.content = content
-                        self.channel = None
-                        self.author = self # author.bot判定をパスするため
-                        self.bot = True
-
-                    async def send(self, content, **kwargs):
-                        # チャンネル送信の代わりにログ出力（必要なら特定チャンネルへ）
-                        print(f"[WebChinchiro Log]: {content}")
-
-                mock_msg = MockMessage(f"!chinchiro_req {pwd} {bet}")
-                await self.handle_chinchiro_payment(mock_msg)
-
-                # 処理済みリクエストを削除
+                        self.content, self.channel, self.author, self.bot = content, None, self, True
+                    async def send(self, content, **kwargs): print(f"[WebChinchiro Log]: {content}")
+                await self.handle_chinchiro_payment(MockMessage(f"!chinchiro_req {pwd} {bet}"))
                 ref.child(req_key).delete()
-        except Exception as e:
-            print(f"Watcher Error: {e}")
+        except Exception as e: print(f"Watcher Error: {e}")
 
 async def setup(bot):
     await bot.add_cog(Auth(bot))

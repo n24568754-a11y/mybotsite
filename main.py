@@ -1,7 +1,10 @@
+
 import discord
 from discord.ext import commands
+from discord import app_commands
 import os
 import asyncio
+import traceback
 from dotenv import load_dotenv
 
 # --- Firebase用のライブラリ ---
@@ -10,19 +13,25 @@ from firebase_admin import credentials
 
 load_dotenv()
 
-# --- Firebaseの初期化 (二重初期化防止ガード付き) ---
+# --- Firebaseの初期化 ---
 if not firebase_admin._apps:
     try:
-        cred = credentials.Certificate("../serviceAccountKey.json")
-        firebase_admin.initialize_app(
-            cred, {"databaseURL": "https://mybot-4e6b1-default-rtdb.firebaseio.com/"}
-        )
-        print("✅ Firebaseを初期化しました")
+        # main.pyから見たパスを指定
+        cred_path = "./serviceAccountKey.json" 
+        if not os.path.exists(cred_path):
+            # 親ディレクトリも探す（既存ロジック維持）
+            cred_path = "../serviceAccountKey.json"
+
+        if os.path.exists(cred_path):
+            cred = credentials.Certificate(cred_path)
+            firebase_admin.initialize_app(
+                cred, {"databaseURL": "https://mybot-4e6b1-default-rtdb.firebaseio.com/"}
+            )
+            print(f"✅ Firebaseを初期化しました (Path: {cred_path})")
+        else:
+            print(f"⚠️ Firebase設定ファイルが見つかりません。")
     except Exception as e:
         print(f"Firebaseの初期化に失敗しました: {e}")
-else:
-    # すでに初期化されている場合はスキップ
-    pass
 
 # --- Botクラスの定義 ---
 class MyBot(commands.Bot):
@@ -30,83 +39,129 @@ class MyBot(commands.Bot):
         intents = discord.Intents.all()
         super().__init__(command_prefix="t!", intents=intents)
         self.delay_time = delay_time 
-        self.bot_index = bot_index # 何番目のBotか識別用
+        self.bot_index = bot_index
+
+        # スラッシュコマンドのエラーハンドリング
+        self.tree.on_error = self.on_tree_error
+
+    async def on_tree_error(self, interaction: discord.Interaction, error: app_commands.AppCommandError):
+        """スラッシュコマンド実行時のエラーを詳細に表示"""
+        print(f"❌ [Command Error - Bot Index {self.bot_index}] {interaction.user.name}: {error}")
+        traceback.print_exc()
+
+        try:
+            if not interaction.response.is_done():
+                await interaction.response.send_message(f"内部エラーが発生しました (Bot Index: {self.bot_index})", ephemeral=True)
+            else:
+                await interaction.followup.send("内部エラーが発生しました。", ephemeral=True)
+        except:
+            pass
 
     async def setup_hook(self):
-        # 1台目のメインBot
-        if self.bot_index == 0:
-            for filename in os.listdir("./cogs"):
-                if filename.endswith(".py"):
-                    # panel.pyは4台目専用にするためメインからは除外
-                    if filename == "panel.py": continue
-                    try:
-                        await self.load_extension(f"cogs.{filename[:-3]}")
-                        print(f"✅ メインBot ({self.user.name}): {filename} をロードしました")
-                    except Exception as e:
-                        print(f"Failed to load {filename}: {e}")
+        # 起動直後のAPI負荷分散
+        await asyncio.sleep(self.delay_time)
 
-        # 4台目のパネル専用Bot
-        elif self.bot_index == 3:
-            try:
-                # 1. 経済システムをロード（ボタン処理でお金を使うため）
+        # --- 各インデックスに応じたCogのロード ---
+        try:
+            # Index 0: メイン機能 (panel.py以外をロード)
+            if self.bot_index == 0:
+                if os.path.exists("./cogs"):
+                    for filename in os.listdir("./cogs"):
+                        if filename.endswith(".py") and filename != "panel.py":
+                            await self.load_extension(f"cogs.{filename[:-3]}")
+                            print(f"✅ メインBot ({self.bot_index}): {filename} をロード")
+
+            # Index 3: パネル・経済専用機
+            elif self.bot_index == 3:
+                # 依存関係があるため economy -> panel の順でロード
                 await self.load_extension("cogs.economy")
-
-                # 2. パネル機能をロード
                 await self.load_extension("cogs.panel")
 
-                # 3. 【修正ポイント】パネルBotからは /set_panel 以外の全コマンドを除去
-                # これにより、パスワード設定コマンド等も含めて全て強制的に非表示にします
+                # パネルBotが保持するコマンドのホワイトリスト
+                allowed_commands = ["set_panel", "set_log_channel"]
+
+                # パネルBotは指定以外のコマンドを表示させない（整理）
                 for cmd in list(self.tree.get_commands()):
-                    if cmd.name != "set_panel":
+                    if cmd.name not in allowed_commands:
                         self.tree.remove_command(cmd.name)
+                print(f"📋 パネルBot ({self.bot_index}): Economy & Panel ロード完了 (許可コマンド: {', '.join(allowed_commands)})")
 
-                print(f"📋 パネルBot ({self.user.name}): コマンドを整理してロードしました")
-            except Exception as e:
-                print(f"Failed to load panel or economy cog: {e}")
+            # Index 4: 特殊ディレクトリ 'five'
+            elif self.bot_index == 4:
+                target_dir = "./five"
+                if os.path.exists(target_dir):
+                    for filename in os.listdir(target_dir):
+                        if filename.endswith(".py"):
+                            await self.load_extension(f"five.{filename[:-3]}")
+                            print(f"🌟 5台目Bot ({self.bot_index}): {filename} をロード")
 
-        # 2台目・3台目のサブBot
-        else:
-            try:
-                await self.load_extension("cogs.music")
-                print(f"🎵 サブBot ({self.user.name}): 音楽機能のみロードしました")
-            except Exception as e:
-                print(f"Failed to load music for {self.user.name}: {e}")
+            # Index 5: 特殊ディレクトリ 'six' (6体目)
+            elif self.bot_index == 5:
+                target_dir = "./six"
+                if os.path.exists(target_dir):
+                    for filename in os.listdir(target_dir):
+                        if filename.endswith(".py"):
+                            await self.load_extension(f"six.{filename[:-3]}")
+                            print(f"⚙️ 6台目Bot ({self.bot_index}): {filename} をロード")
 
-        # コマンドの同期
-        await self.tree.sync()
+            # Index 1, 2 等: 音楽機能
+            else:
+                try:
+                    await self.load_extension("cogs.music")
+                    print(f"🎵 サブBot ({self.bot_index}): 音楽機能をロード")
+                except:
+                    print(f"ℹ️ サブBot ({self.bot_index}): music cogが見つかりません。")
+
+        except Exception as e:
+            print(f"❌ [Load Error - Bot Index {self.bot_index}]: {e}")
+            traceback.print_exc()
+
+        # 同期間隔を広げてレート制限を回避
+        sync_delay = self.bot_index * 4.0 
+        # 6体目の場合はさらに少し待つ
+        await asyncio.sleep(sync_delay)
+
+        try:
+            await self.tree.sync()
+            print(f"🔄 {self.user.name} (Index {self.bot_index}): コマンド同期完了")
+        except Exception as e:
+            print(f"❌ {self.user.name} (Index {self.bot_index}): 同期エラー: {e}")
 
     async def on_ready(self):
-        print(f"✅ ログインしました: {self.user.name} (反応遅延: {self.delay_time}秒)")
+        print(f"✅ ログイン完了: {self.user.name} (Bot Index: {self.bot_index})")
 
-        # Firebaseへのデータ送信はメインBot(index 0)のみに限定（負荷軽減）
+        # Index 0 のみ Firebase へのデータ送信を試行
         if self.bot_index == 0:
             economy_cog = self.get_cog("Economy")
-            if economy_cog:
+            if economy_cog and hasattr(economy_cog, 'update_web_data'):
                 try:
+                    await asyncio.sleep(5)
                     success = economy_cog.update_web_data()
                     if success:
-                        print(f"✅ {self.user.name}: Firebaseへデータを正常に送信しました。")
+                        print(f"✅ {self.user.name}: Firebaseへの初期データ送信成功")
                 except Exception as e:
-                    print(f"⚠️ {self.user.name}: Firebase送信エラー: {e}")
+                    print(f"⚠️ {self.user.name}: Firebase送信失敗: {e}")
 
-# --- 複数Botの同時起動処理 ---
 async def start_bots():
     tokens = [
         os.getenv("TOKEN1") or os.getenv("DISCORD_TOKEN"), 
         os.getenv("TOKEN2"),                              
         os.getenv("TOKEN3"),
-        os.getenv("TOKEN4")  # 4台目のトークン
+        os.getenv("TOKEN4"), # bot_index 3
+        os.getenv("TOKEN5"),
+        os.getenv("TOKEN6")  # 6体目
     ]
 
-    tokens = [t for t in tokens if t]
+    valid_tokens = [(i, t) for i, t in enumerate(tokens) if t]
 
-    if not tokens:
-        print("⚠️ 有効なトークンが.envに見つかりません。")
+    if not valid_tokens:
+        print("⚠️ 有効なトークンが環境変数に見つかりません。")
         return
 
     tasks = []
-    for i, token in enumerate(tokens):
-        bot = MyBot(delay_time=i * 0.8, bot_index=i)
+    for i, token in valid_tokens:
+        # 起動間隔を調整して負荷を軽減
+        bot = MyBot(delay_time=i * 2.0, bot_index=i)
         tasks.append(bot.start(token))
 
     await asyncio.gather(*tasks)
@@ -115,4 +170,7 @@ if __name__ == "__main__":
     try:
         asyncio.run(start_bots())
     except KeyboardInterrupt:
-        print("Botを停止します...")
+        print("\nシステムを終了します...")
+    except Exception as e:
+        print(f"致命的なエラー: {e}")
+        traceback.print_exc()

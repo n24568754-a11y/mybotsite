@@ -54,7 +54,7 @@ const mascotData = {
             { text: "素晴らしい成績だにゃー", img: "character.png" }
         ]
     },
-    'identity-page': { // アイデンティティ（プロフィールの別名）用
+    'identity-page': { 
         defaultImg: 'character.png',
         reactions: [
             { text: "貴方の真実を映し出すにゃ", img: "character.png" }
@@ -107,10 +107,9 @@ database.ref('/').on('value', (snapshot) => {
         window.MISSIONS_DEF = data.MISSIONS || {};
         updateRanking(window.USER_PROFILES);
         if (sessionPassword) {
-            const profilePage = document.getElementById('profile-page');
-            if (profilePage && !profilePage.classList.contains('hidden')) updateProfileDisplay(sessionPassword);
-            if (!document.getElementById('archive-page').classList.contains('hidden')) renderArchive();
-            if (!document.getElementById('tasks-page').classList.contains('hidden')) renderMissions();
+            if (currentActivePageId === 'profile-page') updateProfileDisplay(sessionPassword);
+            if (currentActivePageId === 'archive-page') renderArchive();
+            if (currentActivePageId === 'tasks-page') renderMissions();
         }
     }
 });
@@ -136,25 +135,19 @@ function toggleTheme() {
     else { body.setAttribute('data-theme', 'light'); btn.innerText = '☀️'; }
 }
 
-/**
- * ページ表示のメイン関数
- */
 function showPage(id) {
-    // IDが profile-page または identity-page の場合は統合
     const targetId = (id === 'identity-page') ? 'profile-page' : id;
 
-    // 1. 保存済みパスワードの自動復元
     if (!sessionPassword) {
         sessionPassword = localStorage.getItem('user_pwd') || "";
     }
 
-    // 2. 認証が必要なページ（メニュー以外）で未認証の場合
     if (targetId !== 'menu-page' && !sessionPassword) {
         document.getElementById('modal-confirm-btn').onclick = () => {
             const pwd = document.getElementById('password-input').value;
             if (window.USER_PROFILES && window.USER_PROFILES[pwd]) {
                 sessionPassword = pwd;
-                localStorage.setItem('user_pwd', pwd); // 永続化
+                localStorage.setItem('user_pwd', pwd);
                 closeModal();
                 showPage(targetId); 
             } else { 
@@ -172,7 +165,6 @@ function showPage(id) {
     if (pageEl) {
         pageEl.classList.remove('hidden');
     } else {
-        // ページが見つからない場合はメニューに戻す
         document.getElementById('menu-page').classList.remove('hidden');
         return;
     }
@@ -191,7 +183,6 @@ function showPage(id) {
         ad.classList.add('hidden');
     }
 
-    // キャラクター更新
     const mData = mascotData[targetId];
     if (mData) {
         const imgEl = document.getElementById('mascot-img');
@@ -209,7 +200,6 @@ function showPage(id) {
     window.scrollTo(0,0);
 }
 
-// アイデンティティボタン用のエイリアス関数（HTML側から呼ばれる場合用）
 function openProfileAuth() {
     showPage('profile-page');
 }
@@ -236,7 +226,7 @@ function renderArchive() {
     if (!container || !window.USER_PROFILES || !sessionPassword) return;
     container.innerHTML = "";
     const profile = window.USER_PROFILES[sessionPassword];
-    const inventoryData = profile?.inventory ? Object.values(profile.inventory) : [];
+    const inventoryData = profile?.inventory || [];
     const ownedIds = new Set(inventoryData.map(id => String(id)));
     if (window.GACHA_DATA) {
         window.GACHA_DATA.forEach(item => {
@@ -257,30 +247,48 @@ function renderMissions() {
     const u = USER_PROFILES[sessionPassword] || {};
     const completedMissions = u.completed_missions || [];
     const claimedMissions = u.claimed_missions || [];
+
     const dailyCont = document.createElement('div');
     const permanentCont = document.createElement('div');
     dailyCont.innerHTML = '<div class="mission-category-title">Daily Missions</div>';
     permanentCont.innerHTML = '<div class="mission-category-title">Permanent Missions</div>';
+
     let hasDaily = false, hasPermanent = false;
+
     if (window.MISSIONS_DEF) {
         Object.entries(window.MISSIONS_DEF).forEach(([m_id, m_info]) => {
-            let typeKey = m_info.type;
+            const typeKey = m_info.type; 
             let typeLabel = "OBJ";
             let typeClass = "";
-            if (typeKey === "chat_chars" || typeKey === "chat" || typeKey === "daily_chat") {
-                typeLabel = "💬 CHAT"; typeKey = "chat"; typeClass = "type-chat";
-            } else if (typeKey === "vc_minutes" || typeKey === "vc" || typeKey === "daily_vc") {
-                typeLabel = "🔊 VC"; typeKey = "vc"; typeClass = "type-vc";
+
+            if (typeKey.includes("chat")) { typeLabel = "💬 CHAT"; typeClass = "type-chat"; }
+            else if (typeKey.includes("vc")) { typeLabel = "🔊 VC"; typeClass = "type-vc"; }
+            else if (typeKey === "gacha_count") { typeLabel = "🎰 GACHA"; typeClass = "type-gacha"; }
+
+            // --- 修正箇所：デイリーと累計の混同を防止 ---
+            let currentVal = 0;
+            if (u.stats) {
+                currentVal = u.stats[typeKey] || 0;
+                // フォールバック: もしデイリーキーで値が取れなかった場合、古いキー名の可能性を考慮
+                if (typeKey === 'daily_chat' && !u.stats.daily_chat && u.stats.chat_chars) currentVal = u.stats.daily_chat || 0;
+                if (typeKey === 'daily_vc' && !u.stats.daily_vc && u.stats.vc_minutes) currentVal = u.stats.daily_vc || 0;
             }
-            const currentVal = u.stats ? (u.stats[typeKey] ?? 0) : 0;
+
             const goal = m_info.goal;
             const isReached = completedMissions.includes(m_id) || currentVal >= goal;
             const isClaimed = claimedMissions.includes(m_id);
             const percent = Math.min(100, (currentVal / goal) * 100);
+
             const card = document.createElement('div');
             card.className = `mission-card ${isClaimed ? 'completed-claimed' : ''}`;
-            let actionHtml = isClaimed ? `<span class="claimed-text">RECEIVED</span>` 
-                : (isReached ? `<button class="claim-btn" onclick="claimMission('${m_id}', event)">CLAIM</button>` : "");
+
+            let actionHtml = "";
+            if (isClaimed) {
+                actionHtml = `<span class="claimed-text">RECEIVED</span>`;
+            } else if (isReached) {
+                actionHtml = `<button class="claim-btn" onclick="claimMission('${m_id}', event)">CLAIM</button>`;
+            }
+
             card.innerHTML = `
                 <div class="check-box">${isClaimed ? '✔' : ''}</div>
                 <div class="mission-info">
@@ -294,7 +302,8 @@ function renderMissions() {
                     <div class="mission-progress">${Math.floor(currentVal).toLocaleString()} / ${goal.toLocaleString()}</div>
                     <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${percent}%"></div></div>
                 </div>`;
-            if (m_id.includes('m_daily')) { dailyCont.appendChild(card); hasDaily = true; }
+
+            if (m_info.is_daily) { dailyCont.appendChild(card); hasDaily = true; }
             else { permanentCont.appendChild(card); hasPermanent = true; }
         });
     }
@@ -312,7 +321,6 @@ async function claimMission(missionId, event) {
             method: "POST", headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ content: `!mission_pay ${sessionPassword} ${missionId}` })
         });
-        alert("報酬を申請しました。ボットの処理をお待ちください。");
     } catch(e) {
         alert("通信エラーが発生しました。");
         btn.disabled = false; btn.innerText = "CLAIM";
@@ -445,8 +453,9 @@ function updateProfileDisplay(pwd) {
     const vcEl = document.getElementById('prof-vc');
 
     if (subEl) subEl.innerText = Object.keys(u.subscriptions || {}).length;
-    if (chatEl) chatEl.innerText = (u.stats?.chat || 0).toLocaleString();
-    if (vcEl) vcEl.innerText = (u.stats?.vc || 0).toLocaleString();
+    // --- 修正箇所：プロフィール表示の際に累計値を優先的に探す ---
+    if (chatEl) chatEl.innerText = (u.stats?.chat || u.stats?.chat_chars || 0).toLocaleString();
+    if (vcEl) vcEl.innerText = (u.stats?.vc || u.stats?.vc_minutes || 0).toLocaleString();
 }
 
 async function executeOrderSilent(password) {
