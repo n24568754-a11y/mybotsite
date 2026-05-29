@@ -373,13 +373,6 @@
             "goal": 5,
             "type": "gacha_count",
             "is_daily": false
-        },
-        "m_gacha_count_8241": {
-            "name": "20回行う",
-            "reward": 20000,
-            "goal": 20,
-            "type": "gacha_count",
-            "is_daily": false
         }
     },
     "CURRENCY_NAME": "星",
@@ -387,20 +380,22 @@
         "tenya": {
             "name": "天",
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1368428956214100062/avatars/e21f3f3959dbcf9d6762d0a434c6babf.png?size=1024",
-            "money": 92165289,
+            "money": 92142940,
             "stats": {
-                "chat": 102164,
-                "vc": 4145,
-                "daily_chat": 14876,
-                "daily_vc": 0,
-                "gacha_count": 53,
+                "chat": 102196,
+                "vc": 4246,
+                "daily_chat": 14908,
+                "daily_vc": 101,
+                "gacha_count": 54,
                 "send_money_total": 1000001,
-                "daily_spent": 10000,
-                "total_spent": 10000,
+                "daily_spent": 30000,
+                "total_spent": 30000,
                 "daily_send": 0,
-                "daily_purchases": 1,
-                "total_purchases": 1,
-                "daily_gacha": 1
+                "daily_purchases": 2,
+                "total_purchases": 2,
+                "daily_gacha": 2,
+                "chinchiro_total": 1000,
+                "daily_chinchiro": 1000
             },
             "inventory": [
                 "1497207010721136691",
@@ -432,7 +427,7 @@
                 "1497206404543414322": "2026-06-28T10:46:20.748237",
                 "1497207412937982052": "2026-06-08T02:58:14.454806",
                 "1497205585437790278": "2026-06-14T06:20:33.131096",
-                "1497206030315290816": "2026-06-08T02:54:14.244634",
+                "1497206030315290816": "2026-06-28T16:23:47.418434",
                 "1497204858204323980": "2026-06-08T02:58:05.159530",
                 "1497207225255727224": "2026-06-28T15:33:41.832125",
                 "1497622240928202896": "2026-06-08T02:56:09.924795",
@@ -443,7 +438,8 @@
                 "1496907423318016001": "2026-06-28T10:46:11.321886",
                 "1497207151016542349": "2026-06-28T10:46:36.763217",
                 "1497204772615491634": "2026-06-28T10:46:53.758490",
-                "1497205320945111180": "2026-06-28T10:51:46.816809"
+                "1497205320945111180": "2026-06-28T10:51:46.816809",
+                "1496907337275932732": "2026-06-28T16:24:06.081013"
             },
             "completed_missions": [
                 "m_chat_chars_6240",
@@ -465,10 +461,10 @@
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1387724679225278484/avatars/5d4af9294dc352544026da34825387f0.png?size=1024",
             "money": 74888,
             "stats": {
-                "chat": 6732,
-                "vc": 5772,
-                "daily_chat": 0,
-                "daily_vc": 368,
+                "chat": 6736,
+                "vc": 5872,
+                "daily_chat": 4,
+                "daily_vc": 468,
                 "gacha_count": 11,
                 "send_money_total": 2650003,
                 "daily_spent": 0,
@@ -476,7 +472,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [
                 "1497207151016542349",
@@ -498,7 +496,8 @@
                 "m_chat_chars_6240",
                 "m_vc_minutes_7182",
                 "m_daily_vc_3475",
-                "m_daily_vc_8990"
+                "m_daily_vc_8990",
+                "m_gacha_count_6572"
             ],
             "claimed_missions": []
         },
@@ -518,7 +517,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [
                 "1497207507528192031",
@@ -547,7 +548,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [],
             "subscriptions": {},
@@ -573,7 +576,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [],
             "subscriptions": {},
@@ -598,7 +603,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [],
             "subscriptions": {},
@@ -621,7 +628,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [
                 "1497206816042647673"
@@ -650,7 +659,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [
                 "1497207225255727224"
@@ -679,7 +690,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [],
             "subscriptions": {},
@@ -704,7 +717,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [
                 "1497622958456438927",
@@ -740,7 +755,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [
                 "1497205668619358380",
@@ -785,7 +802,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [
                 "1497207677753888778",
@@ -817,7 +836,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [
                 "1497205320945111180",
@@ -850,7 +871,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [
                 "1497205518870249512",
@@ -883,7 +906,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [],
             "subscriptions": {},
@@ -908,7 +933,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [
                 "1497206030315290816",
@@ -943,7 +970,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [
                 "1497207677753888778"
@@ -973,7 +1002,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [
                 "1497206499506786436",
@@ -990,7 +1021,7 @@
         },
         "8888": {
             "name": "神様",
-            "avatar": "https://cdn.discordapp.com/avatars/1488682620182335600/70ab81e54d2b1bfd39fb5dc259173bb6.png?size=1024",
+            "avatar": "https://cdn.discordapp.com/avatars/1488682620182335600/12f774debb2cf696a6292a80a8e9c924.png?size=1024",
             "money": 50000,
             "stats": {
                 "chat": 136,
@@ -1004,7 +1035,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [],
             "subscriptions": {},
@@ -1029,7 +1062,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [
                 "1497207010721136691",
@@ -1060,7 +1095,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [],
             "subscriptions": {},
@@ -1085,7 +1122,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [],
             "subscriptions": {},
@@ -1110,7 +1149,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [],
             "subscriptions": {},
@@ -1135,7 +1176,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [
                 "1497205425274224821",
@@ -1167,7 +1210,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [
                 "1497204970481520701"
@@ -1196,7 +1241,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [],
             "subscriptions": {},
@@ -1221,7 +1268,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [],
             "subscriptions": {},
@@ -1247,7 +1296,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [],
             "subscriptions": {},
@@ -1273,7 +1324,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [
                 "1497622549964656730"
@@ -1305,7 +1358,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [
                 "1497622549964656730",
@@ -1336,7 +1391,9 @@
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 0,
-                "daily_gacha": 0
+                "daily_gacha": 0,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
             },
             "inventory": [],
             "subscriptions": {

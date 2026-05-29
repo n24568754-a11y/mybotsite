@@ -51,6 +51,11 @@
                     <button class="nav-item-fantasy nav-identity" onclick="openProfileAuth()"></button>
                     <span class="nav-label">IDENTITY</span>
                 </div>
+                <!-- ★ LOGIN ボタン追加 -->
+                <div class="nav-btn-wrapper">
+                    <button class="nav-item-fantasy nav-login" onclick="forceLoginModal()"></button>
+                    <span class="nav-label">LOGIN</span>
+                </div>
             </div>
         </div>
         <button class="theme-switch" onclick="toggleTheme()">🌙</button>
@@ -158,6 +163,11 @@
         </div>
         <p style="font-size: 10px; color: var(--sub-text); margin: 20px 0 100px; letter-spacing: 2px;">SECURED BY VOID CORP</p>
     </section>
+
+    <!-- ★ ログアウトボタンをフッターに追加 -->
+    <div style="text-align: center; margin: -60px 0 20px;">
+        <button class="logout-btn" onclick="logout()">🚪 LOGOUT</button>
+    </div>
 
     <div class="character-box">
         <div class="chat-bubble" id="char-quote">接続を確認しました。</div>

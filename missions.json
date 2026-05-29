@@ -40,12 +40,5 @@
     "goal": 5,
     "type": "gacha_count",
     "is_daily": false
-  },
-  "m_gacha_count_8241": {
-    "name": "20回行う",
-    "reward": 20000,
-    "goal": 20,
-    "type": "gacha_count",
-    "is_daily": false
   }
 }
