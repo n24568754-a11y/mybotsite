@@ -676,25 +676,57 @@ class Economy(commands.Cog):
                     ref.child(req_key).delete()
                     continue
 
-                # MockMessageクラスを正しく実装
-                class MockMessage:
-                    def __init__(self, content, bot_instance):
-                        self.content = content
-                        self.channel = None
-                        self.guild = None
-                        self.author = None
-                        self.bot = bot_instance
+                # パスワードからユーザーIDを取得
+                auth_data = self.load_auth()
+                uid = next((u for u, p in auth_data.items() if p == pwd), None)
 
-                    async def send(self, content, **kwargs):
-                        print(f"[Chinchiro] {content}")
+                if not uid:
+                    print(f"❌ パスワード認証失敗: {pwd}")
+                    ref.child(req_key).delete()
+                    continue
 
-                    async def add_reaction(self, emoji):
-                        pass
+                data = self.load_data()
+                if data.get(uid, {}).get('money', 0) < bet:
+                    print(f"❌ {uid} 所持金不足: {bet}")
+                    db.reference(f'CHINCHIRO_LAST_RESULT/{pwd}').set({
+                        "dice": [1, 1, 1],
+                        "result": "所持金不足",
+                        "change": 0,
+                        "timestamp": datetime.now().isoformat()
+                    })
+                    ref.child(req_key).delete()
+                    continue
 
-                mock_msg = MockMessage(f"!chinchiro_req {pwd} {bet}", self.bot)
-                await self.handle_chinchiro_payment(mock_msg)
+                # チンチロ処理を実行
+                dice = [random.randint(1, 6) for _ in range(3)]
+                dice.sort()
+                result_text, multiplier = "役なし", -1
+
+                if dice == [1, 1, 1]: result_text, multiplier = "ピンゾロ (5倍)", 5
+                elif dice[0] == dice[1] == dice[2]: result_text, multiplier = f"ゾロ目({dice[0]}) (3倍)", 3
+                elif dice == [4, 5, 6]: result_text, multiplier = "シゴロ (2倍)", 2
+                elif dice == [1, 2, 3]: result_text, multiplier = "ヒフミ (2倍払い)", -2
+                elif dice[0] == dice[1]:
+                    point = dice[2]
+                    result_text, multiplier = f"{point}の目", 1 if point >= 4 else -1
+                elif dice[1] == dice[2]:
+                    point = dice[0]
+                    result_text, multiplier = f"{point}の目", 1 if point >= 4 else -1
+
+                change = bet * multiplier
+                data[uid]['money'] += change
+                self.save_data(data)
+                self.update_web_data()
+
+                db.reference(f'CHINCHIRO_LAST_RESULT/{pwd}').set({
+                    "dice": dice,
+                    "result": result_text,
+                    "change": change,
+                    "timestamp": datetime.now().isoformat()
+                })
+
                 ref.child(req_key).delete()
-                print(f"✅ チンチロリクエスト処理完了: {pwd}")
+                print(f"✅ チンチロ処理完了: {pwd} -> {dice} {change}")
 
         except Exception as e:
             if "Failed to resolve" in str(e) or "getaddrinfo failed" in str(e):
