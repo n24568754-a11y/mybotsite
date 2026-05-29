@@ -22,12 +22,13 @@ scene.add(fillLight);
 
 // 各面に描画する数字を明確に定義（サイコロの標準配置）
 // 標準的なサイコロ: 1-6, 2-5, 3-4 が対面
-// 正面(1) - 背面(6), 右面(2) - 左面(5), 上面(3) - 下面(4)
+// 正面(1) - 背面(6), 右面(5) - 左面(2), 上面(4) - 下面(3)
+// 【修正】実際のテクスチャの配置に合わせて調整
 const faceNumbers = {
-    right: 2,   // x+
-    left: 5,    // x-
-    up: 3,      // y+
-    down: 4,    // y-
+    right: 5,   // x+
+    left: 2,    // x-
+    up: 4,      // y+
+    down: 3,    // y-
     front: 1,   // z+
     back: 6     // z-
 };
@@ -85,14 +86,14 @@ function createDiceMaterials() {
 }
 
 // 正面に表示したい数字と、そのための回転角度
-// 正面を向かせたい数字と、それに必要な回転
+// 【修正】実際のテクスチャの配置に合わせて調整
 const rotationsToShowNumber = {
     1: { x: 0, y: 0, z: 0 },                    // 前面そのまま
-    2: { x: 0, y: Math.PI, z: 0 },              // 背面を前に
-    3: { x: -Math.PI / 2, y: 0, z: 0 },         // 上面を前に
-    4: { x: Math.PI / 2, y: 0, z: 0 },          // 下面を前に
-    5: { x: 0, y: -Math.PI / 2, z: 0 },         // 右面を前に
-    6: { x: 0, y: Math.PI / 2, z: 0 }           // 左面を前に
+    2: { x: 0, y: -Math.PI / 2, z: 0 },         // 右面
+    3: { x: Math.PI / 2, y: 0, z: 0 },          // 下面
+    4: { x: -Math.PI / 2, y: 0, z: 0 },         // 上面
+    5: { x: 0, y: Math.PI / 2, z: 0 },          // 左面
+    6: { x: 0, y: Math.PI, z: 0 }               // 背面
 };
 
 const geometry = new THREE.BoxGeometry(1.2, 1.2, 1.2);
@@ -143,19 +144,16 @@ window.showNumber = (num) => {
 
 // 現在の正面の数字を取得
 window.getFrontNumber = () => {
-    // 簡易的な判定
     const rx = dice.rotation.x % (Math.PI * 2);
     const ry = dice.rotation.y % (Math.PI * 2);
-
-    // 各軸の許容誤差
     const eps = 0.3;
 
     if (Math.abs(ry) < eps) return 1;
-    if (Math.abs(ry - Math.PI) < eps || Math.abs(ry + Math.PI) < eps) return 2;
-    if (Math.abs(rx + Math.PI/2) < eps) return 3;
-    if (Math.abs(rx - Math.PI/2) < eps) return 4;
+    if (Math.abs(ry - Math.PI) < eps || Math.abs(ry + Math.PI) < eps) return 6;
+    if (Math.abs(rx + Math.PI/2) < eps) return 4;
+    if (Math.abs(rx - Math.PI/2) < eps) return 3;
     if (Math.abs(ry + Math.PI/2) < eps) return 5;
-    if (Math.abs(ry - Math.PI/2) < eps) return 6;
+    if (Math.abs(ry - Math.PI/2) < eps) return 2;
     return "?";
 };
 

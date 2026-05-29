@@ -375,9 +375,9 @@
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1368428956214100062/avatars/e21f3f3959dbcf9d6762d0a434c6babf.png?size=1024",
             "money": 92140291,
             "stats": {
-                "chat": 101838,
+                "chat": 102002,
                 "vc": 4145,
-                "daily_chat": 14550,
+                "daily_chat": 14714,
                 "daily_vc": 0,
                 "gacha_count": 52,
                 "send_money_total": 1000001
@@ -1097,14 +1097,14 @@
                 "m_chat_chars_6240"
             ]
         },
-        "Haku0312": {
+        "Yoyo0312": {
             "name": "余白",
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1191327231931330652/avatars/f4457404e36a0be355fe89715961cc79.png?size=1024",
             "money": 50000,
             "stats": {
-                "chat": 134,
+                "chat": 154,
                 "vc": 44,
-                "daily_chat": 0,
+                "daily_chat": 20,
                 "daily_vc": 0,
                 "gacha_count": 0,
                 "send_money_total": 0
