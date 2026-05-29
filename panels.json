@@ -1,86 +1,106 @@
 {
-    "1500902513908645918": {
-        "vc_name": "宵宿",
-        "user_limit": 2,
-        "cost": 1000
-    },
-    "1500905232505503855": {
-        "vc_name": "ゲーム",
-        "user_limit": 0,
-        "cost": 0
-    },
-    "1500905561296867531": {
-        "vc_name": "卓",
-        "user_limit": 0,
-        "cost": 0
-    },
-    "1502639656951611572": {
-        "vc_name": "裏宵宿",
-        "user_limit": 0,
-        "cost": 5000,
-        "is_private": true
-    },
-    "1502639956990890097": {
-        "vc_name": "宵宿",
-        "user_limit": 2,
-        "cost": 1000,
-        "is_private": false
-    },
-    "1502640189389148260": {
-        "vc_name": "ゲーム",
+    "1509179228430663831": {
+        "vc_name": "カジノ-",
         "user_limit": 0,
         "cost": 0,
-        "is_private": false
+        "is_private": false,
+        "duration": 24,
+        "allow_rename": true,
+        "allow_subtitle": true,
+        "allow_public": false,
+        "allow_delete": true,
+        "send_log": true,
+        "specific_log_channel_id": 1509178809708974191
     },
-    "1502640333295583353": {
-        "vc_name": "カジノ",
+    "1509189897947320340": {
+        "vc_name": "高級宿-",
         "user_limit": 0,
-        "cost": 0,
-        "is_private": false
-    },
-    "1502640871428980778": {
-        "vc_name": "裏宵宿",
-        "user_limit": 0,
-        "cost": 10000,
-        "is_private": true
-    },
-    "log_config": {
-        "1496790362294063114": 1502771003489652868
-    },
-    "1502775215241822300": {
-        "vc_name": "宵宿-",
-        "user_limit": 2,
-        "cost": 10000,
-        "is_private": false
-    },
-    "1502775487804473445": {
-        "vc_name": "宵宿-",
-        "user_limit": 2,
         "cost": 100000,
-        "is_private": false
+        "is_private": false,
+        "duration": 24,
+        "allow_rename": true,
+        "allow_subtitle": true,
+        "allow_public": false,
+        "allow_delete": true,
+        "send_log": true,
+        "specific_log_channel_id": 1507713929025945791
     },
-    "1502775764679000185": {
+    "1509687073144176850": {
         "vc_name": "宵宿-",
         "user_limit": 2,
         "cost": 10000,
-        "is_private": false
+        "duration": 24,
+        "allow_rename": true,
+        "allow_subtitle": true,
+        "allow_public": false,
+        "allow_private": false,
+        "allow_delete": true,
+        "send_log": true,
+        "specific_log_channel_id": 1507713929025945791
     },
-    "1502776816316977292": {
-        "vc_name": "裏宵宿-",
-        "user_limit": 0,
-        "cost": 50000,
-        "is_private": true
-    },
-    "1503743857622384650": {
+    "1509687251020546249": {
         "vc_name": "宵宿-",
         "user_limit": 2,
         "cost": 0,
-        "is_private": false
+        "duration": 24,
+        "allow_rename": true,
+        "allow_subtitle": true,
+        "allow_public": false,
+        "allow_private": false,
+        "allow_delete": true,
+        "send_log": true,
+        "specific_log_channel_id": 1507713929025945791
     },
-    "1503744077022232607": {
-        "vc_name": "宵宿-",
+    "1509687510270480404": {
+        "vc_name": "裏宵宿-",
         "user_limit": 2,
-        "cost": 10000,
-        "is_private": false
+        "cost": 50000,
+        "duration": 24,
+        "allow_rename": true,
+        "allow_subtitle": true,
+        "allow_public": true,
+        "allow_private": true,
+        "allow_delete": true,
+        "send_log": true,
+        "specific_log_channel_id": 1502771003489652868
+    },
+    "1509687752789196993": {
+        "vc_name": "カジノ-",
+        "user_limit": 0,
+        "cost": 0,
+        "duration": 24,
+        "allow_rename": true,
+        "allow_subtitle": true,
+        "allow_public": false,
+        "allow_private": false,
+        "allow_delete": true,
+        "send_log": true,
+        "specific_log_channel_id": 1500874570284929034
+    },
+    "1509688173352190156": {
+        "vc_name": "ゲーム-",
+        "user_limit": 0,
+        "cost": 0,
+        "duration": 24,
+        "allow_rename": true,
+        "allow_subtitle": true,
+        "allow_public": false,
+        "allow_private": false,
+        "allow_delete": true,
+        "send_log": true,
+        "specific_log_channel_id": 1509687911912570982
+    },
+    "1509688360938242188": {
+        "vc_name": "カジノ-",
+        "user_limit": 0,
+        "cost": 0,
+        "duration": 24,
+        "allow_rename": true,
+        "allow_subtitle": true,
+        "allow_public": false,
+        "allow_private": false,
+        "allow_delete": true,
+        "send_log": true,
+        "specific_log_channel_id": 1509178809708974191
     }
 }

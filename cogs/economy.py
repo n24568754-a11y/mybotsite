@@ -48,6 +48,12 @@ class Auth(commands.Cog):
         self.save_auth(auth_data)
         economy_cog = self.bot.get_cog('Economy')
         if economy_cog:
+            # === 修正: パスワード設定時に新規ユーザーであればデフォルトデータを生成 ===
+            data = economy_cog.load_data()
+            if user_id not in data:
+                data[user_id] = economy_cog.get_default_user_data()
+                economy_cog.save_data(data)
+
             economy_cog.update_web_data()
             await interaction.followup.send(f"✅ パスワードを設定し、Webサイトへ同期しました。", ephemeral=True)
         else:
@@ -187,6 +193,10 @@ class Economy(commands.Cog):
             for user_id, info in user_data.items():
                 pwd = auth_data.get(user_id)
                 if pwd:
+                    # パスワードにFirebaseのキー禁止文字が含まれている場合はスキップ
+                    if not pwd.strip() or any(c in pwd for c in ['.', '$', '#', '[', ']', '/']):
+                        continue
+
                     member = None
                     for g in self.bot.guilds:
                         member = g.get_member(int(user_id))
@@ -195,22 +205,32 @@ class Economy(commands.Cog):
                     profiles[pwd] = {
                         "name": member.display_name if member else f"User_{user_id[-4:]}",
                         "avatar": str(member.display_avatar.url) if member else "",
-                        "money": info.get('money', 0),
+                        "money": int(info.get('money', 0)),
                         "stats": {
-                            "chat": info.get('chat', 0), 
-                            "vc": info.get('vc', 0),
-                            "daily_chat": info.get('daily_chat', 0), 
-                            "daily_vc": info.get('daily_vc', 0),
-                            "gacha_count": info.get('gacha_count', 0),
-                            "send_money_total": info.get('send_money_total', 0)
+                            "chat": int(info.get('chat', 0)), 
+                            "vc": int(info.get('vc', 0)),
+                            "daily_chat": int(info.get('daily_chat', 0)), 
+                            "daily_vc": int(info.get('daily_vc', 0)),
+                            "gacha_count": int(info.get('gacha_count', 0)),
+                            "send_money_total": int(info.get('send_money_total', 0))
                         },
                         "inventory": list(dict.fromkeys(info.get('inventory', []))),
                         "subscriptions": info.get('subscriptions', {}),
                         "completed_missions": info.get('completed_missions', []),
                         "claimed_missions": info.get('claimed_missions', [])
                     }
-            web_json = {"SHOP_DATA": shop_data, "GACHA_DATA": gacha_data, "MISSIONS": missions, "CURRENCY_NAME": self.currency, "USER_PROFILES": profiles}
-            db.reference('/').update(web_json)
+
+            # 各種データの形式安全チェック
+            web_json = {
+                "SHOP_DATA": shop_data if isinstance(shop_data, list) else [],
+                "GACHA_DATA": gacha_data if isinstance(gacha_data, list) else [],
+                "MISSIONS": missions if isinstance(missions, dict) else {},
+                "CURRENCY_NAME": self.currency,
+                "USER_PROFILES": profiles
+            }
+
+            # === 修正: update から set に変更してJSON構造全体をきれいに上書き同期 ===
+            db.reference('/').set(web_json)
             with open(WEB_JSON_FILE, 'w', encoding='utf-8') as f: json.dump(web_json, f, indent=4, ensure_ascii=False)
             return True
         except Exception as e: print(f"Update Error: {e}"); return False
@@ -591,10 +611,13 @@ class Economy(commands.Cog):
         try:
             await 相手.send(embed=embed, view=view)
             await interaction.response.send_message(f"✅ {相手.display_name} さんに送信しました。", ephemeral=True)
-        except: await interaction.response.send_message("❌ DM送信に失敗しました。", ephemeral=True)
+        except: await interaction.force_respond("❌ DM送信に失敗しました。", ephemeral=True)
 
     @tasks.loop(seconds=1)
     async def web_request_watcher(self):
+        # === 修正: Botのログイン処理が完了するまでFirebaseのデータ確認をスキップ（DNSエラー防止） ===
+        if not self.bot.is_ready():
+            return
         try:
             ref = db.reference('CHINCHIRO_SYSTEM/REQUESTS')
             requests = ref.get()
@@ -607,7 +630,12 @@ class Economy(commands.Cog):
                     async def send(self, content, **kwargs): print(f"[WebChinchiro Log]: {content}")
                 await self.handle_chinchiro_payment(MockMessage(f"!chinchiro_req {pwd} {bet}"))
                 ref.child(req_key).delete()
-        except Exception as e: print(f"Watcher Error: {e}")
+        except Exception as e:
+            # 起動直後のドメイン解決一時エラーであれば静かにスルー
+            if "Failed to resolve" in str(e) or "getaddrinfo failed" in str(e):
+                pass
+            else:
+                print(f"Watcher Error: {e}")
 
 async def setup(bot):
     await bot.add_cog(Auth(bot))

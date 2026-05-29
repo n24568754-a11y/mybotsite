@@ -1,0 +1,24 @@
+{
+    "1509560149994639380": {
+        "vc_name": "高級宵宿✨️-",
+        "user_limit": 0,
+        "cost": 100000,
+        "duration": 24,
+        "bitrate": 384,
+        "topic": "テストテストテストテストテストテストテスト",
+        "custom_message": "高級宵宿作成ログ",
+        "allow_rename": true,
+        "allow_subtitle": true,
+        "allow_public": true,
+        "allow_private": true,
+        "allow_delete": true,
+        "send_log": true,
+        "specific_log_channel_id": 1502771003489652868
+    },
+    "1509686341338923028": {
+        "vc_name": "高級宵宿-",
+        "cost": 100000,
+        "send_log": true,
+        "specific_log_channel_id": 1502771003489652868
+    }
+}

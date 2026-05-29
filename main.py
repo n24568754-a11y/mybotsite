@@ -1,4 +1,3 @@
-
 import discord
 from discord.ext import commands
 from discord import app_commands
@@ -78,7 +77,7 @@ class MyBot(commands.Bot):
                 await self.load_extension("cogs.panel")
 
                 # パネルBotが保持するコマンドのホワイトリスト
-                allowed_commands = ["set_panel", "set_log_channel"]
+                allowed_commands = ["set_panel", "set_log_channel", "set_premium_panel", "sync"]
 
                 # パネルBotは指定以外のコマンドを表示させない（整理）
                 for cmd in list(self.tree.get_commands()):
