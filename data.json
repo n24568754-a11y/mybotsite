@@ -1,6 +1,6 @@
 {
   "1368428956214100062": {
-    "money": 92140311,
+    "money": 92140291,
     "last_daily": "2026-05-11T07:29:54.941239",
     "subscriptions": {
       "1497204970481520701": "2026-06-08T18:00:43.299308",
@@ -759,11 +759,11 @@
     "last_daily": null,
     "subscriptions": {},
     "inventory": [],
-    "chat": 498,
+    "chat": 512,
     "vc": 275,
     "gacha_count": 0,
     "send_money_total": 0,
-    "daily_chat": 0,
+    "daily_chat": 14,
     "daily_vc": 0,
     "completed_missions": [
       "m_chat_chars_6240",
@@ -848,15 +848,17 @@
     "claimed_missions": []
   },
   "768797460638203904": {
-    "money": 100000,
+    "money": 90000,
     "last_daily": null,
-    "subscriptions": {},
+    "subscriptions": {
+      "1496907337275932732": "2026-06-28T12:46:51.453082"
+    },
     "inventory": [],
-    "chat": 192,
+    "chat": 200,
     "vc": 317,
     "gacha_count": 0,
     "send_money_total": 0,
-    "daily_chat": 76,
+    "daily_chat": 84,
     "daily_vc": 164,
     "completed_missions": [
       "m_chat_chars_6240",

@@ -373,7 +373,7 @@
         "tenya": {
             "name": "天",
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1368428956214100062/avatars/e21f3f3959dbcf9d6762d0a434c6babf.png?size=1024",
-            "money": 92140311,
+            "money": 92140291,
             "stats": {
                 "chat": 101624,
                 "vc": 4145,
@@ -1056,9 +1056,9 @@
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1421148398324547624/avatars/2efbc393a9e90cedf0a78f95121ecdd2.png?size=1024",
             "money": 51120,
             "stats": {
-                "chat": 498,
+                "chat": 512,
                 "vc": 275,
-                "daily_chat": 0,
+                "daily_chat": 14,
                 "daily_vc": 0,
                 "gacha_count": 0,
                 "send_money_total": 0
@@ -1119,17 +1119,19 @@
         "amakake220": {
             "name": "天翔",
             "avatar": "https://cdn.discordapp.com/avatars/768797460638203904/987decd212c60d140d46652e960bd02a.png?size=1024",
-            "money": 100000,
+            "money": 90000,
             "stats": {
-                "chat": 192,
+                "chat": 200,
                 "vc": 317,
-                "daily_chat": 76,
+                "daily_chat": 84,
                 "daily_vc": 164,
                 "gacha_count": 0,
                 "send_money_total": 0
             },
             "inventory": [],
-            "subscriptions": {},
+            "subscriptions": {
+                "1496907337275932732": "2026-06-28T12:46:51.453082"
+            },
             "completed_missions": [
                 "m_chat_chars_6240",
                 "m_vc_minutes_7182"
