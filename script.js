@@ -496,3 +496,61 @@ async function executeOrderSilent(password) {
         body: JSON.stringify({ content: `!pay_req ${password} ${currentItem.id} ${currentItem.price} ${currentItem.name}` })
     });
 }
+
+// ========== 追加機能: 強制ログインモーダル & ログアウト ==========
+function forceLoginModal() {
+    const modal = document.getElementById('auth-modal');
+    const pwdInput = document.getElementById('password-input');
+    const confirmBtn = document.getElementById('modal-confirm-btn');
+
+    if (!modal || !pwdInput || !confirmBtn) return;
+
+    // 入力フィールドをクリア
+    pwdInput.value = '';
+
+    // 確認ボタンの動作を一時的に上書き
+    const originalOnClick = confirmBtn.onclick;
+    confirmBtn.onclick = () => {
+        const pwd = pwdInput.value.trim();
+        if (window.USER_PROFILES && window.USER_PROFILES[pwd]) {
+            sessionPassword = pwd;
+            localStorage.setItem('user_pwd', pwd);
+            closeModal();
+            // ページをリロードして状態を更新
+            location.reload();
+        } else {
+            alert("ACCESS DENIED: パスワードが正しくありません。");
+        }
+    };
+    showModal();
+
+    // モーダルが閉じられたら元の動作に戻す
+    const closeHandler = () => {
+        confirmBtn.onclick = originalOnClick;
+        document.removeEventListener('modalClosed', closeHandler);
+    };
+    document.addEventListener('modalClosed', closeHandler);
+}
+
+function logout() {
+    if (confirm("ログアウトしますか？\n（再度ログインが必要になります）")) {
+        localStorage.removeItem('user_pwd');
+        sessionPassword = "";
+        showPage('menu-page');
+        setTimeout(() => {
+            if (!sessionPassword) forceLoginModal();
+        }, 100);
+    }
+}
+
+// ページ読み込み時に未認証なら自動でログインモーダルを表示
+document.addEventListener('DOMContentLoaded', () => {
+    const savedPwd = localStorage.getItem('user_pwd');
+    if (savedPwd && window.USER_PROFILES && window.USER_PROFILES[savedPwd]) {
+        sessionPassword = savedPwd;
+    } else {
+        setTimeout(() => {
+            if (!sessionPassword) forceLoginModal();
+        }, 500);
+    }
+});
