@@ -316,6 +316,7 @@ body::before {
 .type-spent { background: #e67e22; }
 .type-send { background: #1abc9c; }
 .type-buy { background: #3498db; }
+.type-chinchiro { background: #e67e22; color: #fff; }
 
 /* --- Character Mascot --- */
 .character-box {

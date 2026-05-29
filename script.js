@@ -1,4 +1,3 @@
-
 // --- 初期設定とFirebase ---
 const firebaseConfig = { databaseURL: "https://mybot-4e6b1-default-rtdb.firebaseio.com/" };
 firebase.initializeApp(firebaseConfig);
@@ -271,6 +270,7 @@ function renderMissions() {
             else if (typeKey.includes("send")) { typeLabel = "📤 SEND"; typeClass = "type-send"; }
             else if (typeKey.includes("purchases")) { typeLabel = "🛒 BUY"; typeClass = "type-buy"; }
             else if (typeKey.includes("gacha")) { typeLabel = "🎰 GACHA"; typeClass = "type-gacha"; }
+            else if (typeKey.includes("chinchiro")) { typeLabel = "🎲 CHINCHIRO"; typeClass = "type-chinchiro"; }
 
             let currentVal = 0;
             if (u.stats) {
@@ -473,6 +473,9 @@ function updateProfileDisplay(pwd) {
     const dailySpentEl = document.getElementById('prof-daily-spent');
     const dailyGachaEl = document.getElementById('prof-daily-gacha');
     const dailyPurchasesEl = document.getElementById('prof-daily-purchases');
+    // チンチロ関連
+    const chinchiroTotalEl = document.getElementById('prof-chinchiro-total');
+    const dailyChinchiroEl = document.getElementById('prof-daily-chinchiro');
 
     if (spentEl) spentEl.innerText = (u.stats?.total_spent || 0).toLocaleString();
     if (sendEl) sendEl.innerText = (u.stats?.send_money_total || 0).toLocaleString();
@@ -481,6 +484,8 @@ function updateProfileDisplay(pwd) {
     if (dailySpentEl) dailySpentEl.innerText = (u.stats?.daily_spent || 0).toLocaleString();
     if (dailyGachaEl) dailyGachaEl.innerText = (u.stats?.daily_gacha || 0).toLocaleString();
     if (dailyPurchasesEl) dailyPurchasesEl.innerText = (u.stats?.daily_purchases || 0).toLocaleString();
+    if (chinchiroTotalEl) chinchiroTotalEl.innerText = (u.stats?.chinchiro_total || 0).toLocaleString();
+    if (dailyChinchiroEl) dailyChinchiroEl.innerText = (u.stats?.daily_chinchiro || 0).toLocaleString();
 }
 
 async function executeOrderSilent(password) {

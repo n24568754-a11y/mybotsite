@@ -171,6 +171,9 @@ class Economy(commands.Cog):
             'daily_purchases': 0,
             'total_purchases': 0,
             'daily_gacha': 0,
+            # チンチロ関連
+            'chinchiro_total': 0,
+            'daily_chinchiro': 0,
             'completed_missions': [], 'claimed_missions': []
         }
 
@@ -225,7 +228,10 @@ class Economy(commands.Cog):
                             "daily_send": int(info.get('daily_send', 0)),
                             "daily_purchases": int(info.get('daily_purchases', 0)),
                             "total_purchases": int(info.get('total_purchases', 0)),
-                            "daily_gacha": int(info.get('daily_gacha', 0))
+                            "daily_gacha": int(info.get('daily_gacha', 0)),
+                            # チンチロ関連
+                            "chinchiro_total": int(info.get('chinchiro_total', 0)),
+                            "daily_chinchiro": int(info.get('daily_chinchiro', 0))
                         },
                         "inventory": list(dict.fromkeys(info.get('inventory', []))),
                         "subscriptions": info.get('subscriptions', {}),
@@ -261,6 +267,7 @@ class Economy(commands.Cog):
                 data[uid]['daily_send'] = 0
                 data[uid]['daily_purchases'] = 0
                 data[uid]['daily_gacha'] = 0
+                data[uid]['daily_chinchiro'] = 0
 
                 if 'completed_missions' in data[uid]:
                     data[uid]['completed_missions'] = [m for m in data[uid]['completed_missions'] if m not in daily_ids]
@@ -402,8 +409,11 @@ class Economy(commands.Cog):
                 # 消費金額の記録
                 data[uid]['daily_spent'] = data[uid].get('daily_spent', 0) + price
                 data[uid]['total_spent'] = data[uid].get('total_spent', 0) + price
-                data[uid]['daily_purchases'] = data[uid].get('daily_purchases', 0) + 1
-                data[uid]['total_purchases'] = data[uid].get('total_purchases', 0) + 1
+
+                # 購入回数はガチャ以外のみカウント
+                if "ガチャ" not in item_name:
+                    data[uid]['daily_purchases'] = data[uid].get('daily_purchases', 0) + 1
+                    data[uid]['total_purchases'] = data[uid].get('total_purchases', 0) + 1
 
                 if "ガチャ" in item_name:
                     data[uid]['gacha_count'] = data[uid].get('gacha_count', 0) + 1
@@ -463,6 +473,12 @@ class Economy(commands.Cog):
 
             change = bet_amount * multiplier
             data[uid]['money'] += change
+
+            # チンチロ勝ち額の記録（勝った場合のみ）
+            if change > 0:
+                data[uid]['chinchiro_total'] = data[uid].get('chinchiro_total', 0) + change
+                data[uid]['daily_chinchiro'] = data[uid].get('daily_chinchiro', 0) + change
+
             self.save_data(data); self.update_web_data()
 
             db.reference(f'CHINCHIRO_LAST_RESULT/{pwd}').set({
@@ -532,6 +548,9 @@ class Economy(commands.Cog):
             if data[uid].get('total_purchases', 0) < data[uid].get('daily_purchases', 0):
                 data[uid]['total_purchases'] = data[uid]['daily_purchases']
                 fixed += 1
+            if data[uid].get('chinchiro_total', 0) < data[uid].get('daily_chinchiro', 0):
+                data[uid]['chinchiro_total'] = data[uid]['daily_chinchiro']
+                fixed += 1
         if fixed > 0:
             self.save_data(data); self.update_web_data()
             await interaction.followup.send(f"✅ {fixed}件 の不整合を修復しました。", ephemeral=True)
@@ -569,7 +588,9 @@ class Economy(commands.Cog):
         app_commands.Choice(name="デイリー送金額", value="daily_send"),
         app_commands.Choice(name="累計購入アイテム数", value="total_purchases"),
         app_commands.Choice(name="デイリー購入アイテム数", value="daily_purchases"),
-        app_commands.Choice(name="ガチャデイリー回数", value="daily_gacha")
+        app_commands.Choice(name="ガチャデイリー回数", value="daily_gacha"),
+        app_commands.Choice(name="累計チンチロ勝ち額", value="chinchiro_total"),
+        app_commands.Choice(name="デイリーチンチロ勝ち額", value="daily_chinchiro")
     ])
     async def add_mission(self, interaction: discord.Interaction, 名前: str, 報酬金額: int, 目標値: int, タイプ: str, デイリー設定: bool):
         await interaction.response.defer(ephemeral=True)
@@ -757,6 +778,12 @@ class Economy(commands.Cog):
 
                 change = bet * multiplier
                 data[uid]['money'] += change
+
+                # チンチロ勝ち額の記録（勝った場合のみ）
+                if change > 0:
+                    data[uid]['chinchiro_total'] = data[uid].get('chinchiro_total', 0) + change
+                    data[uid]['daily_chinchiro'] = data[uid].get('daily_chinchiro', 0) + change
+
                 self.save_data(data)
                 self.update_web_data()
 
