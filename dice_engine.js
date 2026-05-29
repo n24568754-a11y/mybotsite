@@ -23,7 +23,6 @@ scene.add(fillLight);
 // 各面に描画する数字を明確に定義（サイコロの標準配置）
 // 標準的なサイコロ: 1-6, 2-5, 3-4 が対面
 // 正面(1) - 背面(6), 右面(5) - 左面(2), 上面(4) - 下面(3)
-// 【修正】実際のテクスチャの配置に合わせて調整
 const faceNumbers = {
     right: 5,   // x+
     left: 2,    // x-
@@ -85,15 +84,15 @@ function createDiceMaterials() {
     ];
 }
 
-// 正面に表示したい数字と、そのための回転角度
-// 【修正】実際のテクスチャの配置に合わせて調整
+// 【最終修正版】実際の表示結果に基づくマッピング
+// showNumber(1) → 1, showNumber(2) → 2, ... showNumber(6) → 6
 const rotationsToShowNumber = {
-    1: { x: 0, y: 0, z: 0 },                    // 前面そのまま
-    2: { x: 0, y: -Math.PI / 2, z: 0 },         // 右面
-    3: { x: Math.PI / 2, y: 0, z: 0 },          // 下面
-    4: { x: -Math.PI / 2, y: 0, z: 0 },         // 上面
-    5: { x: 0, y: Math.PI / 2, z: 0 },          // 左面
-    6: { x: 0, y: Math.PI, z: 0 }               // 背面
+    1: { x: 0, y: 0, z: 0 },                    // 前面 → 1
+    2: { x: 0, y: Math.PI / 2, z: 0 },          // +90度 → 2
+    3: { x: Math.PI / 2, y: 0, z: 0 },          // 下面 → 3
+    4: { x: -Math.PI / 2, y: 0, z: 0 },         // 上面 → 4
+    5: { x: 0, y: -Math.PI / 2, z: 0 },         // -90度 → 5
+    6: { x: 0, y: Math.PI, z: 0 }               // 背面 → 6
 };
 
 const geometry = new THREE.BoxGeometry(1.2, 1.2, 1.2);
@@ -138,7 +137,9 @@ window.showNumber = (num) => {
     if (rot) {
         targetRotationX = rot.x;
         targetRotationY = rot.y;
-        console.log(`数字 ${num} を正面に表示: x=${rot.x}, y=${rot.y}`);
+        console.log(`[✅ 更新] 数字 ${num} を正面に表示: x=${rot.x}, y=${rot.y}`);
+    } else {
+        console.log(`[❌ エラー] 数字 ${num} は無効です (1-6 を指定してください)`);
     }
 };
 
@@ -152,12 +153,27 @@ window.getFrontNumber = () => {
     if (Math.abs(ry - Math.PI) < eps || Math.abs(ry + Math.PI) < eps) return 6;
     if (Math.abs(rx + Math.PI/2) < eps) return 4;
     if (Math.abs(rx - Math.PI/2) < eps) return 3;
-    if (Math.abs(ry + Math.PI/2) < eps) return 5;
-    if (Math.abs(ry - Math.PI/2) < eps) return 2;
+    if (Math.abs(ry + Math.PI/2) < eps) return 2;
+    if (Math.abs(ry - Math.PI/2) < eps) return 5;
     return "?";
 };
 
-console.log("=== サイコロテストツール ===");
-console.log("マウスドラッグで回転");
-console.log("コンソールで showNumber(1) などと入力して正面を表示");
-console.log("getFrontNumber() で現在の正面の数字を取得");
+// テスト用：全数字を順番にテスト
+window.testAllNumbers = () => {
+    console.log("=== 全数字テスト開始 ===");
+    for (let i = 1; i <= 6; i++) {
+        setTimeout(() => {
+            window.showNumber(i);
+        }, i * 500);
+    }
+    console.log("=== 2秒後に全数字が順番に表示されます ===");
+};
+
+console.log("=== 🎲 サイコロテストツール v2 (修正版) ===");
+console.log("【更新内容】showNumber(1)〜(6) で正しい数字が正面に表示されるように修正");
+console.log("操作方法:");
+console.log("  - マウスドラッグ: サイコロを回転");
+console.log("  - showNumber(1-6): 指定した数字を正面に表示");
+console.log("  - getFrontNumber(): 現在正面の数字を取得");
+console.log("  - testAllNumbers(): 1〜6を順番にテスト表示");
+console.log("==========================================");

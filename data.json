@@ -1,6 +1,6 @@
 {
   "1368428956214100062": {
-    "money": 92140291,
+    "money": 92140290,
     "last_daily": "2026-05-11T07:29:54.941239",
     "subscriptions": {
       "1497204970481520701": "2026-06-08T18:00:43.299308",
@@ -20,7 +20,7 @@
       "1497204772615491634": "2026-06-28T10:46:53.758490",
       "1497205320945111180": "2026-06-28T10:51:46.816809"
     },
-    "daily_chat": 14714,
+    "daily_chat": 14876,
     "daily_vc": 0,
     "chat_chars": 46328,
     "vc_minutes": 3077,
@@ -61,7 +61,7 @@
       "m_vc_minutes_7182",
       "m_daily_chat_5230"
     ],
-    "chat": 102002,
+    "chat": 102164,
     "vc": 4145,
     "weekly_vc_minutes": 0,
     "evaluator_total_minutes": 47
@@ -832,13 +832,17 @@
     "weekly_vc_minutes": 0
   },
   "1191327231931330652": {
-    "money": 50000,
+    "money": 20000,
     "last_daily": null,
-    "subscriptions": {},
-    "inventory": [],
+    "subscriptions": {
+      "1497622549964656730": "2026-06-28T13:22:29.461418"
+    },
+    "inventory": [
+      "1497622549964656730"
+    ],
     "chat": 154,
     "vc": 44,
-    "gacha_count": 0,
+    "gacha_count": 1,
     "send_money_total": 0,
     "daily_chat": 20,
     "daily_vc": 0,
