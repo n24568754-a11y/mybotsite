@@ -373,11 +373,11 @@
         "tenya": {
             "name": "天",
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1368428956214100062/avatars/e21f3f3959dbcf9d6762d0a434c6babf.png?size=1024",
-            "money": 92140318,
+            "money": 92140333,
             "stats": {
-                "chat": 100476,
+                "chat": 101298,
                 "vc": 4145,
-                "daily_chat": 13188,
+                "daily_chat": 14010,
                 "daily_vc": 0,
                 "gacha_count": 52,
                 "send_money_total": 1000001
@@ -864,7 +864,7 @@
         },
         "8888": {
             "name": "神様",
-            "avatar": "https://cdn.discordapp.com/avatars/1488682620182335600/d706ed124174bff8819f9c78ccf37719.png?size=1024",
+            "avatar": "https://cdn.discordapp.com/avatars/1488682620182335600/b0d28514ccccc15520d0a420e396b751.png?size=1024",
             "money": 50000,
             "stats": {
                 "chat": 136,

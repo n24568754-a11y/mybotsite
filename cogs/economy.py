@@ -48,7 +48,6 @@ class Auth(commands.Cog):
         self.save_auth(auth_data)
         economy_cog = self.bot.get_cog('Economy')
         if economy_cog:
-            # === 修正: パスワード設定時に新規ユーザーであればデフォルトデータを生成 ===
             data = economy_cog.load_data()
             if user_id not in data:
                 data[user_id] = economy_cog.get_default_user_data()
@@ -193,7 +192,6 @@ class Economy(commands.Cog):
             for user_id, info in user_data.items():
                 pwd = auth_data.get(user_id)
                 if pwd:
-                    # パスワードにFirebaseのキー禁止文字が含まれている場合はスキップ
                     if not pwd.strip() or any(c in pwd for c in ['.', '$', '#', '[', ']', '/']):
                         continue
 
@@ -220,7 +218,6 @@ class Economy(commands.Cog):
                         "claimed_missions": info.get('claimed_missions', [])
                     }
 
-            # 各種データの形式安全チェック
             web_json = {
                 "SHOP_DATA": shop_data if isinstance(shop_data, list) else [],
                 "GACHA_DATA": gacha_data if isinstance(gacha_data, list) else [],
@@ -229,7 +226,6 @@ class Economy(commands.Cog):
                 "USER_PROFILES": profiles
             }
 
-            # === 修正: update から set に変更してJSON構造全体をきれいに上書き同期 ===
             db.reference('/').set(web_json)
             with open(WEB_JSON_FILE, 'w', encoding='utf-8') as f: json.dump(web_json, f, indent=4, ensure_ascii=False)
             return True
@@ -245,7 +241,6 @@ class Economy(commands.Cog):
             for uid in data:
                 data[uid]['daily_chat'] = 0
                 data[uid]['daily_vc'] = 0
-                # デイリー関連ミッションの達成・受取履歴をリセット
                 if 'completed_missions' in data[uid]:
                     data[uid]['completed_missions'] = [m for m in data[uid]['completed_missions'] if m not in daily_ids]
                 if 'claimed_missions' in data[uid]:
@@ -272,7 +267,6 @@ class Economy(commands.Cog):
         data[uid]['chat'] = data[uid].get('chat', 0) + length
         data[uid]['daily_chat'] = data[uid].get('daily_chat', 0) + length
 
-        # 念のための不整合修正
         if data[uid]['chat'] < data[uid]['daily_chat']:
             data[uid]['chat'] = data[uid]['daily_chat']
 
@@ -287,11 +281,9 @@ class Economy(commands.Cog):
         for m_id, m_info in missions.items():
             if m_id in completed: continue
 
-            # ミッションのタイプ（chat, daily_chat等）を取得し、ユーザーデータから値を取り出す
             m_type = m_info['type']
             current = u_data.get(m_type, 0)
 
-            # 旧キー(chat_chars/vc_minutes)との互換性
             if m_type == "chat_chars" and current == 0: current = u_data.get("chat", 0)
             if m_type == "vc_minutes" and current == 0: current = u_data.get("vc", 0)
 
@@ -313,11 +305,9 @@ class Economy(commands.Cog):
             if m_id not in missions: return
             m_info = missions[m_id]
 
-            # 報酬支払い時の再チェック：必ずミッションタイプに合わせた現在の値で判定
             m_type = m_info['type']
             current = u_data.get(m_type, 0)
 
-            # 互換性維持
             if m_type == "chat_chars" and current == 0: current = u_data.get("chat", 0)
             if m_type == "vc_minutes" and current == 0: current = u_data.get("vc", 0)
 
@@ -340,7 +330,6 @@ class Economy(commands.Cog):
             price = int(parts[3])
             item_name = " ".join(parts[4:]) if len(parts) > 4 else ""
 
-            # パスワードからユーザーIDを取得
             auth_data = self.load_auth()
             uid = next((u for u, p in auth_data.items() if p == pwd), None)
             if not uid:
@@ -350,12 +339,10 @@ class Economy(commands.Cog):
             data = self.load_data()
             user_data = data.get(uid, {})
 
-            # 所持金チェック
             if user_data.get('money', 0) < price:
                 await message.channel.send(f"❌ <@{uid}> 所持金が足りません！ (必要: {price}{self.currency})")
                 return
 
-            # ロールを取得して付与できるか事前チェック
             target_role = None
             target_guild = None
             for guild in self.bot.guilds:
@@ -369,13 +356,11 @@ class Economy(commands.Cog):
                 await message.channel.send(f"❌ ロールID `{role_id}` が見つかりません。")
                 return
 
-            # メンバーを取得
             member = target_guild.get_member(int(uid))
             if not member:
                 await message.channel.send(f"❌ ユーザー <@{uid}> が見つかりません。")
                 return
 
-            # Botの権限チェック
             bot_member = target_guild.get_member(self.bot.user.id)
             if not bot_member.guild_permissions.manage_roles:
                 await message.channel.send(f"❌ Botにロール管理権限がありません。")
@@ -385,18 +370,14 @@ class Economy(commands.Cog):
                 await message.channel.send(f"❌ Botの権限が不足しています（ロールがBotより上位です）。")
                 return
 
-            # ここから実際の処理（ロール付与 → 成功したら引き落とし）
             try:
-                # ロールを付与
                 await member.add_roles(target_role, reason=f"Web購入: {item_name}")
 
-                # ロール付与成功 → 通貨を引き落とし
                 if uid not in data:
                     data[uid] = self.get_default_user_data()
 
                 data[uid]['money'] -= price
 
-                # ガチャの場合はインベントリ追加
                 if "ガチャ" in item_name:
                     data[uid]['gacha_count'] = data[uid].get('gacha_count', 0) + 1
                     inventory = data[uid].get('inventory', [])
@@ -405,7 +386,6 @@ class Economy(commands.Cog):
                         inventory.append(target_id_str)
                         data[uid]['inventory'] = inventory
 
-                # サブスクリプション設定（30日間）
                 expiry = (datetime.now() + timedelta(days=30)).isoformat()
                 data[uid].setdefault('subscriptions', {})[str(role_id)] = expiry
 
@@ -415,10 +395,8 @@ class Economy(commands.Cog):
                 await message.channel.send(f"✅ <@{uid}> が **{item_name}** を購入しました！ (支払い: {price}{self.currency})")
 
             except discord.Forbidden:
-                # ロール付与に失敗した場合は通貨を引き落とさない
                 await message.channel.send(f"❌ <@{uid}> ロール付与に失敗しました（権限不足）。通貨は引き落とされていません。")
             except Exception as e:
-                # その他のエラーも通貨を引き落とさない
                 await message.channel.send(f"❌ <@{uid}> 購入処理中にエラーが発生しました。通貨は引き落とされていません。")
                 print(f"Purchase Error: {e}")
 
@@ -679,25 +657,46 @@ class Economy(commands.Cog):
             await interaction.response.send_message(f"✅ {相手.display_name} さんに送信しました。", ephemeral=True)
         except: await interaction.force_respond("❌ DM送信に失敗しました。", ephemeral=True)
 
-    @tasks.loop(seconds=1)
+    @tasks.loop(seconds=5)
     async def web_request_watcher(self):
-        # === 修正: Botのログイン処理が完了するまでFirebaseのデータ確認をスキップ（DNSエラー防止） ===
         if not self.bot.is_ready():
             return
         try:
             ref = db.reference('CHINCHIRO_SYSTEM/REQUESTS')
             requests = ref.get()
-            if not requests: return
+            if not requests: 
+                return
+
             for req_key, val in requests.items():
-                pwd, bet = val.get('pwd'), val.get('bet')
+                pwd = val.get('pwd')
+                bet = val.get('bet')
+
+                if not pwd or not bet:
+                    print(f"⚠️ 無効なリクエスト: {val}")
+                    ref.child(req_key).delete()
+                    continue
+
+                # MockMessageクラスを正しく実装
                 class MockMessage:
-                    def __init__(self, content):
-                        self.content, self.channel, self.author, self.bot = content, None, self, True
-                    async def send(self, content, **kwargs): print(f"[WebChinchiro Log]: {content}")
-                await self.handle_chinchiro_payment(MockMessage(f"!chinchiro_req {pwd} {bet}"))
+                    def __init__(self, content, bot_instance):
+                        self.content = content
+                        self.channel = None
+                        self.guild = None
+                        self.author = None
+                        self.bot = bot_instance
+
+                    async def send(self, content, **kwargs):
+                        print(f"[Chinchiro] {content}")
+
+                    async def add_reaction(self, emoji):
+                        pass
+
+                mock_msg = MockMessage(f"!chinchiro_req {pwd} {bet}", self.bot)
+                await self.handle_chinchiro_payment(mock_msg)
                 ref.child(req_key).delete()
+                print(f"✅ チンチロリクエスト処理完了: {pwd}")
+
         except Exception as e:
-            # 起動直後のドメイン解決一時エラーであれば静かにスルー
             if "Failed to resolve" in str(e) or "getaddrinfo failed" in str(e):
                 pass
             else:
