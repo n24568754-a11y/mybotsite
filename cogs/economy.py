@@ -163,7 +163,15 @@ class Economy(commands.Cog):
         return {
             'money': 0, 'last_daily': None, 'subscriptions': {}, 'inventory': [],
             'chat': 0, 'vc': 0, 'gacha_count': 0, 'send_money_total': 0,
-            'daily_chat': 0, 'daily_vc': 0, 'completed_missions': [], 'claimed_missions': []
+            'daily_chat': 0, 'daily_vc': 0,
+            # 追加統計項目
+            'daily_spent': 0,
+            'total_spent': 0,
+            'daily_send': 0,
+            'daily_purchases': 0,
+            'total_purchases': 0,
+            'daily_gacha': 0,
+            'completed_missions': [], 'claimed_missions': []
         }
 
     @property
@@ -210,7 +218,14 @@ class Economy(commands.Cog):
                             "daily_chat": int(info.get('daily_chat', 0)), 
                             "daily_vc": int(info.get('daily_vc', 0)),
                             "gacha_count": int(info.get('gacha_count', 0)),
-                            "send_money_total": int(info.get('send_money_total', 0))
+                            "send_money_total": int(info.get('send_money_total', 0)),
+                            # 追加統計項目
+                            "daily_spent": int(info.get('daily_spent', 0)),
+                            "total_spent": int(info.get('total_spent', 0)),
+                            "daily_send": int(info.get('daily_send', 0)),
+                            "daily_purchases": int(info.get('daily_purchases', 0)),
+                            "total_purchases": int(info.get('total_purchases', 0)),
+                            "daily_gacha": int(info.get('daily_gacha', 0))
                         },
                         "inventory": list(dict.fromkeys(info.get('inventory', []))),
                         "subscriptions": info.get('subscriptions', {}),
@@ -241,6 +256,12 @@ class Economy(commands.Cog):
             for uid in data:
                 data[uid]['daily_chat'] = 0
                 data[uid]['daily_vc'] = 0
+                # 追加リセット項目
+                data[uid]['daily_spent'] = 0
+                data[uid]['daily_send'] = 0
+                data[uid]['daily_purchases'] = 0
+                data[uid]['daily_gacha'] = 0
+
                 if 'completed_missions' in data[uid]:
                     data[uid]['completed_missions'] = [m for m in data[uid]['completed_missions'] if m not in daily_ids]
                 if 'claimed_missions' in data[uid]:
@@ -378,8 +399,15 @@ class Economy(commands.Cog):
 
                 data[uid]['money'] -= price
 
+                # 消費金額の記録
+                data[uid]['daily_spent'] = data[uid].get('daily_spent', 0) + price
+                data[uid]['total_spent'] = data[uid].get('total_spent', 0) + price
+                data[uid]['daily_purchases'] = data[uid].get('daily_purchases', 0) + 1
+                data[uid]['total_purchases'] = data[uid].get('total_purchases', 0) + 1
+
                 if "ガチャ" in item_name:
                     data[uid]['gacha_count'] = data[uid].get('gacha_count', 0) + 1
+                    data[uid]['daily_gacha'] = data[uid].get('daily_gacha', 0) + 1
                     inventory = data[uid].get('inventory', [])
                     target_id_str = str(role_id)
                     if target_id_str not in inventory:
@@ -497,6 +525,13 @@ class Economy(commands.Cog):
             if data[uid].get('vc', 0) < data[uid].get('daily_vc', 0):
                 data[uid]['vc'] = data[uid]['daily_vc']
                 fixed += 1
+            # 新規統計の整合性チェック
+            if data[uid].get('total_spent', 0) < data[uid].get('daily_spent', 0):
+                data[uid]['total_spent'] = data[uid]['daily_spent']
+                fixed += 1
+            if data[uid].get('total_purchases', 0) < data[uid].get('daily_purchases', 0):
+                data[uid]['total_purchases'] = data[uid]['daily_purchases']
+                fixed += 1
         if fixed > 0:
             self.save_data(data); self.update_web_data()
             await interaction.followup.send(f"✅ {fixed}件 の不整合を修復しました。", ephemeral=True)
@@ -527,7 +562,14 @@ class Economy(commands.Cog):
         app_commands.Choice(name="デイリーチャット文字数", value="daily_chat"),
         app_commands.Choice(name="累計VC時間(分)", value="vc"),
         app_commands.Choice(name="デイリーVC時間(分)", value="daily_vc"),
-        app_commands.Choice(name="累計ガチャ回数", value="gacha_count")
+        app_commands.Choice(name="累計ガチャ回数", value="gacha_count"),
+        app_commands.Choice(name="累計消費金額", value="total_spent"),
+        app_commands.Choice(name="デイリー消費金額", value="daily_spent"),
+        app_commands.Choice(name="累計送金額", value="send_money_total"),
+        app_commands.Choice(name="デイリー送金額", value="daily_send"),
+        app_commands.Choice(name="累計購入アイテム数", value="total_purchases"),
+        app_commands.Choice(name="デイリー購入アイテム数", value="daily_purchases"),
+        app_commands.Choice(name="ガチャデイリー回数", value="daily_gacha")
     ])
     async def add_mission(self, interaction: discord.Interaction, 名前: str, 報酬金額: int, 目標値: int, タイプ: str, デイリー設定: bool):
         await interaction.response.defer(ephemeral=True)
@@ -644,6 +686,8 @@ class Economy(commands.Cog):
         data[sid]['money'] -= 金額
         data[rid]['money'] += 金額
         data[sid]['send_money_total'] = data[sid].get('send_money_total', 0) + 金額
+        # デイリー送金額の記録
+        data[sid]['daily_send'] = data[sid].get('daily_send', 0) + 金額
         self.save_data(data); self.update_web_data()
         await interaction.followup.send(f"✅ {相手.display_name} へ送金しました。", ephemeral=True)
 
@@ -676,7 +720,6 @@ class Economy(commands.Cog):
                     ref.child(req_key).delete()
                     continue
 
-                # パスワードからユーザーIDを取得
                 auth_data = self.load_auth()
                 uid = next((u for u, p in auth_data.items() if p == pwd), None)
 
@@ -697,7 +740,6 @@ class Economy(commands.Cog):
                     ref.child(req_key).delete()
                     continue
 
-                # チンチロ処理を実行
                 dice = [random.randint(1, 6) for _ in range(3)]
                 dice.sort()
                 result_text, multiplier = "役なし", -1

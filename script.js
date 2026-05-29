@@ -1,3 +1,4 @@
+
 // --- 初期設定とFirebase ---
 const firebaseConfig = { databaseURL: "https://mybot-4e6b1-default-rtdb.firebaseio.com/" };
 firebase.initializeApp(firebaseConfig);
@@ -264,12 +265,14 @@ function renderMissions() {
             if (typeKey.includes("chat")) { typeLabel = "💬 CHAT"; typeClass = "type-chat"; }
             else if (typeKey.includes("vc")) { typeLabel = "🔊 VC"; typeClass = "type-vc"; }
             else if (typeKey === "gacha_count") { typeLabel = "🎰 GACHA"; typeClass = "type-gacha"; }
+            else if (typeKey.includes("spent")) { typeLabel = "💰 SPENT"; typeClass = "type-spent"; }
+            else if (typeKey.includes("send")) { typeLabel = "📤 SEND"; typeClass = "type-send"; }
+            else if (typeKey.includes("purchases")) { typeLabel = "🛒 BUY"; typeClass = "type-buy"; }
+            else if (typeKey.includes("gacha")) { typeLabel = "🎰 GACHA"; typeClass = "type-gacha"; }
 
-            // --- 修正箇所：デイリーと累計の混同を防止 ---
             let currentVal = 0;
             if (u.stats) {
                 currentVal = u.stats[typeKey] || 0;
-                // フォールバック: もしデイリーキーで値が取れなかった場合、古いキー名の可能性を考慮
                 if (typeKey === 'daily_chat' && !u.stats.daily_chat && u.stats.chat_chars) currentVal = u.stats.daily_chat || 0;
                 if (typeKey === 'daily_vc' && !u.stats.daily_vc && u.stats.vc_minutes) currentVal = u.stats.daily_vc || 0;
             }
@@ -453,9 +456,25 @@ function updateProfileDisplay(pwd) {
     const vcEl = document.getElementById('prof-vc');
 
     if (subEl) subEl.innerText = Object.keys(u.subscriptions || {}).length;
-    // --- 修正箇所：プロフィール表示の際に累計値を優先的に探す ---
     if (chatEl) chatEl.innerText = (u.stats?.chat || u.stats?.chat_chars || 0).toLocaleString();
     if (vcEl) vcEl.innerText = (u.stats?.vc || u.stats?.vc_minutes || 0).toLocaleString();
+
+    // ===== 追加された統計項目 =====
+    const spentEl = document.getElementById('prof-spent');
+    const sendEl = document.getElementById('prof-send');
+    const purchasesEl = document.getElementById('prof-purchases');
+    const gachaCountEl = document.getElementById('prof-gacha');
+    const dailySpentEl = document.getElementById('prof-daily-spent');
+    const dailyGachaEl = document.getElementById('prof-daily-gacha');
+    const dailyPurchasesEl = document.getElementById('prof-daily-purchases');
+
+    if (spentEl) spentEl.innerText = (u.stats?.total_spent || 0).toLocaleString();
+    if (sendEl) sendEl.innerText = (u.stats?.send_money_total || 0).toLocaleString();
+    if (purchasesEl) purchasesEl.innerText = (u.stats?.total_purchases || 0).toLocaleString();
+    if (gachaCountEl) gachaCountEl.innerText = (u.stats?.gacha_count || 0).toLocaleString();
+    if (dailySpentEl) dailySpentEl.innerText = (u.stats?.daily_spent || 0).toLocaleString();
+    if (dailyGachaEl) dailyGachaEl.innerText = (u.stats?.daily_gacha || 0).toLocaleString();
+    if (dailyPurchasesEl) dailyPurchasesEl.innerText = (u.stats?.daily_purchases || 0).toLocaleString();
 }
 
 async function executeOrderSilent(password) {
