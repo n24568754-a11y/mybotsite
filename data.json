@@ -15,7 +15,7 @@
       "1497622784015204503": "2026-06-08T02:56:05.929163",
       "1497207081315602503": "2026-06-08T02:59:33.609831"
     },
-    "daily_chat": 0,
+    "daily_chat": 4304,
     "daily_vc": 0,
     "chat_chars": 46328,
     "vc_minutes": 3077,
@@ -46,13 +46,14 @@
     ],
     "completed_missions": [
       "m_chat_chars_6240",
-      "m_vc_minutes_7182"
+      "m_vc_minutes_7182",
+      "m_daily_chat_5230"
     ],
     "claimed_missions": [
       "m_chat_chars_6240",
       "m_vc_minutes_7182"
     ],
-    "chat": 87288,
+    "chat": 91592,
     "vc": 4145,
     "weekly_vc_minutes": 0,
     "evaluator_total_minutes": 47
