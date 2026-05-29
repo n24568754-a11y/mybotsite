@@ -1100,20 +1100,22 @@
         "Yoyo0312": {
             "name": "余白",
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1191327231931330652/avatars/f4457404e36a0be355fe89715961cc79.png?size=1024",
-            "money": 20000,
+            "money": 10000,
             "stats": {
                 "chat": 154,
                 "vc": 44,
                 "daily_chat": 20,
                 "daily_vc": 0,
-                "gacha_count": 1,
+                "gacha_count": 2,
                 "send_money_total": 0
             },
             "inventory": [
-                "1497622549964656730"
+                "1497622549964656730",
+                "1497205518870249512"
             ],
             "subscriptions": {
-                "1497622549964656730": "2026-06-28T13:22:29.461418"
+                "1497622549964656730": "2026-06-28T13:22:29.461418",
+                "1497205518870249512": "2026-06-28T13:33:48.155954"
             },
             "completed_missions": [
                 "m_chat_chars_6240"
