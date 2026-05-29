@@ -333,31 +333,97 @@ class Economy(commands.Cog):
     async def handle_web_payment(self, message):
         try:
             parts = message.content.split()
-            pwd, role_id, price = parts[1], int(parts[2]), int(parts[3])
-            item_name = " ".join(parts[4:])
-            uid = next((u for u, p in self.load_auth().items() if p == pwd), None)
-            if not uid: return
+            if len(parts) < 4:
+                return
+            pwd = parts[1]
+            role_id = int(parts[2])
+            price = int(parts[3])
+            item_name = " ".join(parts[4:]) if len(parts) > 4 else ""
+
+            # パスワードからユーザーIDを取得
+            auth_data = self.load_auth()
+            uid = next((u for u, p in auth_data.items() if p == pwd), None)
+            if not uid:
+                await message.channel.send(f"❌ パスワード認証に失敗しました。")
+                return
+
             data = self.load_data()
-            if data.get(uid, {}).get('money', 0) < price: return
-            data[uid]['money'] -= price
+            user_data = data.get(uid, {})
 
-            if "ガチャ" in item_name:
-                data[uid]['gacha_count'] = data[uid].get('gacha_count', 0) + 1
-                inventory = data[uid].get('inventory', [])
-                target_id_str = str(role_id)
-                if target_id_str not in inventory:
-                    inventory.append(target_id_str)
-                    data[uid]['inventory'] = inventory
+            # 所持金チェック
+            if user_data.get('money', 0) < price:
+                await message.channel.send(f"❌ <@{uid}> 所持金が足りません！ (必要: {price}{self.currency})")
+                return
 
-            expiry = (datetime.now() + timedelta(days=30)).isoformat()
-            data[uid].setdefault('subscriptions', {})[str(role_id)] = expiry
-            self.save_data(data); self.update_web_data()
-            for g in self.bot.guilds:
-                m = g.get_member(int(uid))
-                r = g.get_role(role_id)
-                if m and r: await m.add_roles(r)
-            await message.channel.send(f"💳 <@{uid}> が {item_name} を購入！")
-        except: pass
+            # ロールを取得して付与できるか事前チェック
+            target_role = None
+            target_guild = None
+            for guild in self.bot.guilds:
+                role = guild.get_role(role_id)
+                if role:
+                    target_role = role
+                    target_guild = guild
+                    break
+
+            if not target_role:
+                await message.channel.send(f"❌ ロールID `{role_id}` が見つかりません。")
+                return
+
+            # メンバーを取得
+            member = target_guild.get_member(int(uid))
+            if not member:
+                await message.channel.send(f"❌ ユーザー <@{uid}> が見つかりません。")
+                return
+
+            # Botの権限チェック
+            bot_member = target_guild.get_member(self.bot.user.id)
+            if not bot_member.guild_permissions.manage_roles:
+                await message.channel.send(f"❌ Botにロール管理権限がありません。")
+                return
+
+            if target_role.position >= bot_member.top_role.position:
+                await message.channel.send(f"❌ Botの権限が不足しています（ロールがBotより上位です）。")
+                return
+
+            # ここから実際の処理（ロール付与 → 成功したら引き落とし）
+            try:
+                # ロールを付与
+                await member.add_roles(target_role, reason=f"Web購入: {item_name}")
+
+                # ロール付与成功 → 通貨を引き落とし
+                if uid not in data:
+                    data[uid] = self.get_default_user_data()
+
+                data[uid]['money'] -= price
+
+                # ガチャの場合はインベントリ追加
+                if "ガチャ" in item_name:
+                    data[uid]['gacha_count'] = data[uid].get('gacha_count', 0) + 1
+                    inventory = data[uid].get('inventory', [])
+                    target_id_str = str(role_id)
+                    if target_id_str not in inventory:
+                        inventory.append(target_id_str)
+                        data[uid]['inventory'] = inventory
+
+                # サブスクリプション設定（30日間）
+                expiry = (datetime.now() + timedelta(days=30)).isoformat()
+                data[uid].setdefault('subscriptions', {})[str(role_id)] = expiry
+
+                self.save_data(data)
+                self.update_web_data()
+
+                await message.channel.send(f"✅ <@{uid}> が **{item_name}** を購入しました！ (支払い: {price}{self.currency})")
+
+            except discord.Forbidden:
+                # ロール付与に失敗した場合は通貨を引き落とさない
+                await message.channel.send(f"❌ <@{uid}> ロール付与に失敗しました（権限不足）。通貨は引き落とされていません。")
+            except Exception as e:
+                # その他のエラーも通貨を引き落とさない
+                await message.channel.send(f"❌ <@{uid}> 購入処理中にエラーが発生しました。通貨は引き落とされていません。")
+                print(f"Purchase Error: {e}")
+
+        except Exception as e:
+            print(f"handle_web_payment Error: {e}")
 
     async def handle_chinchiro_payment(self, message):
         try:

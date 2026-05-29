@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 /**
- * VOID PLATFORM - 3D DICE ENGINE (Perfect Rotation Sync)
+ * VOID PLATFORM - 3D DICE ENGINE (Perfect Rotation Sync - FIXED)
  */
 
 const scene = new THREE.Scene();
@@ -26,16 +26,17 @@ const diceArray = [];
 const geometry = new THREE.BoxGeometry(1, 1, 1);
 
 /**
- * 【完全修正版】出目を正面に向けるための回転定義
- * Three.jsのMeshFaceMaterialのインデックス順(右, 左, 上, 下, 前, 後)に対応
+ * 【修正版】正しい出目を正面に向けるための回転定義
+ * Three.jsのBoxGeometryのマテリアルインデックス:
+ * 0: 右 (x+), 1: 左 (x-), 2: 上 (y+), 3: 下 (y-), 4: 前 (z+), 5: 後 (z-)
  */
 const faceRotations = {
-    1: { x: 0,            y: 0 },               // 5番目(前面): そのまま
-    2: { x: 0,            y: Math.PI },         // 6番目(背面): 180度回転
-    3: { x: Math.PI / 2,  y: 0 },               // 4番目(底面): 上に90度回転して底を前に
-    4: { x: -Math.PI / 2, y: 0 },               // 3番目(天面): 下に90度回転して天を前に
-    5: { x: 0,            y: -Math.PI / 2 },    // 1番目(右面): 左に90度回転して右を前に
-    6: { x: 0,            y: Math.PI / 2 }      // 2番目(左面): 右に90度回転して左を前に
+    1: { x: 0,            y: 0,            z: 0 },        // 前面 (z+) = 目1
+    2: { x: 0,            y: Math.PI,      z: 0 },        // 後面 (z-) = 目2
+    3: { x: Math.PI / 2,  y: 0,            z: 0 },        // 下面 (y-) = 目3
+    4: { x: -Math.PI / 2, y: 0,            z: 0 },        // 上面 (y+) = 目4
+    5: { x: 0,            y: Math.PI / 2,  z: 0 },        // 右面 (x+) = 目5
+    6: { x: 0,            y: -Math.PI / 2, z: 0 }         // 左面 (x-) = 目6
 };
 
 function createDiceMaterials() {
@@ -46,8 +47,8 @@ function createDiceMaterials() {
         [[32, 32], [32, 64], [32, 96], [96, 32], [96, 64], [96, 96]]
     ];
 
-    // マテリアルを配列で返す (Three.jsの仕様: 右, 左, 上, 下, 前, 後 の順)
-    // 今回の定義に合わせて[5, 6, 4, 3, 1, 2]の順でテクスチャを生成
+    // マテリアルの順序: 右, 左, 上, 下, 前, 後
+    // それぞれに割り当てる目の番号: 5, 6, 4, 3, 1, 2
     const materialOrder = [5, 6, 4, 3, 1, 2]; 
 
     return materialOrder.map((num) => {
@@ -112,6 +113,7 @@ window.startDiceRoll = function() {
     if (stopTimeout) clearTimeout(stopTimeout);
     isRolling = true;
     isFixed = false; 
+    rollSpeed = 0;
     console.log("🎲 漆黒の賽が回ります...");
 };
 
@@ -124,16 +126,17 @@ window.stopDiceRoll = function(resultDice) {
             const val = resultDice[i];
             const rot = faceRotations[val];
             if (rot) {
-                // z軸の回転もリセットして、目を真っ直ぐにする
-                d.rotation.set(rot.x, rot.y, 0);
+                // Z軸も明示的にリセット
+                d.rotation.set(rot.x, rot.y, rot.z);
                 d.position.y = 0; 
             }
         });
-        console.log(`🎲 結果固定(10秒間): ${resultDice}`);
+        console.log(`🎲 結果固定: ${resultDice}`);
 
+        // 5秒後にゆっくり回転を再開
         stopTimeout = setTimeout(() => {
             isFixed = false;
-        }, 10000); 
+        }, 5000); 
 
     } else {
         isFixed = false;
