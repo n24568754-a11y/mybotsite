@@ -33,5 +33,12 @@
     "goal": 300,
     "type": "daily_vc",
     "is_daily": true
+  },
+  "m_gacha_count_6572": {
+    "name": "ガチャを5回しよう",
+    "reward": 15000,
+    "goal": 5,
+    "type": "gacha_count",
+    "is_daily": false
   }
 }

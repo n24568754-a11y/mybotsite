@@ -115,7 +115,7 @@ body::before {
     box-shadow: 0 5px 20px rgba(0,0,0,0.5);
     display: flex;
     align-items: center;
-    overflow: hidden; /* 子要素のマスクを有効にするため */
+    overflow: hidden;
 }
 
 .nav-container-fantasy { 
@@ -124,21 +124,16 @@ body::before {
     height: 100%; 
     display: flex; 
     align-items: center; 
-    padding: 0 60px; /* 両端のフェードのための余白 */
-
-    /* 横スライド設定 */
+    padding: 0 60px;
     overflow-x: auto;
     white-space: nowrap;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
-    touch-action: pan-x; /* 横操作のみ許可（上下ガタつき防止） */
-
-    /* フェードアウトマスク演出 */
+    touch-action: pan-x;
     mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
     -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
 }
 
-/* スクロールバー非表示 */
 .nav-container-fantasy::-webkit-scrollbar {
     display: none;
 }
@@ -146,8 +141,8 @@ body::before {
 .nav-links-fantasy { 
     display: flex; 
     gap: 20px; 
-    align-items: center; /* 縦中央揃え */
-    flex-wrap: nowrap; /* 改行禁止 */
+    align-items: center;
+    flex-wrap: nowrap;
 }
 
 .nav-btn-wrapper {
@@ -155,7 +150,7 @@ body::before {
     flex-direction: column;
     align-items: center;
     gap: 6px;
-    flex-shrink: 0; /* ボタンが潰れるのを防止 */
+    flex-shrink: 0;
 }
 
 .nav-item-fantasy { 
@@ -249,14 +244,78 @@ body::before {
 }
 .completed-claimed .check-box { background: #00ffcc; border-color: #00ffcc; color: #000; }
 .mission-info { flex-grow: 1; }
-.mission-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+.mission-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 8px;
+}
 .mission-title { font-weight: bold; }
 .mission-progress { font-size: 12px; color: var(--sub-text); }
 .progress-bar-bg { width: 100%; height: 4px; background: #222; margin-top: 8px; border-radius: 2px; overflow: hidden; }
 .progress-bar-fill { height: 100%; background: var(--accent-color); transition: 0.5s; }
 .completed-claimed .progress-bar-fill { background: #00ffcc; }
-.claim-btn { background: var(--accent-color); color: #fff; border: none; padding: 4px 10px; border-radius: 4px; font-size: 10px; cursor: pointer; font-weight: bold; }
-.claimed-text { color: #00ffcc; font-size: 10px; font-weight: bold; }
+
+/* ミッションの報酬表示スタイル */
+.mission-reward {
+    font-size: 11px;
+    color: #ffaa00;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+.reward-hint {
+    font-size: 11px;
+    color: #ffaa00;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.claim-btn { 
+    background: var(--accent-color); 
+    color: #fff; 
+    border: none; 
+    padding: 4px 12px; 
+    border-radius: 4px; 
+    font-size: 11px; 
+    cursor: pointer; 
+    font-weight: bold;
+    transition: 0.2s;
+}
+.claim-btn:hover {
+    background: #ffaa00;
+    color: #000;
+}
+
+.claimed-text { 
+    color: #00ffcc; 
+    font-size: 11px; 
+    font-weight: bold;
+    background: rgba(0, 255, 204, 0.1);
+    padding: 4px 10px;
+    border-radius: 10px;
+}
+
+/* ミッションタイプバッジ */
+.mission-type-badge {
+    font-size: 9px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.type-chat { background: #5865f2; }
+.type-vc { background: #57f287; color: #000; }
+.type-gacha { background: #9b59b6; }
+.type-spent { background: #e67e22; }
+.type-send { background: #1abc9c; }
+.type-buy { background: #3498db; }
 
 /* --- Character Mascot --- */
 .character-box {

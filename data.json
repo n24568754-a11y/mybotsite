@@ -1,6 +1,6 @@
 {
   "1368428956214100062": {
-    "money": 92140290,
+    "money": 92155290,
     "last_daily": "2026-05-11T07:29:54.941239",
     "subscriptions": {
       "1497204970481520701": "2026-06-08T18:00:43.299308",
@@ -54,12 +54,14 @@
     "completed_missions": [
       "m_chat_chars_6240",
       "m_vc_minutes_7182",
-      "m_daily_chat_5230"
+      "m_daily_chat_5230",
+      "m_gacha_count_6572"
     ],
     "claimed_missions": [
       "m_chat_chars_6240",
       "m_vc_minutes_7182",
-      "m_daily_chat_5230"
+      "m_daily_chat_5230",
+      "m_gacha_count_6572"
     ],
     "chat": 102164,
     "vc": 4145,

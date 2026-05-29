@@ -366,6 +366,13 @@
             "goal": 300,
             "type": "daily_vc",
             "is_daily": true
+        },
+        "m_gacha_count_6572": {
+            "name": "ガチャを5回しよう",
+            "reward": 15000,
+            "goal": 5,
+            "type": "gacha_count",
+            "is_daily": false
         }
     },
     "CURRENCY_NAME": "星",
@@ -373,14 +380,20 @@
         "tenya": {
             "name": "天",
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1368428956214100062/avatars/e21f3f3959dbcf9d6762d0a434c6babf.png?size=1024",
-            "money": 92140290,
+            "money": 92155290,
             "stats": {
                 "chat": 102164,
                 "vc": 4145,
                 "daily_chat": 14876,
                 "daily_vc": 0,
                 "gacha_count": 52,
-                "send_money_total": 1000001
+                "send_money_total": 1000001,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [
                 "1497207010721136691",
@@ -428,12 +441,14 @@
             "completed_missions": [
                 "m_chat_chars_6240",
                 "m_vc_minutes_7182",
-                "m_daily_chat_5230"
+                "m_daily_chat_5230",
+                "m_gacha_count_6572"
             ],
             "claimed_missions": [
                 "m_chat_chars_6240",
                 "m_vc_minutes_7182",
-                "m_daily_chat_5230"
+                "m_daily_chat_5230",
+                "m_gacha_count_6572"
             ]
         },
         "ageha0205": {
@@ -446,7 +461,13 @@
                 "daily_chat": 0,
                 "daily_vc": 368,
                 "gacha_count": 11,
-                "send_money_total": 2650003
+                "send_money_total": 2650003,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [
                 "1497207151016542349",
@@ -482,7 +503,13 @@
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 2,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [
                 "1497207507528192031",
@@ -505,7 +532,13 @@
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 0,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [],
             "subscriptions": {},
@@ -525,7 +558,13 @@
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 0,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [],
             "subscriptions": {},
@@ -544,7 +583,13 @@
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 0,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [],
             "subscriptions": {},
@@ -561,7 +606,13 @@
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 2,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [
                 "1497206816042647673"
@@ -584,7 +635,13 @@
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 1,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [
                 "1497207225255727224"
@@ -607,7 +664,13 @@
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 0,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [],
             "subscriptions": {},
@@ -626,7 +689,13 @@
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 5,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [
                 "1497622958456438927",
@@ -656,7 +725,13 @@
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 11,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [
                 "1497205668619358380",
@@ -695,7 +770,13 @@
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 4,
-                "send_money_total": 1171001
+                "send_money_total": 1171001,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [
                 "1497207677753888778",
@@ -721,7 +802,13 @@
                 "daily_chat": 414,
                 "daily_vc": 0,
                 "gacha_count": 4,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [
                 "1497205320945111180",
@@ -748,7 +835,13 @@
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 6,
-                "send_money_total": 20000
+                "send_money_total": 20000,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [
                 "1497205518870249512",
@@ -775,7 +868,13 @@
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 0,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [],
             "subscriptions": {},
@@ -794,7 +893,13 @@
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 7,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [
                 "1497206030315290816",
@@ -823,7 +928,13 @@
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 2,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [
                 "1497207677753888778"
@@ -847,7 +958,13 @@
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 5,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [
                 "1497206499506786436",
@@ -872,7 +989,13 @@
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 0,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [],
             "subscriptions": {},
@@ -891,7 +1014,13 @@
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 3,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [
                 "1497207010721136691",
@@ -916,7 +1045,13 @@
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 0,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [],
             "subscriptions": {},
@@ -935,7 +1070,13 @@
                 "daily_chat": 6,
                 "daily_vc": 0,
                 "gacha_count": 0,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [],
             "subscriptions": {},
@@ -954,7 +1095,13 @@
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 0,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [],
             "subscriptions": {},
@@ -973,7 +1120,13 @@
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 3,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [
                 "1497205425274224821",
@@ -999,7 +1152,13 @@
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 2,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [
                 "1497204970481520701"
@@ -1022,7 +1181,13 @@
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 0,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [],
             "subscriptions": {},
@@ -1041,7 +1206,13 @@
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 0,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [],
             "subscriptions": {},
@@ -1061,7 +1232,13 @@
                 "daily_chat": 14,
                 "daily_vc": 0,
                 "gacha_count": 0,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [],
             "subscriptions": {},
@@ -1081,7 +1258,13 @@
                 "daily_chat": 8,
                 "daily_vc": 196,
                 "gacha_count": 2,
-                "send_money_total": 30002
+                "send_money_total": 30002,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [
                 "1497622549964656730"
@@ -1107,7 +1290,13 @@
                 "daily_chat": 20,
                 "daily_vc": 0,
                 "gacha_count": 2,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [
                 "1497622549964656730",
@@ -1132,7 +1321,13 @@
                 "daily_chat": 84,
                 "daily_vc": 164,
                 "gacha_count": 0,
-                "send_money_total": 0
+                "send_money_total": 0,
+                "daily_spent": 0,
+                "total_spent": 0,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 0
             },
             "inventory": [],
             "subscriptions": {

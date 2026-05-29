@@ -106,6 +106,7 @@ database.ref('/').on('value', (snapshot) => {
         window.GACHA_DATA = data.GACHA_DATA || [];
         window.USER_PROFILES = data.USER_PROFILES || {};
         window.MISSIONS_DEF = data.MISSIONS || {};
+        window.CURRENCY_NAME = data.CURRENCY_NAME || "星";
         updateRanking(window.USER_PROFILES);
         if (sessionPassword) {
             if (currentActivePageId === 'profile-page') updateProfileDisplay(sessionPassword);
@@ -248,6 +249,7 @@ function renderMissions() {
     const u = USER_PROFILES[sessionPassword] || {};
     const completedMissions = u.completed_missions || [];
     const claimedMissions = u.claimed_missions || [];
+    const currencyName = window.CURRENCY_NAME || "星";
 
     const dailyCont = document.createElement('div');
     const permanentCont = document.createElement('div');
@@ -278,6 +280,7 @@ function renderMissions() {
             }
 
             const goal = m_info.goal;
+            const reward = m_info.reward;
             const isReached = completedMissions.includes(m_id) || currentVal >= goal;
             const isClaimed = claimedMissions.includes(m_id);
             const percent = Math.min(100, (currentVal / goal) * 100);
@@ -287,18 +290,21 @@ function renderMissions() {
 
             let actionHtml = "";
             if (isClaimed) {
-                actionHtml = `<span class="claimed-text">RECEIVED</span>`;
+                actionHtml = `<span class="claimed-text">✓ RECEIVED</span>`;
             } else if (isReached) {
-                actionHtml = `<button class="claim-btn" onclick="claimMission('${m_id}', event)">CLAIM</button>`;
+                actionHtml = `<button class="claim-btn" onclick="claimMission('${m_id}', event)">CLAIM ${reward}${currencyName}</button>`;
+            } else {
+                actionHtml = `<span class="reward-hint">💰 +${reward}${currencyName}</span>`;
             }
 
             card.innerHTML = `
                 <div class="check-box">${isClaimed ? '✔' : ''}</div>
                 <div class="mission-info">
                     <div class="mission-header">
-                        <div style="display:flex; align-items:center;">
+                        <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px;">
                             <span class="mission-type-badge ${typeClass}">${typeLabel}</span>
                             <span class="mission-title">${m_info.name}</span>
+                            <span class="mission-reward">報酬: ${reward}${currencyName}</span>
                         </div>
                         ${actionHtml}
                     </div>

@@ -151,7 +151,7 @@ class Economy(commands.Cog):
 
     def _load_config(self):
         if not os.path.exists(CONFIG_FILE):
-            self.config = {"currency_name": "円", "last_reset_date": datetime.now().date().isoformat()}
+            self.config = {"currency_name": "星", "last_reset_date": datetime.now().date().isoformat()}
             self._save_config()
         else:
             with open(CONFIG_FILE, 'r', encoding='utf-8') as f: self.config = json.load(f)
@@ -175,7 +175,7 @@ class Economy(commands.Cog):
         }
 
     @property
-    def currency(self): return self.config.get("currency_name", "円")
+    def currency(self): return self.config.get("currency_name", "星")
 
     def load_data(self):
         if not os.path.exists(DATA_FILE): return {}
