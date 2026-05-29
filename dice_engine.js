@@ -1,10 +1,14 @@
 import * as THREE from 'three';
 
+/**
+ * VOID PLATFORM - 3D DICE ENGINE (FULLY FIXED)
+ */
+
 const scene = new THREE.Scene();
 const container = document.getElementById('dice-container');
 
 const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-camera.position.z = 8;
+camera.position.z = 6;
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(container.clientWidth, container.clientHeight);
@@ -13,14 +17,15 @@ container.appendChild(renderer.domElement);
 
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
 scene.add(ambientLight);
+
 const purpleLight = new THREE.PointLight(0x8a2be2, 5, 20);
 purpleLight.position.set(2, 3, 4);
 scene.add(purpleLight);
-const fillLight = new THREE.DirectionalLight(0xffffff, 0.5);
-fillLight.position.set(-2, 1, -3);
-scene.add(fillLight);
 
-// 各面に描画する数字を明確に定義
+const diceArray = [];
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+
+// 各面に描画する数字の配置（サイコロの標準配置）
 const faceNumbers = {
     right: 5,   // x+
     left: 2,    // x-
@@ -42,124 +47,179 @@ function createDiceMaterials() {
 
     const createTexture = (number) => {
         const canvas = document.createElement('canvas');
-        canvas.width = 256;
-        canvas.height = 256;
+        canvas.width = 128;
+        canvas.height = 128;
         const ctx = canvas.getContext('2d');
 
         ctx.fillStyle = '#000000';
-        ctx.fillRect(0, 0, 256, 256);
+        ctx.fillRect(0, 0, 128, 128);
         ctx.strokeStyle = '#8a2be2';
-        ctx.lineWidth = 15;
-        ctx.strokeRect(10, 10, 236, 236);
+        ctx.lineWidth = 10;
+        ctx.strokeRect(5, 5, 118, 118);
         ctx.fillStyle = '#ffffff';
 
         const dots = dotPositions[number];
         if (dots) {
             dots.forEach(([x, y]) => {
                 ctx.beginPath();
-                ctx.arc(x, y, 24, 0, Math.PI * 2);
+                ctx.arc(x, y, 14, 0, Math.PI * 2);
                 ctx.fill();
             });
         }
 
-        ctx.font = 'Bold 40px "Meiryo"';
-        ctx.fillStyle = '#ffaa00';
-        ctx.shadowBlur = 0;
-        ctx.fillText(number.toString(), 200, 50);
-
         const texture = new THREE.CanvasTexture(canvas);
-        return new THREE.MeshStandardMaterial({ map: texture, roughness: 0.2, metalness: 0.5 });
+        return new THREE.MeshStandardMaterial({
+            map: texture,
+            emissiveMap: texture,
+            emissive: 0x333333,
+            emissiveIntensity: 0.3,
+            roughness: 0.2,
+            metalness: 0.6,
+            side: THREE.DoubleSide
+        });
     };
 
     return [
-        createTexture(faceNumbers.right),
-        createTexture(faceNumbers.left),
-        createTexture(faceNumbers.up),
-        createTexture(faceNumbers.down),
-        createTexture(faceNumbers.front),
-        createTexture(faceNumbers.back)
+        createTexture(faceNumbers.right),  // 右 (x+)
+        createTexture(faceNumbers.left),   // 左 (x-)
+        createTexture(faceNumbers.up),     // 上 (y+)
+        createTexture(faceNumbers.down),   // 下 (y-)
+        createTexture(faceNumbers.front),  // 前 (z+)
+        createTexture(faceNumbers.back)    // 後 (z-)
     ];
 }
 
-// 【最終修正版】3と4を入れ替え
-const rotationsToShowNumber = {
-    1: { x: 0, y: 0, z: 0 },                    // 前面 → 1
-    2: { x: 0, y: Math.PI / 2, z: 0 },          // +90度 → 2
-    3: { x: -Math.PI / 2, y: 0, z: 0 },         // 上面 → 3
-    4: { x: Math.PI / 2, y: 0, z: 0 },          // 下面 → 4
-    5: { x: 0, y: -Math.PI / 2, z: 0 },         // -90度 → 5
-    6: { x: 0, y: Math.PI, z: 0 }               // 背面 → 6
-};
-
-const geometry = new THREE.BoxGeometry(1.2, 1.2, 1.2);
-const materials = createDiceMaterials();
-const dice = new THREE.Mesh(geometry, materials);
-scene.add(dice);
-
-let isDragging = false;
-let lastX = 0;
-let lastY = 0;
-let targetRotationX = 0.5;
-let targetRotationY = 0.5;
-
-renderer.domElement.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    lastX = e.clientX;
-    lastY = e.clientY;
-});
-window.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
-    const deltaX = e.clientX - lastX;
-    const deltaY = e.clientY - lastY;
-    targetRotationY += deltaX * 0.01;
-    targetRotationX += deltaY * 0.01;
-    lastX = e.clientX;
-    lastY = e.clientY;
-});
-window.addEventListener('mouseup', () => { isDragging = false; });
-
-function animate() {
-    requestAnimationFrame(animate);
-    dice.rotation.x = targetRotationX;
-    dice.rotation.y = targetRotationY;
-    renderer.render(scene, camera);
+function spawnDice(x) {
+    const materials = createDiceMaterials();
+    const mesh = new THREE.Mesh(geometry, materials);
+    mesh.position.x = x;
+    mesh.position.y = 0;
+    mesh.userData = { originalX: x };
+    mesh.quaternion.setFromEuler(new THREE.Euler(
+        Math.random() * Math.PI * 2,
+        Math.random() * Math.PI * 2,
+        Math.random() * Math.PI * 2
+    ));
+    scene.add(mesh);
+    return mesh;
 }
-animate();
 
-window.showNumber = (num) => {
-    const rot = rotationsToShowNumber[num];
-    if (rot) {
-        targetRotationX = rot.x;
-        targetRotationY = rot.y;
-        console.log(`[✅ 更新] 数字 ${num} を正面に表示: x=${rot.x}, y=${rot.y}`);
+// 3つのサイコロを生成
+diceArray.push(spawnDice(-1.8), spawnDice(0), spawnDice(1.8));
+
+// 【修正版】正しい表示結果を得るための回転定義
+const faceQuaternions = {
+    1: new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0, 'XYZ')),           // 前面
+    2: new THREE.Quaternion().setFromEuler(new THREE.Euler(0, Math.PI / 2, 0, 'XYZ')), // +90度
+    3: new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0, 'XYZ')),// 上面
+    4: new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI / 2, 0, 0, 'XYZ')), // 下面
+    5: new THREE.Quaternion().setFromEuler(new THREE.Euler(0, -Math.PI / 2, 0, 'XYZ')),// -90度
+    6: new THREE.Quaternion().setFromEuler(new THREE.Euler(0, Math.PI, 0, 'XYZ'))      // 背面
+};
+
+let isRolling = false;
+let isFixed = false;
+let rollSpeed = 0;
+let stopTimeout = null;
+let rollAnimationId = null;
+
+function animateRoll() {
+    if (!isRolling) return;
+
+    diceArray.forEach((d, i) => {
+        rollSpeed = Math.min(rollSpeed + 0.015, 0.35);
+        const deltaRot = new THREE.Euler(
+            rollSpeed * (1 + i * 0.1),
+            rollSpeed * 1.3 * (1 - i * 0.05),
+            rollSpeed * 0.9 * (1 + i * 0.08)
+        );
+        const deltaQuat = new THREE.Quaternion().setFromEuler(deltaRot);
+        d.quaternion.premultiply(deltaQuat);
+        d.position.y = Math.abs(Math.sin(Date.now() * 0.012 + i * 2)) * 0.4;
+    });
+
+    renderer.render(scene, camera);
+    rollAnimationId = requestAnimationFrame(animateRoll);
+}
+
+function animateIdle() {
+    if (isRolling || isFixed) {
+        renderer.render(scene, camera);
+        requestAnimationFrame(animateIdle);
+        return;
+    }
+
+    diceArray.forEach((d, i) => {
+        const idleRot = new THREE.Euler(0, 0.003 * (i + 1), 0);
+        const idleQuat = new THREE.Quaternion().setFromEuler(idleRot);
+        d.quaternion.premultiply(idleQuat);
+        d.position.y = Math.sin(Date.now() * 0.001 + i) * 0.05;
+    });
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(animateIdle);
+}
+
+// アイドルアニメーション開始
+animateIdle();
+
+// --- 外部連携API ---
+
+window.startDiceRoll = function() {
+    if (stopTimeout) clearTimeout(stopTimeout);
+    if (rollAnimationId) cancelAnimationFrame(rollAnimationId);
+
+    isRolling = true;
+    isFixed = false;
+    rollSpeed = 0;
+
+    diceArray.forEach((d, i) => {
+        d.position.y = 0.2;
+    });
+
+    animateRoll();
+    console.log("🎲 賽が回ります...");
+};
+
+window.stopDiceRoll = function(resultDice) {
+    if (rollAnimationId) {
+        cancelAnimationFrame(rollAnimationId);
+        rollAnimationId = null;
+    }
+    isRolling = false;
+
+    if (resultDice && Array.isArray(resultDice) && resultDice.length === 3) {
+        isFixed = true;
+
+        diceArray.forEach((dice, index) => {
+            const targetValue = resultDice[index];
+            const targetQuat = faceQuaternions[targetValue];
+
+            if (targetQuat) {
+                dice.quaternion.copy(targetQuat);
+                dice.position.y = 0;
+            }
+        });
+
+        console.log(`🎲 結果固定: ${resultDice.join(', ')}`);
+
+        if (stopTimeout) clearTimeout(stopTimeout);
+        stopTimeout = setTimeout(() => {
+            isFixed = false;
+        }, 8000);
+
     } else {
-        console.log(`[❌ エラー] 数字 ${num} は無効です`);
+        isFixed = false;
+        console.warn("無効な結果データ:", resultDice);
     }
 };
 
-window.getFrontNumber = () => {
-    const rx = dice.rotation.x % (Math.PI * 2);
-    const ry = dice.rotation.y % (Math.PI * 2);
-    const eps = 0.3;
+window.addEventListener('resize', () => {
+    const w = container.clientWidth;
+    const h = container.clientHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+});
 
-    if (Math.abs(ry) < eps) return 1;
-    if (Math.abs(ry - Math.PI) < eps || Math.abs(ry + Math.PI) < eps) return 6;
-    if (Math.abs(rx + Math.PI/2) < eps) return 3;
-    if (Math.abs(rx - Math.PI/2) < eps) return 4;
-    if (Math.abs(ry + Math.PI/2) < eps) return 2;
-    if (Math.abs(ry - Math.PI/2) < eps) return 5;
-    return "?";
-};
-
-window.testAllNumbers = () => {
-    console.log("=== 全数字テスト開始 ===");
-    for (let i = 1; i <= 6; i++) {
-        setTimeout(() => {
-            window.showNumber(i);
-        }, i * 500);
-    }
-};
-
-console.log("=== 🎲 サイコロテストツール v3 (3と4を修正) ===");
-console.log("showNumber(1)〜(6) で正しい数字が正面に表示されるはず");
-console.log("testAllNumbers() で一括テスト");
+console.log("🎲 3D Dice Engine 初期化完了（完全修正版）");
