@@ -223,7 +223,9 @@ class PremiumVCPanelView(discord.ui.View):
             )
             embed.add_field(name="チャンネルタイプ", value="🔊 ボイスチャンネル" if channel_type == "voice" else "🎭 ステージチャンネル", inline=True)
 
-            await channel.send(content=interaction.user.mention, embed=embed, view=VCManageView(interaction.user.id, allowed_buttons))
+            manage_view = VCManageView(interaction.user.id, allowed_buttons)
+            manage_view.add_buttons_dynamically()
+            await channel.send(content=interaction.user.mention, embed=embed, view=manage_view)
 
             if self.config.get("send_log", True):
                 await self._send_premium_log(interaction, channel, cost, channel_type)
@@ -343,9 +345,10 @@ class VCPanelView(discord.ui.View):
             allowed_buttons = {
                 "rename": config.get("allow_rename", True),
                 "subtitle": config.get("allow_subtitle", True),
-                "public": True,
-                "private": True,
-                "delete": config.get("allow_delete", True)
+                "public": config.get("allow_public", True),
+                "private": config.get("allow_private", True),
+                "delete": config.get("allow_delete", True),
+                "bitrate": False  # 通常パネルではビットレート変更は非表示
             }
 
             embed = discord.Embed(title="⚙️ VC管理パネル", description="作成者専用パネルです。", color=0x2b2d31)
@@ -354,7 +357,9 @@ class VCPanelView(discord.ui.View):
             else:
                 embed.description += "\n\n⏳ このVCの有効期限は **無制限** です。（無人時は5分後自動削除）"
 
-            await channel.send(content=interaction.user.mention, embed=embed, view=VCManageView(interaction.user.id, allowed_buttons))
+            manage_view = VCManageView(interaction.user.id, allowed_buttons)
+            manage_view.add_buttons_dynamically()
+            await channel.send(content=interaction.user.mention, embed=embed, view=manage_view)
 
             if config.get("send_log", True):
                 await self._send_vc_log(interaction, channel, cost, False)
@@ -428,14 +433,40 @@ class VCManageView(discord.ui.View):
         super().__init__(timeout=None)
         self.owner_id = owner_id
 
+        # デフォルト設定
         if allowed_buttons is None:
-            allowed_buttons = {"rename": True, "subtitle": True, "public": True, "private": True, "delete": True, "bitrate": True}
+            allowed_buttons = {
+                "rename": True,
+                "subtitle": True,
+                "public": True,
+                "private": True,
+                "delete": True,
+                "bitrate": False
+            }
 
-        for btn_id, enabled in allowed_buttons.items():
-            if not enabled:
-                btn = getattr(self, btn_id, None)
-                if btn:
-                    self.remove_item(btn)
+        # 各ボタンの表示/非表示を個別に設定するフラグとして保存
+        self.allowed_buttons = allowed_buttons
+
+    def add_buttons_dynamically(self):
+        """許可されたボタンのみを動的に追加"""
+        # 既存のボタンをクリア
+        self.clear_items()
+
+        # ユーザーを招待（常に表示）
+        self.add_item(self.invite_user)
+
+        if self.allowed_buttons.get("rename", True):
+            self.add_item(self.rename)
+        if self.allowed_buttons.get("subtitle", True):
+            self.add_item(self.subtitle)
+        if self.allowed_buttons.get("bitrate", False):
+            self.add_item(self.change_bitrate)
+        if self.allowed_buttons.get("public", True):
+            self.add_item(self.public)
+        if self.allowed_buttons.get("private", True):
+            self.add_item(self.private)
+        if self.allowed_buttons.get("delete", True):
+            self.add_item(self.delete)
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
         if interaction.user.guild_permissions.administrator:

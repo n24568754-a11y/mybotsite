@@ -102,5 +102,44 @@
         "allow_delete": true,
         "send_log": true,
         "specific_log_channel_id": 1509178809708974191
+    },
+    "1509881718080012560": {
+        "vc_name": "宵宿-",
+        "user_limit": 2,
+        "cost": 0,
+        "duration": 24,
+        "allow_rename": true,
+        "allow_subtitle": true,
+        "allow_public": false,
+        "allow_private": false,
+        "allow_delete": true,
+        "send_log": true,
+        "specific_log_channel_id": 1507713929025945791
+    },
+    "1509881883377532968": {
+        "vc_name": "宵宿-",
+        "user_limit": 2,
+        "cost": 10000,
+        "duration": 24,
+        "allow_rename": true,
+        "allow_subtitle": true,
+        "allow_public": false,
+        "allow_private": false,
+        "allow_delete": true,
+        "send_log": true,
+        "specific_log_channel_id": 1507713929025945791
+    },
+    "1510285577700900986": {
+        "vc_name": "宵宿-",
+        "user_limit": 2,
+        "cost": 0,
+        "duration": 24,
+        "allow_rename": true,
+        "allow_subtitle": true,
+        "allow_public": false,
+        "allow_private": false,
+        "allow_delete": true,
+        "send_log": true,
+        "specific_log_channel_id": 1507713929025945791
     }
 }

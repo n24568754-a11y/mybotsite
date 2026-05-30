@@ -380,22 +380,22 @@
         "tenya": {
             "name": "天",
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1368428956214100062/avatars/e21f3f3959dbcf9d6762d0a434c6babf.png?size=1024",
-            "money": 92142940,
+            "money": 92122740,
             "stats": {
                 "chat": 103438,
-                "vc": 4256,
-                "daily_chat": 16150,
-                "daily_vc": 111,
+                "vc": 4363,
+                "daily_chat": 0,
+                "daily_vc": 50,
                 "gacha_count": 54,
                 "send_money_total": 1000001,
-                "daily_spent": 30000,
+                "daily_spent": 0,
                 "total_spent": 30000,
                 "daily_send": 0,
-                "daily_purchases": 2,
+                "daily_purchases": 0,
                 "total_purchases": 2,
-                "daily_gacha": 2,
-                "chinchiro_total": 1000,
-                "daily_chinchiro": 1000
+                "daily_gacha": 0,
+                "chinchiro_total": 201000,
+                "daily_chinchiro": 0
             },
             "inventory": [
                 "1497207010721136691",
@@ -444,14 +444,12 @@
             "completed_missions": [
                 "m_chat_chars_6240",
                 "m_vc_minutes_7182",
-                "m_daily_chat_5230",
                 "m_gacha_count_6572",
                 "m_gacha_count_8241"
             ],
             "claimed_missions": [
                 "m_chat_chars_6240",
                 "m_vc_minutes_7182",
-                "m_daily_chat_5230",
                 "m_gacha_count_6572",
                 "m_gacha_count_8241"
             ]
@@ -459,12 +457,12 @@
         "ageha0205": {
             "name": "真宵",
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1387724679225278484/avatars/5d4af9294dc352544026da34825387f0.png?size=1024",
-            "money": 74888,
+            "money": 134888,
             "stats": {
-                "chat": 6736,
-                "vc": 5882,
-                "daily_chat": 4,
-                "daily_vc": 478,
+                "chat": 6966,
+                "vc": 6063,
+                "daily_chat": 156,
+                "daily_vc": 52,
                 "gacha_count": 11,
                 "send_money_total": 2650003,
                 "daily_spent": 0,
@@ -473,7 +471,7 @@
                 "daily_purchases": 0,
                 "total_purchases": 0,
                 "daily_gacha": 0,
-                "chinchiro_total": 0,
+                "chinchiro_total": 150000,
                 "daily_chinchiro": 0
             },
             "inventory": [
@@ -487,7 +485,6 @@
                 "1497622363196362793"
             ],
             "subscriptions": {
-                "1497204858204323980": "2026-05-30T05:18:47.063012",
                 "1497206816042647673": "2026-06-04T00:40:33.022737",
                 "1497207225255727224": "2026-06-08T02:48:43.118765",
                 "1497622363196362793": "2026-06-08T02:48:59.126070"
@@ -495,8 +492,6 @@
             "completed_missions": [
                 "m_chat_chars_6240",
                 "m_vc_minutes_7182",
-                "m_daily_vc_3475",
-                "m_daily_vc_8990",
                 "m_gacha_count_6572"
             ],
             "claimed_missions": []
@@ -635,9 +630,7 @@
             "inventory": [
                 "1497206816042647673"
             ],
-            "subscriptions": {
-                "1497206816042647673": "2026-05-30T05:19:42.371157"
-            },
+            "subscriptions": {},
             "completed_missions": [
                 "m_chat_chars_6240"
             ],
@@ -789,14 +782,14 @@
         "ageha0309": {
             "name": "都",
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1502658399463280810/avatars/f2509c2735cceda440128869085909d7.png?size=1024",
-            "money": 2791223,
+            "money": 2541223,
             "stats": {
                 "chat": 7488,
                 "vc": 3867,
                 "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 4,
-                "send_money_total": 1171001,
+                "send_money_total": 1421001,
                 "daily_spent": 0,
                 "total_spent": 0,
                 "daily_send": 0,
@@ -822,12 +815,12 @@
         },
         "END0000": {
             "name": "ﾈｺと和解せよ",
-            "avatar": "https://cdn.discordapp.com/avatars/812721666227699742/4dc703c39cddeb86e696653dc18dd5cd.png?size=1024",
+            "avatar": "https://cdn.discordapp.com/avatars/812721666227699742/27a68270c19de51e66d2b5ab02a8be5e.png?size=1024",
             "money": 49332,
             "stats": {
-                "chat": 5950,
+                "chat": 6160,
                 "vc": 994,
-                "daily_chat": 414,
+                "daily_chat": 114,
                 "daily_vc": 0,
                 "gacha_count": 4,
                 "send_money_total": 0,
@@ -850,8 +843,7 @@
             },
             "completed_missions": [
                 "m_chat_chars_6240",
-                "m_vc_minutes_7182",
-                "m_daily_chat_5230"
+                "m_vc_minutes_7182"
             ],
             "claimed_missions": []
         },
@@ -1024,9 +1016,9 @@
             "avatar": "https://cdn.discordapp.com/avatars/1488682620182335600/12f774debb2cf696a6292a80a8e9c924.png?size=1024",
             "money": 50000,
             "stats": {
-                "chat": 136,
+                "chat": 162,
                 "vc": 12,
-                "daily_chat": 0,
+                "daily_chat": 26,
                 "daily_vc": 0,
                 "gacha_count": 0,
                 "send_money_total": 0,
@@ -1113,7 +1105,7 @@
             "stats": {
                 "chat": 152,
                 "vc": 8,
-                "daily_chat": 6,
+                "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 0,
                 "send_money_total": 0,
@@ -1283,11 +1275,11 @@
         "azdayo000": {
             "name": "az",
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1421148398324547624/avatars/2efbc393a9e90cedf0a78f95121ecdd2.png?size=1024",
-            "money": 51120,
+            "money": 200880,
             "stats": {
-                "chat": 512,
-                "vc": 275,
-                "daily_chat": 14,
+                "chat": 620,
+                "vc": 377,
+                "daily_chat": 40,
                 "daily_vc": 0,
                 "gacha_count": 0,
                 "send_money_total": 0,
@@ -1315,8 +1307,8 @@
             "stats": {
                 "chat": 256,
                 "vc": 389,
-                "daily_chat": 8,
-                "daily_vc": 196,
+                "daily_chat": 0,
+                "daily_vc": 0,
                 "gacha_count": 2,
                 "send_money_total": 30002,
                 "daily_spent": 0,
@@ -1349,7 +1341,7 @@
             "stats": {
                 "chat": 154,
                 "vc": 44,
-                "daily_chat": 20,
+                "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 2,
                 "send_money_total": 0,
@@ -1378,12 +1370,12 @@
         "amakake220": {
             "name": "天翔",
             "avatar": "https://cdn.discordapp.com/avatars/768797460638203904/987decd212c60d140d46652e960bd02a.png?size=1024",
-            "money": 90000,
+            "money": 20068,
             "stats": {
-                "chat": 200,
+                "chat": 244,
                 "vc": 317,
-                "daily_chat": 84,
-                "daily_vc": 164,
+                "daily_chat": 44,
+                "daily_vc": 0,
                 "gacha_count": 0,
                 "send_money_total": 0,
                 "daily_spent": 0,
@@ -1392,7 +1384,7 @@
                 "daily_purchases": 0,
                 "total_purchases": 0,
                 "daily_gacha": 0,
-                "chinchiro_total": 0,
+                "chinchiro_total": 50000,
                 "daily_chinchiro": 0
             },
             "inventory": [],
