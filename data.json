@@ -22,7 +22,7 @@
       "1496907337275932732": "2026-06-28T16:24:06.081013"
     },
     "daily_chat": 0,
-    "daily_vc": 87,
+    "daily_vc": 121,
     "chat_chars": 46328,
     "vc_minutes": 3077,
     "send_money_total": 1000002,
@@ -65,7 +65,7 @@
       "m_gacha_count_8241"
     ],
     "chat": 103438,
-    "vc": 4530,
+    "vc": 4564,
     "weekly_vc_minutes": 0,
     "evaluator_total_minutes": 47,
     "daily_spent": 30000,
@@ -86,7 +86,7 @@
       "1497622363196362793": "2026-06-08T02:48:59.126070"
     },
     "daily_chat": 534,
-    "daily_vc": 71,
+    "daily_vc": 101,
     "vc_minutes": 2126,
     "gacha_count": 11,
     "inventory": [
@@ -101,7 +101,7 @@
     ],
     "chat_chars": 2814,
     "chat": 7500,
-    "vc": 6182,
+    "vc": 6212,
     "completed_missions": [
       "m_chat_chars_6240",
       "m_vc_minutes_7182",
@@ -146,11 +146,11 @@
   "1393702468600336586": {
     "money": 30610,
     "subscriptions": {},
-    "daily_chat": 0,
+    "daily_chat": 82,
     "daily_vc": 0,
     "vc": 457,
     "vc_minutes": 335,
-    "chat": 989,
+    "chat": 1071,
     "chat_chars": 981,
     "completed_missions": [
       "m_chat_chars_6240",
@@ -698,11 +698,11 @@
       "1497207010721136691",
       "1497622456729337866"
     ],
-    "chat": 3262,
+    "chat": 3276,
     "vc": 185,
     "gacha_count": 3,
     "send_money_total": 0,
-    "daily_chat": 0,
+    "daily_chat": 14,
     "daily_vc": 0,
     "completed_missions": [
       "m_chat_chars_6240"
@@ -979,12 +979,12 @@
     "inventory": [
       "1497622549964656730"
     ],
-    "chat": 352,
-    "vc": 460,
+    "chat": 508,
+    "vc": 490,
     "gacha_count": 2,
     "send_money_total": 30002,
-    "daily_chat": 96,
-    "daily_vc": 71,
+    "daily_chat": 252,
+    "daily_vc": 101,
     "completed_missions": [
       "m_chat_chars_6240",
       "m_vc_minutes_7182"
@@ -1059,11 +1059,11 @@
       "1496907337275932732": "2026-06-28T12:46:51.453082"
     },
     "inventory": [],
-    "chat": 244,
+    "chat": 268,
     "vc": 317,
     "gacha_count": 0,
     "send_money_total": 0,
-    "daily_chat": 0,
+    "daily_chat": 24,
     "daily_vc": 0,
     "completed_missions": [
       "m_chat_chars_6240",

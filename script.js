@@ -548,7 +548,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedPwd = localStorage.getItem('user_pwd');
     if (savedPwd && window.USER_PROFILES && window.USER_PROFILES[savedPwd]) {
         sessionPassword = savedPwd;
+        // ログイン済みの場合はモーダルを表示しない
+        console.log("✅ 既にログイン済み: " + savedPwd);
     } else {
+        // 未認証の場合のみモーダルを表示
         setTimeout(() => {
             if (!sessionPassword) forceLoginModal();
         }, 500);
