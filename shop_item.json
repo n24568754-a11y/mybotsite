@@ -380,20 +380,20 @@
         "tenya": {
             "name": "天",
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1368428956214100062/avatars/e21f3f3959dbcf9d6762d0a434c6babf.png?size=1024",
-            "money": 92122740,
+            "money": 92092717,
             "stats": {
                 "chat": 103438,
-                "vc": 4363,
+                "vc": 4530,
                 "daily_chat": 0,
-                "daily_vc": 50,
-                "gacha_count": 54,
-                "send_money_total": 1000001,
-                "daily_spent": 0,
-                "total_spent": 30000,
+                "daily_vc": 87,
+                "gacha_count": 55,
+                "send_money_total": 1000002,
+                "daily_spent": 30000,
+                "total_spent": 60000,
                 "daily_send": 0,
                 "daily_purchases": 0,
                 "total_purchases": 2,
-                "daily_gacha": 0,
+                "daily_gacha": 1,
                 "chinchiro_total": 201000,
                 "daily_chinchiro": 0
             },
@@ -430,7 +430,7 @@
                 "1497206030315290816": "2026-06-28T16:23:47.418434",
                 "1497204858204323980": "2026-06-08T02:58:05.159530",
                 "1497207225255727224": "2026-06-28T15:33:41.832125",
-                "1497622240928202896": "2026-06-08T02:56:09.924795",
+                "1497622240928202896": "2026-06-30T00:21:36.692437",
                 "1497622549964656730": "2026-06-08T02:55:44.385392",
                 "1497622784015204503": "2026-06-08T02:56:05.929163",
                 "1497207081315602503": "2026-06-08T02:59:33.609831",
@@ -457,17 +457,17 @@
         "ageha0205": {
             "name": "真宵",
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1387724679225278484/avatars/5d4af9294dc352544026da34825387f0.png?size=1024",
-            "money": 134888,
+            "money": 114889,
             "stats": {
-                "chat": 6966,
-                "vc": 6063,
-                "daily_chat": 156,
-                "daily_vc": 52,
+                "chat": 7500,
+                "vc": 6182,
+                "daily_chat": 534,
+                "daily_vc": 71,
                 "gacha_count": 11,
-                "send_money_total": 2650003,
+                "send_money_total": 2670003,
                 "daily_spent": 0,
                 "total_spent": 0,
-                "daily_send": 0,
+                "daily_send": 20000,
                 "daily_purchases": 0,
                 "total_purchases": 0,
                 "daily_gacha": 0,
@@ -492,7 +492,8 @@
             "completed_missions": [
                 "m_chat_chars_6240",
                 "m_vc_minutes_7182",
-                "m_gacha_count_6572"
+                "m_gacha_count_6572",
+                "m_daily_chat_5230"
             ],
             "claimed_missions": []
         },
@@ -782,14 +783,14 @@
         "ageha0309": {
             "name": "都",
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1502658399463280810/avatars/f2509c2735cceda440128869085909d7.png?size=1024",
-            "money": 2541223,
+            "money": 2441223,
             "stats": {
-                "chat": 7488,
-                "vc": 3867,
-                "daily_chat": 0,
-                "daily_vc": 0,
+                "chat": 7510,
+                "vc": 3900,
+                "daily_chat": 22,
+                "daily_vc": 15,
                 "gacha_count": 4,
-                "send_money_total": 1421001,
+                "send_money_total": 1521001,
                 "daily_spent": 0,
                 "total_spent": 0,
                 "daily_send": 0,
@@ -818,9 +819,9 @@
             "avatar": "https://cdn.discordapp.com/avatars/812721666227699742/27a68270c19de51e66d2b5ab02a8be5e.png?size=1024",
             "money": 49332,
             "stats": {
-                "chat": 6160,
+                "chat": 6192,
                 "vc": 994,
-                "daily_chat": 114,
+                "daily_chat": 32,
                 "daily_vc": 0,
                 "gacha_count": 4,
                 "send_money_total": 0,
@@ -852,9 +853,9 @@
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1057622936187568198/avatars/9c6cfc62fcb364b17ccc74df95f82a1a.png?size=1024",
             "money": 30790,
             "stats": {
-                "chat": 366,
+                "chat": 382,
                 "vc": 454,
-                "daily_chat": 0,
+                "daily_chat": 16,
                 "daily_vc": 0,
                 "gacha_count": 6,
                 "send_money_total": 20000,
@@ -878,7 +879,8 @@
                 "1497206404543414322": "2026-06-09T23:22:35.084715"
             },
             "completed_missions": [
-                "m_chat_chars_6240"
+                "m_chat_chars_6240",
+                "m_gacha_count_6572"
             ],
             "claimed_missions": []
         },
@@ -983,9 +985,9 @@
             "avatar": "https://cdn.discordapp.com/avatars/1480946807046672436/3371e747fef55de22925fb6127880858.png?size=1024",
             "money": 2915,
             "stats": {
-                "chat": 1760,
+                "chat": 1836,
                 "vc": 515,
-                "daily_chat": 0,
+                "daily_chat": 44,
                 "daily_vc": 0,
                 "gacha_count": 5,
                 "send_money_total": 0,
@@ -1007,7 +1009,8 @@
                 "1497205518870249512": "2026-06-12T21:53:59.106090"
             },
             "completed_missions": [
-                "m_chat_chars_6240"
+                "m_chat_chars_6240",
+                "m_gacha_count_6572"
             ],
             "claimed_missions": []
         },
@@ -1018,7 +1021,7 @@
             "stats": {
                 "chat": 162,
                 "vc": 12,
-                "daily_chat": 26,
+                "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 0,
                 "send_money_total": 0,
@@ -1279,7 +1282,7 @@
             "stats": {
                 "chat": 620,
                 "vc": 377,
-                "daily_chat": 40,
+                "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 0,
                 "send_money_total": 0,
@@ -1303,28 +1306,29 @@
         "igns": {
             "name": "司教",
             "avatar": "https://cdn.discordapp.com/avatars/1366670368282247198/976c40b454dcff926201971559eed64b.png?size=1024",
-            "money": 32974,
+            "money": 10000,
             "stats": {
-                "chat": 256,
-                "vc": 389,
-                "daily_chat": 0,
-                "daily_vc": 0,
+                "chat": 352,
+                "vc": 460,
+                "daily_chat": 96,
+                "daily_vc": 71,
                 "gacha_count": 2,
                 "send_money_total": 30002,
-                "daily_spent": 0,
-                "total_spent": 0,
+                "daily_spent": 3,
+                "total_spent": 3,
                 "daily_send": 0,
-                "daily_purchases": 0,
-                "total_purchases": 0,
+                "daily_purchases": 1,
+                "total_purchases": 1,
                 "daily_gacha": 0,
-                "chinchiro_total": 0,
-                "daily_chinchiro": 0
+                "chinchiro_total": 5000,
+                "daily_chinchiro": 5000
             },
             "inventory": [
                 "1497622549964656730"
             ],
             "subscriptions": {
-                "1497622549964656730": "2026-06-21T20:24:16.189774"
+                "1497622549964656730": "2026-06-21T20:24:16.189774",
+                "1496900798083367062": "2026-06-30T00:12:23.958103"
             },
             "completed_missions": [
                 "m_chat_chars_6240",
@@ -1339,9 +1343,9 @@
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1191327231931330652/avatars/f4457404e36a0be355fe89715961cc79.png?size=1024",
             "money": 10000,
             "stats": {
-                "chat": 154,
+                "chat": 230,
                 "vc": 44,
-                "daily_chat": 0,
+                "daily_chat": 46,
                 "daily_vc": 0,
                 "gacha_count": 2,
                 "send_money_total": 0,
@@ -1374,7 +1378,7 @@
             "stats": {
                 "chat": 244,
                 "vc": 317,
-                "daily_chat": 44,
+                "daily_chat": 0,
                 "daily_vc": 0,
                 "gacha_count": 0,
                 "send_money_total": 0,
@@ -1396,6 +1400,49 @@
                 "m_vc_minutes_7182"
             ],
             "claimed_missions": []
+        },
+        "4392": {
+            "name": "翠",
+            "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1481264584311570524/avatars/4e84b1adc7c3aa859d130f0c64cef4c8.png?size=1024",
+            "money": 25000,
+            "stats": {
+                "chat": 150,
+                "vc": 215,
+                "daily_chat": 0,
+                "daily_vc": 87,
+                "gacha_count": 5,
+                "send_money_total": 0,
+                "daily_spent": 90000,
+                "total_spent": 90000,
+                "daily_send": 0,
+                "daily_purchases": 0,
+                "total_purchases": 0,
+                "daily_gacha": 5,
+                "chinchiro_total": 0,
+                "daily_chinchiro": 0
+            },
+            "inventory": [
+                "1497207507528192031",
+                "1497622363196362793",
+                "1497622784015204503",
+                "1497207592370442300",
+                "1497204858204323980"
+            ],
+            "subscriptions": {
+                "1497207507528192031": "2026-06-30T00:18:50.168147",
+                "1497622363196362793": "2026-06-30T00:21:35.432335",
+                "1497622784015204503": "2026-06-30T00:22:07.145535",
+                "1497207592370442300": "2026-06-30T00:23:11.910145",
+                "1497204858204323980": "2026-06-30T00:23:19.576439"
+            },
+            "completed_missions": [
+                "m_chat_chars_6240",
+                "m_vc_minutes_7182",
+                "m_gacha_count_6572"
+            ],
+            "claimed_missions": [
+                "m_gacha_count_6572"
+            ]
         }
     }
 }

@@ -51,7 +51,7 @@
                     <button class="nav-item-fantasy nav-identity" onclick="openProfileAuth()"></button>
                     <span class="nav-label">IDENTITY</span>
                 </div>
-                <!-- ★ LOGIN ボタン追加 -->
+                <!-- LOGIN ボタン -->
                 <div class="nav-btn-wrapper">
                     <button class="nav-item-fantasy nav-login" onclick="forceLoginModal()"></button>
                     <span class="nav-label">LOGIN</span>
@@ -164,12 +164,12 @@
         <p style="font-size: 10px; color: var(--sub-text); margin: 20px 0 100px; letter-spacing: 2px;">SECURED BY VOID CORP</p>
     </section>
 
-    <!-- ★ ログアウトボタンをフッターに追加 -->
-    <div style="text-align: center; margin: -60px 0 20px;">
-        <button class="logout-btn" onclick="logout()">🚪 LOGOUT</button>
-    </div>
+    <!-- キャラクター表示切り替えボタン（左下に配置） -->
+    <button id="toggle-character-btn" class="toggle-character-btn" style="position: fixed; bottom: 20px; left: 20px; z-index: 1001; background: rgba(0,0,0,0.6); border: 1px solid var(--accent-color); color: white; padding: 8px 12px; border-radius: 30px; cursor: pointer; font-size: 12px; backdrop-filter: blur(5px);">
+        🐱 キャラ非表示
+    </button>
 
-    <div class="character-box">
+    <div class="character-box" id="character-box">
         <div class="chat-bubble" id="char-quote">接続を確認しました。</div>
         <img id="mascot-img" src="character.png" class="mascot-img" onerror="this.src='https://via.placeholder.com/280x400?text=No+Character'">
     </div>

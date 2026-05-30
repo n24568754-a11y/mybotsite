@@ -445,3 +445,17 @@ h1 { font-size: clamp(2rem, 8vw, 3.5rem); letter-spacing: 10px; margin: 20px 0; 
 .hidden { display: none !important; }
 .main-shop-btn { background: #000; color: #fff; border: 1px solid var(--accent-color); padding: 15px 30px; cursor: pointer; transition: 0.3s; border-radius: 5px; font-weight: bold; }
 .main-shop-btn:hover { background: var(--accent-color); box-shadow: 0 0 20px var(--accent-color); }
+
+/* --- キャラクター表示切替ボタン --- */
+.toggle-character-btn {
+    transition: 0.3s;
+}
+.toggle-character-btn:hover {
+    background: var(--accent-color);
+    box-shadow: 0 0 10px var(--accent-color);
+}
+
+/* キャラクター非表示時のスタイル */
+.character-box.hidden {
+    display: none !important;
+}

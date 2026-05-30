@@ -151,7 +151,7 @@ class Economy(commands.Cog):
 
     def _load_config(self):
         if not os.path.exists(CONFIG_FILE):
-            self.config = {"currency_name": "星", "last_reset_date": datetime.now().date().isoformat()}
+            self.config = {"currency_name": "星", "last_reset_date": datetime.now().date().isoformat(), "transfer_log_channel_id": None}
             self._save_config()
         else:
             with open(CONFIG_FILE, 'r', encoding='utf-8') as f: self.config = json.load(f)
@@ -164,14 +164,12 @@ class Economy(commands.Cog):
             'money': 0, 'last_daily': None, 'subscriptions': {}, 'inventory': [],
             'chat': 0, 'vc': 0, 'gacha_count': 0, 'send_money_total': 0,
             'daily_chat': 0, 'daily_vc': 0,
-            # 追加統計項目
             'daily_spent': 0,
             'total_spent': 0,
             'daily_send': 0,
             'daily_purchases': 0,
             'total_purchases': 0,
             'daily_gacha': 0,
-            # チンチロ関連
             'chinchiro_total': 0,
             'daily_chinchiro': 0,
             'completed_missions': [], 'claimed_missions': []
@@ -222,14 +220,12 @@ class Economy(commands.Cog):
                             "daily_vc": int(info.get('daily_vc', 0)),
                             "gacha_count": int(info.get('gacha_count', 0)),
                             "send_money_total": int(info.get('send_money_total', 0)),
-                            # 追加統計項目
                             "daily_spent": int(info.get('daily_spent', 0)),
                             "total_spent": int(info.get('total_spent', 0)),
                             "daily_send": int(info.get('daily_send', 0)),
                             "daily_purchases": int(info.get('daily_purchases', 0)),
                             "total_purchases": int(info.get('total_purchases', 0)),
                             "daily_gacha": int(info.get('daily_gacha', 0)),
-                            # チンチロ関連
                             "chinchiro_total": int(info.get('chinchiro_total', 0)),
                             "daily_chinchiro": int(info.get('daily_chinchiro', 0))
                         },
@@ -262,7 +258,6 @@ class Economy(commands.Cog):
             for uid in data:
                 data[uid]['daily_chat'] = 0
                 data[uid]['daily_vc'] = 0
-                # 追加リセット項目
                 data[uid]['daily_spent'] = 0
                 data[uid]['daily_send'] = 0
                 data[uid]['daily_purchases'] = 0
@@ -406,11 +401,9 @@ class Economy(commands.Cog):
 
                 data[uid]['money'] -= price
 
-                # 消費金額の記録
                 data[uid]['daily_spent'] = data[uid].get('daily_spent', 0) + price
                 data[uid]['total_spent'] = data[uid].get('total_spent', 0) + price
 
-                # 購入回数はガチャ以外のみカウント
                 if "ガチャ" not in item_name:
                     data[uid]['daily_purchases'] = data[uid].get('daily_purchases', 0) + 1
                     data[uid]['total_purchases'] = data[uid].get('total_purchases', 0) + 1
@@ -474,7 +467,6 @@ class Economy(commands.Cog):
             change = bet_amount * multiplier
             data[uid]['money'] += change
 
-            # チンチロ勝ち額の記録（勝った場合のみ）
             if change > 0:
                 data[uid]['chinchiro_total'] = data[uid].get('chinchiro_total', 0) + change
                 data[uid]['daily_chinchiro'] = data[uid].get('daily_chinchiro', 0) + change
@@ -541,7 +533,6 @@ class Economy(commands.Cog):
             if data[uid].get('vc', 0) < data[uid].get('daily_vc', 0):
                 data[uid]['vc'] = data[uid]['daily_vc']
                 fixed += 1
-            # 新規統計の整合性チェック
             if data[uid].get('total_spent', 0) < data[uid].get('daily_spent', 0):
                 data[uid]['total_spent'] = data[uid]['daily_spent']
                 fixed += 1
@@ -702,15 +693,81 @@ class Economy(commands.Cog):
         data = self.load_data()
         sid, rid = str(interaction.user.id), str(相手.id)
         if 金額 <= 0 or sid == rid or data.get(sid, {}).get('money', 0) < 金額:
-            await interaction.followup.send("無効な操作です。", ephemeral=True); return
-        if rid not in data: data[rid] = self.get_default_user_data()
+            await interaction.followup.send("無効な操作です。", ephemeral=True)
+            return
+        if rid not in data:
+            data[rid] = self.get_default_user_data()
+
+        # 送金処理
         data[sid]['money'] -= 金額
         data[rid]['money'] += 金額
         data[sid]['send_money_total'] = data[sid].get('send_money_total', 0) + 金額
-        # デイリー送金額の記録
         data[sid]['daily_send'] = data[sid].get('daily_send', 0) + 金額
-        self.save_data(data); self.update_web_data()
+
+        self.save_data(data)
+        self.update_web_data()
+
         await interaction.followup.send(f"✅ {相手.display_name} へ送金しました。", ephemeral=True)
+
+        # ========== 送金ログを埋め込みで送信 ==========
+        await self.send_transfer_log(interaction, 相手, 金額)
+
+    async def send_transfer_log(self, interaction: discord.Interaction, receiver: discord.Member, amount: int):
+        """送金ログを専用チャンネルに送信"""
+        try:
+            # ログ送信先チャンネルIDを取得
+            log_channel_id = self.config.get("transfer_log_channel_id")
+            if not log_channel_id:
+                log_channel = interaction.channel
+            else:
+                log_channel = interaction.guild.get_channel(log_channel_id)
+                if not log_channel:
+                    log_channel = interaction.channel
+
+            sender = interaction.user
+            now = datetime.now()
+
+            # 送金者のVC情報を取得
+            vc_info = "なし"
+            vc_members_mentions = []
+
+            if sender.voice and sender.voice.channel:
+                vc_channel = sender.voice.channel
+                vc_info = f"{vc_channel.mention}"
+
+                for member in vc_channel.members:
+                    if member.id != sender.id:
+                        vc_members_mentions.append(member.mention)
+
+            # 埋め込み作成
+            embed = discord.Embed(
+                title="💸 送金ログ",
+                color=discord.Color.gold(),
+                timestamp=now
+            )
+
+            embed.add_field(name="送金者", value=f"{sender.mention}\nID: `{sender.id}`", inline=True)
+            embed.add_field(name="受取者", value=f"{receiver.mention}\nID: `{receiver.id}`", inline=True)
+            embed.add_field(name="💰 送金額", value=f"{amount} {self.currency}", inline=True)
+
+            embed.add_field(
+                name="📅 日時",
+                value=f"<t:{int(now.timestamp())}:F>\n<t:{int(now.timestamp())}:R>",
+                inline=False
+            )
+
+            embed.add_field(
+                name="🎙️ VC滞在状況",
+                value=f"**VC:** {vc_info}\n**同席者:** {', '.join(vc_members_mentions) if vc_members_mentions else 'なし'}",
+                inline=False
+            )
+
+            embed.set_thumbnail(url=sender.display_avatar.url)
+
+            await log_channel.send(embed=embed)
+
+        except Exception as e:
+            print(f"送金ログ送信エラー: {e}")
 
     @app_commands.command(name="請求書", description="相手にDMで請求書を送ります")
     async def bill(self, interaction: discord.Interaction, 相手: discord.Member, 金額: int):
@@ -721,6 +778,14 @@ class Economy(commands.Cog):
             await 相手.send(embed=embed, view=view)
             await interaction.response.send_message(f"✅ {相手.display_name} さんに送信しました。", ephemeral=True)
         except: await interaction.force_respond("❌ DM送信に失敗しました。", ephemeral=True)
+
+    @app_commands.command(name="set_transfer_log", description="送金ログの送信先チャンネルを設定します")
+    @app_commands.default_permissions(administrator=True)
+    async def set_transfer_log(self, interaction: discord.Interaction, channel: discord.TextChannel):
+        """送金ログを送信するチャンネルを設定"""
+        self.config["transfer_log_channel_id"] = channel.id
+        self._save_config()
+        await interaction.response.send_message(f"✅ 送金ログの送信先を {channel.mention} に設定しました。", ephemeral=True)
 
     @tasks.loop(seconds=5)
     async def web_request_watcher(self):
@@ -779,7 +844,6 @@ class Economy(commands.Cog):
                 change = bet * multiplier
                 data[uid]['money'] += change
 
-                # チンチロ勝ち額の記録（勝った場合のみ）
                 if change > 0:
                     data[uid]['chinchiro_total'] = data[uid].get('chinchiro_total', 0) + change
                     data[uid]['daily_chinchiro'] = data[uid].get('daily_chinchiro', 0) + change

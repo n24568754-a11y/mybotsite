@@ -554,3 +554,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 500);
     }
 });
+
+// ========== キャラクター表示切替機能 ==========
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtn = document.getElementById('toggle-character-btn');
+    const characterBox = document.getElementById('character-box');
+
+    if (toggleBtn && characterBox) {
+        // 初期状態をチェック（ローカルストレージから復元）
+        const isCharacterHidden = localStorage.getItem('character_hidden') === 'true';
+        if (isCharacterHidden) {
+            characterBox.classList.add('hidden');
+            toggleBtn.innerHTML = '🐱 キャラ表示';
+        } else {
+            toggleBtn.innerHTML = '🐱 キャラ非表示';
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            if (characterBox.classList.contains('hidden')) {
+                characterBox.classList.remove('hidden');
+                toggleBtn.innerHTML = '🐱 キャラ非表示';
+                localStorage.setItem('character_hidden', 'false');
+            } else {
+                characterBox.classList.add('hidden');
+                toggleBtn.innerHTML = '🐱 キャラ表示';
+                localStorage.setItem('character_hidden', 'true');
+            }
+        });
+    }
+});

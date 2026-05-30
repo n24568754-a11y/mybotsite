@@ -141,5 +141,70 @@
         "allow_delete": true,
         "send_log": true,
         "specific_log_channel_id": 1507713929025945791
+    },
+    "1510287441226105014": {
+        "vc_name": "宵宿-",
+        "user_limit": 2,
+        "cost": 0,
+        "duration": 24,
+        "allow_rename": true,
+        "allow_subtitle": true,
+        "allow_public": false,
+        "allow_private": false,
+        "allow_delete": true,
+        "send_log": true,
+        "specific_log_channel_id": 1507713929025945791
+    },
+    "1510288018815193128": {
+        "vc_name": "宵宿-",
+        "user_limit": 2,
+        "cost": 10000,
+        "duration": 24,
+        "allow_rename": true,
+        "allow_subtitle": true,
+        "allow_public": false,
+        "allow_private": false,
+        "allow_delete": true,
+        "send_log": true,
+        "specific_log_channel_id": 1507713929025945791
+    },
+    "1510288419807301643": {
+        "vc_name": "裏宵宿-",
+        "user_limit": 2,
+        "cost": 50000,
+        "duration": 24,
+        "allow_rename": true,
+        "allow_subtitle": true,
+        "allow_public": true,
+        "allow_private": true,
+        "allow_delete": true,
+        "send_log": true,
+        "specific_log_channel_id": 1507713929025945791
+    },
+    "1510288742412321011": {
+        "vc_name": "ゲーム-",
+        "user_limit": 0,
+        "cost": 0,
+        "duration": 24,
+        "allow_rename": true,
+        "allow_subtitle": true,
+        "allow_public": false,
+        "allow_private": false,
+        "allow_delete": true,
+        "send_log": true,
+        "specific_log_channel_id": 1509687911912570982
+    },
+    "1510289086395580436": {
+        "vc_name": "カジノ-",
+        "user_limit": 0,
+        "cost": 0,
+        "duration": 24,
+        "allow_rename": true,
+        "allow_subtitle": true,
+        "allow_public": false,
+        "allow_private": false,
+        "allow_delete": true,
+        "send_log": true,
+        "specific_log_channel_id": 1509178809708974191
     }
 }
