@@ -97,7 +97,10 @@ function createParticles() {
 }
 createParticles();
 
-// --- リアルタイム同期 ---
+// ========== Firebase読み込み完了を待つログイン状態チェック ==========
+let firebaseLoaded = false;
+
+// --- リアルタイム同期（拡張版） ---
 database.ref('/').on('value', (snapshot) => {
     const data = snapshot.val();
     if (data) {
@@ -107,6 +110,21 @@ database.ref('/').on('value', (snapshot) => {
         window.MISSIONS_DEF = data.MISSIONS || {};
         window.CURRENCY_NAME = data.CURRENCY_NAME || "星";
         updateRanking(window.USER_PROFILES);
+
+        firebaseLoaded = true;
+
+        // Firebaseデータが読み込まれた後にログイン状態をチェック
+        const savedPwd = localStorage.getItem('user_pwd');
+        if (savedPwd && window.USER_PROFILES && window.USER_PROFILES[savedPwd]) {
+            sessionPassword = savedPwd;
+            console.log("✅ 既にログイン済み: " + savedPwd);
+        } else if (!sessionPassword) {
+            // 未認証の場合のみモーダルを表示
+            setTimeout(() => {
+                if (!sessionPassword) forceLoginModal();
+            }, 500);
+        }
+
         if (sessionPassword) {
             if (currentActivePageId === 'profile-page') updateProfileDisplay(sessionPassword);
             if (currentActivePageId === 'archive-page') renderArchive();
@@ -205,7 +223,9 @@ function openProfileAuth() {
     showPage('profile-page');
 }
 
+// DOMContentLoaded の修正版（マスコットとタイムアウト処理）
 document.addEventListener('DOMContentLoaded', () => {
+    // マスコットクリック処理
     const mascotImg = document.getElementById('mascot-img');
     if(mascotImg) {
         mascotImg.addEventListener('click', () => {
@@ -218,6 +238,40 @@ document.addEventListener('DOMContentLoaded', () => {
             quoteEl.innerText = random.text;
             imgEl.classList.add('bounce-anim');
             setTimeout(() => imgEl.classList.remove('bounce-anim'), 500);
+        });
+    }
+
+    // 5秒経過しても Firebase が読み込まれない場合はフォールバック
+    setTimeout(() => {
+        if (!firebaseLoaded && !sessionPassword) {
+            console.log("⚠️ Firebase読み込みタイムアウト - モーダル表示");
+            forceLoginModal();
+        }
+    }, 3000);
+
+    // キャラクター表示切替機能
+    const toggleBtn = document.getElementById('toggle-character-btn');
+    const characterBox = document.getElementById('character-box');
+
+    if (toggleBtn && characterBox) {
+        const isCharacterHidden = localStorage.getItem('character_hidden') === 'true';
+        if (isCharacterHidden) {
+            characterBox.classList.add('hidden');
+            toggleBtn.innerHTML = '🐱 キャラ表示';
+        } else {
+            toggleBtn.innerHTML = '🐱 キャラ非表示';
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            if (characterBox.classList.contains('hidden')) {
+                characterBox.classList.remove('hidden');
+                toggleBtn.innerHTML = '🐱 キャラ非表示';
+                localStorage.setItem('character_hidden', 'false');
+            } else {
+                characterBox.classList.add('hidden');
+                toggleBtn.innerHTML = '🐱 キャラ表示';
+                localStorage.setItem('character_hidden', 'true');
+            }
         });
     }
 });
@@ -542,47 +596,3 @@ function logout() {
         }, 100);
     }
 }
-
-// ページ読み込み時に未認証なら自動でログインモーダルを表示
-document.addEventListener('DOMContentLoaded', () => {
-    const savedPwd = localStorage.getItem('user_pwd');
-    if (savedPwd && window.USER_PROFILES && window.USER_PROFILES[savedPwd]) {
-        sessionPassword = savedPwd;
-        // ログイン済みの場合はモーダルを表示しない
-        console.log("✅ 既にログイン済み: " + savedPwd);
-    } else {
-        // 未認証の場合のみモーダルを表示
-        setTimeout(() => {
-            if (!sessionPassword) forceLoginModal();
-        }, 500);
-    }
-});
-
-// ========== キャラクター表示切替機能 ==========
-document.addEventListener('DOMContentLoaded', () => {
-    const toggleBtn = document.getElementById('toggle-character-btn');
-    const characterBox = document.getElementById('character-box');
-
-    if (toggleBtn && characterBox) {
-        // 初期状態をチェック（ローカルストレージから復元）
-        const isCharacterHidden = localStorage.getItem('character_hidden') === 'true';
-        if (isCharacterHidden) {
-            characterBox.classList.add('hidden');
-            toggleBtn.innerHTML = '🐱 キャラ表示';
-        } else {
-            toggleBtn.innerHTML = '🐱 キャラ非表示';
-        }
-
-        toggleBtn.addEventListener('click', () => {
-            if (characterBox.classList.contains('hidden')) {
-                characterBox.classList.remove('hidden');
-                toggleBtn.innerHTML = '🐱 キャラ非表示';
-                localStorage.setItem('character_hidden', 'false');
-            } else {
-                characterBox.classList.add('hidden');
-                toggleBtn.innerHTML = '🐱 キャラ表示';
-                localStorage.setItem('character_hidden', 'true');
-            }
-        });
-    }
-});

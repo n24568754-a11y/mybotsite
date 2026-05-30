@@ -459,9 +459,9 @@
             "avatar": "https://cdn.discordapp.com/guilds/1496790362294063114/users/1387724679225278484/avatars/5d4af9294dc352544026da34825387f0.png?size=1024",
             "money": 114889,
             "stats": {
-                "chat": 7500,
+                "chat": 7650,
                 "vc": 6212,
-                "daily_chat": 534,
+                "daily_chat": 684,
                 "daily_vc": 101,
                 "gacha_count": 11,
                 "send_money_total": 2670003,
@@ -1376,9 +1376,9 @@
             "avatar": "https://cdn.discordapp.com/avatars/768797460638203904/987decd212c60d140d46652e960bd02a.png?size=1024",
             "money": 20068,
             "stats": {
-                "chat": 268,
+                "chat": 300,
                 "vc": 317,
-                "daily_chat": 24,
+                "daily_chat": 56,
                 "daily_vc": 0,
                 "gacha_count": 0,
                 "send_money_total": 0,
