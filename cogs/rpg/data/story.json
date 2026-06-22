@@ -1,0 +1,145 @@
+{
+  "chapters": {
+    "prologue": {
+      "name": "プロローグ",
+      "order": 0,
+      "is_active": true,
+      "prerequisites": {
+        "min_level": 1,
+        "required_items": [],
+        "required_flags": []
+      },
+      "description": "冒険の始まり"
+    },
+    "chapter_1": {
+      "name": "草原の危機",
+      "order": 1,
+      "is_active": true,
+      "prerequisites": {
+        "min_level": 3,
+        "required_items": [],
+        "required_flags": ["met_elder"]
+      },
+      "description": "長老からの依頼"
+    }
+  },
+  "events": {
+    "first_step": {
+      "name": "最初の一歩",
+      "trigger": {
+        "type": "location",
+        "area": "草原",
+        "x": 4,
+        "y": 5,
+        "radius": 2
+      },
+      "conditions": {
+        "flags_required": [],
+        "flags_forbidden": ["completed_first_step"],
+        "level_min": 1
+      },
+      "once": true,
+      "dialogue": {
+        "npc_name": "謎の声",
+        "npc_icon": "✨",
+        "messages": [
+          "よく来たな、冒険者よ...",
+          "この世界には数多くの危険と冒険が待っている。",
+          "まずは `/rpg_walk` で草原を探索してみよう。"
+        ]
+      },
+      "auto_effects": {
+        "flags_add": ["completed_first_step"],
+        "reward_exp": 20,
+        "reward_gold": 10
+      }
+    },
+    "meet_elder": {
+      "name": "村の長老",
+      "trigger": {
+        "type": "location",
+        "area": "村",
+        "x": 3,
+        "y": 3,
+        "radius": 0
+      },
+      "conditions": {
+        "flags_required": [],
+        "flags_forbidden": ["met_elder"],
+        "level_min": 1
+      },
+      "once": true,
+      "dialogue": {
+        "npc_name": "長老",
+        "npc_icon": "👴",
+        "messages": [
+          "おお、旅の人か...",
+          "実は困っておるのじゃ。",
+          "森の奥に住む魔物が村を襲っておる。",
+          "退治してはくれまいか？"
+        ]
+      },
+      "choices": [
+        {
+          "text": "引き受ける！",
+          "style": "success",
+          "effects": {
+            "flags_add": ["accepted_elder_quest"],
+            "quest_start": "defeat_goblin_chief",
+            "reward_exp": 50,
+            "reward_gold": 100
+          },
+          "next_event": null
+        },
+        {
+          "text": "まだ自信がない...",
+          "style": "secondary",
+          "effects": {
+            "flags_add": ["refused_elder_quest"]
+          },
+          "next_event": null
+        }
+      ]
+    },
+    "defeat_goblin_chief_complete": {
+      "name": "ゴブリン討伐完了",
+      "trigger": {
+        "type": "quest_complete",
+        "quest_id": "defeat_goblin_chief"
+      },
+      "conditions": {
+        "flags_required": ["accepted_elder_quest"],
+        "flags_forbidden": ["completed_goblin_quest"],
+        "level_min": 1
+      },
+      "once": true,
+      "dialogue": {
+        "npc_name": "長老",
+        "npc_icon": "👴",
+        "messages": [
+          "おお！ ゴブリンを倒してくれたのか！",
+          "ありがとう、これで村は安全じゃ。",
+          "これは感謝の気持ちじゃ。"
+        ]
+      },
+      "auto_effects": {
+        "flags_add": ["completed_goblin_quest"],
+        "reward_exp": 200,
+        "reward_gold": 300,
+        "reward_item": "iron_sword"
+      }
+    }
+  },
+  "quest_events": {
+    "defeat_goblin_chief": {
+      "name": "ゴブリン討伐",
+      "target_enemy": "goblin_chief",
+      "required_kills": 1,
+      "description": "村を襲っているゴブリンの親分を倒せ！"
+    }
+  },
+  "flags": {
+    "global_flags": {},
+    "player_flags": {}
+  }
+}

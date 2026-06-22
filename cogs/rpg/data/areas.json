@@ -1,0 +1,74 @@
+{
+  "草原": {
+    "name": "🌿 草原",
+    "level_range": [1, 3],
+    "enemies": ["slime", "goblin"],
+    "encounter_rate": 0.12,
+    "description": "のどかな草原。スライムやゴブリンが現れる。",
+    "color": 5777400
+  },
+  "森林": {
+    "name": "🌲 森林",
+    "level_range": [3, 6],
+    "enemies": ["goblin", "wolf"],
+    "encounter_rate": 0.15,
+    "description": "薄暗い森。ゴブリンやウルフが潜んでいる。",
+    "color": 3383603
+  },
+  "村": {
+    "name": "🏘️ 村",
+    "level_range": [1, 99],
+    "enemies": [],
+    "encounter_rate": 0,
+    "description": "平和な村。宿屋やショップがある。",
+    "color": 16755027
+  },
+  "街": {
+    "name": "🏙️ 街",
+    "level_range": [1, 99],
+    "enemies": [],
+    "encounter_rate": 0,
+    "description": "賑やかな商業都市。",
+    "color": 16755027
+  },
+  "城": {
+    "name": "🏰 城",
+    "level_range": [5, 99],
+    "enemies": [],
+    "encounter_rate": 0,
+    "description": "王都。国王がいる。",
+    "color": 16755027
+  },
+  "山": {
+    "name": "⛰️ 山",
+    "level_range": [5, 9],
+    "enemies": ["wolf", "bat"],
+    "encounter_rate": 0.18,
+    "description": "険しい山道。",
+    "color": 11184810
+  },
+  "洞窟": {
+    "name": "🕳️ 洞窟",
+    "level_range": [7, 12],
+    "enemies": ["bat", "goblin"],
+    "encounter_rate": 0.2,
+    "description": "暗く湿った洞窟。",
+    "color": 8947914
+  },
+  "砂漠": {
+    "name": "🏜️ 砂漠",
+    "level_range": [8, 15],
+    "enemies": ["wolf", "scorpion"],
+    "encounter_rate": 0.16,
+    "description": "灼熱の砂漠。",
+    "color": 16755027
+  },
+  "海岸": {
+    "name": "🏖️ 海岸",
+    "level_range": [10, 18],
+    "enemies": ["crab", "fishman"],
+    "encounter_rate": 0.14,
+    "description": "潮風が吹き抜ける海岸。",
+    "color": 4507391
+  }
+}

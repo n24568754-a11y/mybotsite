@@ -1,0 +1,12 @@
+{
+  "potion": {
+    "name": "🧪 ポーション",
+    "type": "回復",
+    "effect": {"hp": 50}
+  },
+  "antidote": {
+    "name": "🌿 解毒薬",
+    "type": "状態異常回復",
+    "effect": {"cure": ["poison"]}
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "戦士": {
+    "name": "⚔️ 戦士",
+    "description": "高い攻撃力と防御力を持つ前衛職",
+    "base_stats": {
+      "hp": 60, "mp": 15,
+      "atk": 15, "def": 12,
+      "mag": 5, "agi": 8, "luk": 8
+    },
+    "growth": {
+      "hp": 12, "mp": 2,
+      "atk": 4, "def": 3,
+      "mag": 1, "agi": 2, "luk": 1
+    },
+    "starting_skills": ["通常攻撃", "かばう"],
+    "starting_spells": []
+  },
+  "魔法使い": {
+    "name": "🔮 魔法使い",
+    "description": "強力な魔法で敵を殲滅する後衛職",
+    "base_stats": {
+      "hp": 40, "mp": 30,
+      "atk": 8, "def": 6,
+      "mag": 18, "agi": 10, "luk": 8
+    },
+    "growth": {
+      "hp": 6, "mp": 8,
+      "atk": 1, "def": 1,
+      "mag": 5, "agi": 2, "luk": 1
+    },
+    "starting_skills": ["通常攻撃"],
+    "starting_spells": ["ファイア"]
+  },
+  "盗賊": {
+    "name": "🗡️ 盗賊",
+    "description": "素早さと運を活かした攻撃が特徴",
+    "base_stats": {
+      "hp": 50, "mp": 20,
+      "atk": 12, "def": 8,
+      "mag": 6, "agi": 15, "luk": 15
+    },
+    "growth": {
+      "hp": 8, "mp": 4,
+      "atk": 3, "def": 1,
+      "mag": 1, "agi": 4, "luk": 3
+    },
+    "starting_skills": ["通常攻撃", "スティール"],
+    "starting_spells": []
+  },
+  "僧侶": {
+    "name": "🙏 僧侶",
+    "description": "回復魔法と補助魔法を扱う",
+    "base_stats": {
+      "hp": 55, "mp": 25,
+      "atk": 10, "def": 10,
+      "mag": 12, "agi": 8, "luk": 10
+    },
+    "growth": {
+      "hp": 9, "mp": 6,
+      "atk": 2, "def": 2,
+      "mag": 4, "agi": 1, "luk": 2
+    },
+    "starting_skills": ["通常攻撃"],
+    "starting_spells": ["ヒール"]
+  },
+  "狩人": {
+    "name": "🏹 狩人",
+    "description": "高い命中率と状態異常攻撃が得意",
+    "base_stats": {
+      "hp": 52, "mp": 18,
+      "atk": 14, "def": 9,
+      "mag": 7, "agi": 12, "luk": 10
+    },
+    "growth": {
+      "hp": 9, "mp": 4,
+      "atk": 3, "def": 2,
+      "mag": 2, "agi": 3, "luk": 2
+    },
+    "starting_skills": ["通常攻撃", "毒矢"],
+    "starting_spells": []
+  }
+}

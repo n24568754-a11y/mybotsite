@@ -1,0 +1,804 @@
+{
+  "weapons": {
+    "bronze_sword": {
+      "name": "銅の剣",
+      "type": "weapon",
+      "description": "初心者向けの剣",
+      "stats": {
+        "atk": 5
+      },
+      "element": null,
+      "special_effects": [],
+      "rarity": "common",
+      "value": 300,
+      "required_level": 1,
+      "sell_price": 150,
+      "emoji": "⚔️"
+    },
+    "iron_sword": {
+      "name": "鉄の剣",
+      "type": "weapon",
+      "description": "標準的な鉄の剣",
+      "stats": {
+        "atk": 10
+      },
+      "element": null,
+      "special_effects": [],
+      "rarity": "common",
+      "value": 800,
+      "required_level": 5,
+      "sell_price": 400,
+      "emoji": "⚔️"
+    },
+    "flame_sword": {
+      "name": "炎の剣",
+      "type": "weapon",
+      "description": "火の力を宿した剣",
+      "stats": {
+        "atk": 15,
+        "mag": 5
+      },
+      "element": "fire",
+      "special_effects": [
+        "burn_skill"
+      ],
+      "rarity": "rare",
+      "value": 3000,
+      "required_level": 10,
+      "sell_price": 1500,
+      "emoji": "🔥"
+    },
+    "ice_dagger": {
+      "name": "氷の短剣",
+      "type": "weapon",
+      "description": "氷結の力を持つ短剣",
+      "stats": {
+        "atk": 12,
+        "agi": 5
+      },
+      "element": "ice",
+      "special_effects": [
+        "freeze_chance"
+      ],
+      "rarity": "rare",
+      "value": 2800,
+      "required_level": 8,
+      "sell_price": 1400,
+      "emoji": "❄️"
+    },
+    "thunder_hammer": {
+      "name": "雷のハンマー",
+      "type": "weapon",
+      "description": "雷撃を纏うハンマー",
+      "stats": {
+        "atk": 18,
+        "def": 3
+      },
+      "element": "thunder",
+      "special_effects": [
+        "stun_chance"
+      ],
+      "rarity": "epic",
+      "value": 5000,
+      "required_level": 15,
+      "sell_price": 2500,
+      "emoji": "⚡"
+    },
+    "water_blade": {
+      "name": "水の刃",
+      "type": "weapon",
+      "description": "水流を纏う剣",
+      "stats": {
+        "atk": 14,
+        "agi": 3
+      },
+      "element": "water",
+      "special_effects": [],
+      "rarity": "rare",
+      "value": 2800,
+      "required_level": 8,
+      "sell_price": 1400,
+      "emoji": "💧"
+    },
+    "wind_sword": {
+      "name": "風の剣",
+      "type": "weapon",
+      "description": "風の力を宿した剣",
+      "stats": {
+        "atk": 13,
+        "agi": 8
+      },
+      "element": "wind",
+      "special_effects": [],
+      "rarity": "rare",
+      "value": 2900,
+      "required_level": 9,
+      "sell_price": 1450,
+      "emoji": "🌪️"
+    },
+    "earth_hammer": {
+      "name": "地のハンマー",
+      "type": "weapon",
+      "description": "大地の力を込めたハンマー",
+      "stats": {
+        "atk": 20,
+        "def": 5
+      },
+      "element": "earth",
+      "special_effects": [],
+      "rarity": "epic",
+      "value": 4500,
+      "required_level": 12,
+      "sell_price": 2250,
+      "emoji": "🪨"
+    },
+    "wood_spear": {
+      "name": "木の槍",
+      "type": "weapon",
+      "description": "生命の力を宿した槍",
+      "stats": {
+        "atk": 12,
+        "hp": 20
+      },
+      "element": "wood",
+      "special_effects": [
+        "hp_regen"
+      ],
+      "rarity": "uncommon",
+      "value": 2000,
+      "required_level": 6,
+      "sell_price": 1000,
+      "emoji": "🌿"
+    },
+    "light_blade": {
+      "name": "光の刃",
+      "type": "weapon",
+      "description": "聖なる光を放つ剣",
+      "stats": {
+        "atk": 16,
+        "mag": 8
+      },
+      "element": "light",
+      "special_effects": [
+        "holy_damage"
+      ],
+      "rarity": "epic",
+      "value": 6000,
+      "required_level": 15,
+      "sell_price": 3000,
+      "emoji": "✨"
+    },
+    "dark_scythe": {
+      "name": "闇の大鎌",
+      "type": "weapon",
+      "description": "闇の力を秘めた大鎌",
+      "stats": {
+        "atk": 17,
+        "luk": 5
+      },
+      "element": "dark",
+      "special_effects": [
+        "drain_life"
+      ],
+      "rarity": "epic",
+      "value": 6000,
+      "required_level": 15,
+      "sell_price": 3000,
+      "emoji": "🌑"
+    },
+    "poison_dagger": {
+      "name": "毒の短剣",
+      "type": "weapon",
+      "description": "猛毒を塗った短剣",
+      "stats": {
+        "atk": 11,
+        "agi": 6
+      },
+      "element": "poison",
+      "special_effects": [
+        "poison_chance"
+      ],
+      "rarity": "rare",
+      "value": 2500,
+      "required_level": 7,
+      "sell_price": 1250,
+      "emoji": "☠️"
+    },
+    "rock_hammer": {
+      "name": "岩のハンマー",
+      "type": "weapon",
+      "description": "岩のように硬いハンマー",
+      "stats": {
+        "atk": 19,
+        "def": 8
+      },
+      "element": "rock",
+      "special_effects": [],
+      "rarity": "rare",
+      "value": 3500,
+      "required_level": 11,
+      "sell_price": 1750,
+      "emoji": "🪨"
+    },
+    "bone_sword": {
+      "name": "骨の剣",
+      "type": "weapon",
+      "description": "魔獣の骨で作られた剣",
+      "stats": {
+        "atk": 12
+      },
+      "element": null,
+      "special_effects": [],
+      "rarity": "common",
+      "value": 200,
+      "required_level": 3,
+      "sell_price": 100,
+      "emoji": "🗡️"
+    },
+    "bone_sword_plus": {
+      "name": "骨の剣+",
+      "type": "weapon",
+      "description": "強化された骨の剣",
+      "stats": {
+        "atk": 18
+      },
+      "element": null,
+      "special_effects": [],
+      "rarity": "uncommon",
+      "value": 500,
+      "required_level": 6,
+      "sell_price": 250,
+      "emoji": "🗡️✨"
+    },
+    "bone_sword_ex": {
+      "name": "骨の剣EX",
+      "type": "weapon",
+      "description": "極上の骨の剣",
+      "stats": {
+        "atk": 28,
+        "agi": 5
+      },
+      "element": null,
+      "special_effects": [],
+      "rarity": "rare",
+      "value": 1200,
+      "required_level": 10,
+      "sell_price": 600,
+      "emoji": "🗡️💎"
+    },
+    "goblin_dagger": {
+      "name": "ゴブリンダガー",
+      "type": "weapon",
+      "description": "ゴブリンの牙で作られた短剣",
+      "stats": {
+        "atk": 8,
+        "agi": 4
+      },
+      "element": null,
+      "special_effects": [],
+      "rarity": "common",
+      "value": 150,
+      "required_level": 2,
+      "sell_price": 75,
+      "emoji": "🔪"
+    },
+    "goblin_dagger_plus": {
+      "name": "ゴブリンダガー+",
+      "type": "weapon",
+      "description": "強化されたゴブリンダガー",
+      "stats": {
+        "atk": 14,
+        "agi": 7
+      },
+      "element": null,
+      "special_effects": [],
+      "rarity": "uncommon",
+      "value": 400,
+      "required_level": 5,
+      "sell_price": 200,
+      "emoji": "🔪✨"
+    },
+    "a0af01d8": {
+      "name": "小熱の短剣",
+      "description": "少しの熱を帯びた短剣。低級の魔物になら効果はある。\n初心者向け",
+      "emoji": "⚔️",
+      "required_level": 1,
+      "value": 100,
+      "rarity": "rare",
+      "stats": {
+        "atk": 15,
+        "def": 0,
+        "mag": 10,
+        "agi": 0,
+        "hp": 0,
+        "mp": 0
+      },
+      "materials": {
+        "fire_core_c": 5,
+        "monster_bone_c": 5
+      },
+      "upgrade_materials": {
+        "slime_jelly_b": 5,
+        "fire_core_c": 8
+      },
+      "element": "fire"
+    }
+  },
+  "armors": {
+    "leather_armor": {
+      "name": "革の鎧",
+      "type": "armor",
+      "description": "軽量な革の鎧",
+      "stats": {
+        "def": 8,
+        "hp": 10
+      },
+      "element": null,
+      "element_resist": null,
+      "special_effects": [],
+      "rarity": "common",
+      "value": 500,
+      "required_level": 1,
+      "sell_price": 250,
+      "emoji": "🛡️"
+    },
+    "iron_armor": {
+      "name": "鉄の鎧",
+      "type": "armor",
+      "description": "頑丈な鉄の鎧",
+      "stats": {
+        "def": 15,
+        "hp": 20
+      },
+      "element": null,
+      "element_resist": null,
+      "special_effects": [],
+      "rarity": "common",
+      "value": 1200,
+      "required_level": 5,
+      "sell_price": 600,
+      "emoji": "🛡️"
+    },
+    "flame_robe": {
+      "name": "火のローブ",
+      "type": "armor",
+      "description": "炎耐性を持つローブ",
+      "stats": {
+        "def": 5,
+        "mag": 10,
+        "hp": 15
+      },
+      "element": null,
+      "element_resist": "fire",
+      "special_effects": [
+        "mp_regen"
+      ],
+      "rarity": "rare",
+      "value": 2500,
+      "required_level": 10,
+      "sell_price": 1250,
+      "emoji": "👘"
+    },
+    "water_robe": {
+      "name": "水のローブ",
+      "type": "armor",
+      "description": "水耐性を持つローブ",
+      "stats": {
+        "def": 5,
+        "mag": 10,
+        "hp": 15
+      },
+      "element": null,
+      "element_resist": "water",
+      "special_effects": [],
+      "rarity": "rare",
+      "value": 2500,
+      "required_level": 10,
+      "sell_price": 1250,
+      "emoji": "👘"
+    },
+    "earth_armor": {
+      "name": "大地の鎧",
+      "type": "armor",
+      "description": "地属性耐性を持つ重鎧",
+      "stats": {
+        "def": 20,
+        "hp": 30
+      },
+      "element": null,
+      "element_resist": "earth",
+      "special_effects": [],
+      "rarity": "epic",
+      "value": 4000,
+      "required_level": 12,
+      "sell_price": 2000,
+      "emoji": "🛡️"
+    },
+    "light_robe": {
+      "name": "光のローブ",
+      "type": "armor",
+      "description": "光耐性を持つ聖衣",
+      "stats": {
+        "def": 8,
+        "mag": 12,
+        "hp": 20
+      },
+      "element": null,
+      "element_resist": "light",
+      "special_effects": [
+        "holy_blessing"
+      ],
+      "rarity": "epic",
+      "value": 5000,
+      "required_level": 15,
+      "sell_price": 2500,
+      "emoji": "👘"
+    },
+    "bone_armor": {
+      "name": "骨の鎧",
+      "type": "armor",
+      "description": "魔獣の骨で作られた鎧",
+      "stats": {
+        "def": 10,
+        "hp": 15
+      },
+      "element": null,
+      "element_resist": null,
+      "special_effects": [],
+      "rarity": "common",
+      "value": 250,
+      "required_level": 3,
+      "sell_price": 125,
+      "emoji": "🛡️"
+    },
+    "bone_armor_plus": {
+      "name": "骨の鎧+",
+      "type": "armor",
+      "description": "強化された骨の鎧",
+      "stats": {
+        "def": 18,
+        "hp": 25
+      },
+      "element": null,
+      "element_resist": null,
+      "special_effects": [],
+      "rarity": "uncommon",
+      "value": 600,
+      "required_level": 6,
+      "sell_price": 300,
+      "emoji": "🛡️✨"
+    },
+    "bone_armor_ex": {
+      "name": "骨の鎧EX",
+      "type": "armor",
+      "description": "極上の骨の鎧",
+      "stats": {
+        "def": 28,
+        "hp": 40
+      },
+      "element": null,
+      "element_resist": null,
+      "special_effects": [],
+      "rarity": "rare",
+      "value": 1400,
+      "required_level": 10,
+      "sell_price": 700,
+      "emoji": "🛡️💎"
+    },
+    "wolf_armor": {
+      "name": "ウルフアーマー",
+      "type": "armor",
+      "description": "ウルフの毛皮で作られた軽鎧",
+      "stats": {
+        "def": 8,
+        "agi": 4,
+        "hp": 10
+      },
+      "element": null,
+      "element_resist": null,
+      "special_effects": [],
+      "rarity": "common",
+      "value": 300,
+      "required_level": 4,
+      "sell_price": 150,
+      "emoji": "🐺🛡️"
+    },
+    "wolf_armor_plus": {
+      "name": "ウルフアーマー+",
+      "type": "armor",
+      "description": "強化されたウルフアーマー",
+      "stats": {
+        "def": 14,
+        "agi": 7,
+        "hp": 18
+      },
+      "element": null,
+      "element_resist": null,
+      "special_effects": [],
+      "rarity": "uncommon",
+      "value": 600,
+      "required_level": 7,
+      "sell_price": 300,
+      "emoji": "🐺🛡️✨"
+    },
+    "crab_armor": {
+      "name": "クラブアーマー",
+      "type": "armor",
+      "description": "クラブの甲羅で作られた硬い鎧",
+      "stats": {
+        "def": 15,
+        "hp": 10
+      },
+      "element": null,
+      "element_resist": null,
+      "special_effects": [],
+      "rarity": "common",
+      "value": 350,
+      "required_level": 5,
+      "sell_price": 175,
+      "emoji": "🦀🛡️"
+    }
+  },
+  "accessories": {
+    "power_ring": {
+      "name": "力の指輪",
+      "type": "accessory",
+      "description": "攻撃力を高める指輪",
+      "stats": {
+        "atk": 8
+      },
+      "element": null,
+      "special_effects": [],
+      "rarity": "uncommon",
+      "value": 800,
+      "required_level": 5,
+      "sell_price": 400,
+      "emoji": "💍"
+    },
+    "magic_ring": {
+      "name": "魔法の指輪",
+      "type": "accessory",
+      "description": "魔法力を高める指輪",
+      "stats": {
+        "mag": 10
+      },
+      "element": null,
+      "special_effects": [],
+      "rarity": "uncommon",
+      "value": 800,
+      "required_level": 5,
+      "sell_price": 400,
+      "emoji": "💍"
+    },
+    "life_necklace": {
+      "name": "命のネックレス",
+      "type": "accessory",
+      "description": "最大HPを増やすネックレス",
+      "stats": {
+        "hp": 50
+      },
+      "element": null,
+      "special_effects": [
+        "auto_regen"
+      ],
+      "rarity": "rare",
+      "value": 2000,
+      "required_level": 8,
+      "sell_price": 1000,
+      "emoji": "📿"
+    },
+    "element_ring": {
+      "name": "属性の指輪",
+      "type": "accessory",
+      "description": "全属性耐性を少し上げる",
+      "stats": {},
+      "element": null,
+      "special_effects": [
+        "all_resist"
+      ],
+      "rarity": "epic",
+      "value": 5000,
+      "required_level": 15,
+      "sell_price": 2500,
+      "emoji": "💍"
+    },
+    "050e2b6c": {
+      "name": "静かなる雫",
+      "description": "眠るような落ち着いた雰囲気を帯びたアクセサリー\n初心者向け",
+      "emoji": "🟩",
+      "required_level": 6,
+      "value": 600,
+      "rarity": "uncommon",
+      "stats": {
+        "atk": 50,
+        "def": 30,
+        "mag": 20,
+        "agi": 0,
+        "hp": 80,
+        "mp": 30
+      },
+      "slot": "earring",
+      "materials": {
+        "fish_scale_c": 3,
+        "slime_jelly_b": 1,
+        "monster_bone_b": 3
+      },
+      "upgrade_materials": {
+        "monster_bone_b": 10
+      },
+      "element": "water"
+    }
+  },
+  "element_chart": {
+    "fire": {
+      "name": "🔥 炎",
+      "weak": [
+        "water",
+        "ice"
+      ],
+      "resist": [
+        "fire",
+        "wood"
+      ],
+      "strong_against": [
+        "wood",
+        "ice"
+      ],
+      "immune": []
+    },
+    "water": {
+      "name": "💧 水",
+      "weak": [
+        "thunder",
+        "wood"
+      ],
+      "resist": [
+        "water",
+        "fire"
+      ],
+      "strong_against": [
+        "fire",
+        "rock"
+      ],
+      "immune": []
+    },
+    "ice": {
+      "name": "❄️ 氷",
+      "weak": [
+        "fire",
+        "thunder"
+      ],
+      "resist": [
+        "ice",
+        "water"
+      ],
+      "strong_against": [
+        "wind",
+        "wood"
+      ],
+      "immune": []
+    },
+    "thunder": {
+      "name": "⚡ 雷",
+      "weak": [
+        "wind",
+        "earth"
+      ],
+      "resist": [
+        "thunder",
+        "water"
+      ],
+      "strong_against": [
+        "water",
+        "ice"
+      ],
+      "immune": []
+    },
+    "wind": {
+      "name": "🌪️ 風",
+      "weak": [
+        "ice",
+        "rock"
+      ],
+      "resist": [
+        "wind",
+        "thunder"
+      ],
+      "strong_against": [
+        "thunder",
+        "earth"
+      ],
+      "immune": []
+    },
+    "earth": {
+      "name": "🪨 地",
+      "weak": [
+        "wind",
+        "water"
+      ],
+      "resist": [
+        "earth",
+        "rock"
+      ],
+      "strong_against": [
+        "thunder",
+        "rock"
+      ],
+      "immune": []
+    },
+    "rock": {
+      "name": "🪨 岩",
+      "weak": [
+        "water",
+        "earth"
+      ],
+      "resist": [
+        "rock",
+        "thunder"
+      ],
+      "strong_against": [
+        "wind",
+        "fire"
+      ],
+      "immune": []
+    },
+    "wood": {
+      "name": "🌿 木",
+      "weak": [
+        "fire",
+        "ice"
+      ],
+      "resist": [
+        "wood",
+        "water"
+      ],
+      "strong_against": [
+        "water",
+        "earth"
+      ],
+      "immune": []
+    },
+    "light": {
+      "name": "✨ 光",
+      "weak": [
+        "dark"
+      ],
+      "resist": [
+        "light"
+      ],
+      "strong_against": [
+        "dark"
+      ],
+      "immune": []
+    },
+    "dark": {
+      "name": "🌑 闇",
+      "weak": [
+        "light"
+      ],
+      "resist": [
+        "dark"
+      ],
+      "strong_against": [
+        "light"
+      ],
+      "immune": []
+    },
+    "poison": {
+      "name": "☠️ 毒",
+      "weak": [
+        "light",
+        "wood"
+      ],
+      "resist": [
+        "poison",
+        "dark"
+      ],
+      "strong_against": [
+        "wood",
+        "earth"
+      ],
+      "immune": []
+    }
+  }
+}

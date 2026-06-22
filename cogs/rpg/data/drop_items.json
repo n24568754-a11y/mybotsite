@@ -1,0 +1,494 @@
+{
+  "materials": {
+    "slime_jelly_c": {
+      "name": "スライムゼリー C",
+      "description": "スライムから採れるゼリー状の物質。品質は並",
+      "rarity": "common",
+      "rank": "C",
+      "value": 10,
+      "emoji": "🟢",
+      "craft_uses": [
+        "slime_armor",
+        "potion",
+        "bone_sword"
+      ]
+    },
+    "slime_jelly_b": {
+      "name": "スライムゼリー B",
+      "description": "スライムから採れるゼリー状の物質。品質は良",
+      "rarity": "uncommon",
+      "rank": "B",
+      "value": 30,
+      "emoji": "🔵",
+      "craft_uses": [
+        "slime_armor_plus",
+        "high_potion"
+      ]
+    },
+    "slime_jelly_a": {
+      "name": "スライムゼリー A",
+      "description": "スライムから採れるゼリー状の物質。品質は極上",
+      "rarity": "rare",
+      "rank": "A",
+      "value": 100,
+      "emoji": "🟣",
+      "craft_uses": [
+        "slime_armor_ex",
+        "elixir"
+      ]
+    },
+    "goblin_fang_c": {
+      "name": "ゴブリンの牙 C",
+      "description": "ゴブリンの鋭い牙。武器の素材になる",
+      "rarity": "common",
+      "rank": "C",
+      "value": 15,
+      "emoji": "🟢",
+      "craft_uses": [
+        "goblin_dagger",
+        "bone_sword"
+      ]
+    },
+    "goblin_fang_b": {
+      "name": "ゴブリンの牙 B",
+      "description": "ゴブリンの鋭い牙。良質な素材",
+      "rarity": "uncommon",
+      "rank": "B",
+      "value": 40,
+      "emoji": "🔵",
+      "craft_uses": [
+        "goblin_dagger_plus",
+        "bone_sword_plus"
+      ]
+    },
+    "wolf_pelt_c": {
+      "name": "ウルフの毛皮 C",
+      "description": "ウルフの毛皮。防具の素材になる",
+      "rarity": "common",
+      "rank": "C",
+      "value": 12,
+      "emoji": "🟢",
+      "craft_uses": [
+        "wolf_armor",
+        "warm_boots"
+      ]
+    },
+    "wolf_pelt_b": {
+      "name": "ウルフの毛皮 B",
+      "description": "ウルフの毛皮。品質の良いもの",
+      "rarity": "uncommon",
+      "rank": "B",
+      "value": 35,
+      "emoji": "🔵",
+      "craft_uses": [
+        "wolf_armor_plus"
+      ]
+    },
+    "bat_wing_c": {
+      "name": "コウモリの翼 C",
+      "description": "コウモリの翼。闇属性の素材",
+      "rarity": "common",
+      "rank": "C",
+      "value": 8,
+      "emoji": "🟢",
+      "craft_uses": [
+        "dark_robe",
+        "night_vision"
+      ]
+    },
+    "scorpion_tail_c": {
+      "name": "サソリの毒針 C",
+      "description": "サソリの毒針。毒属性の素材",
+      "rarity": "common",
+      "rank": "C",
+      "value": 20,
+      "emoji": "🟢",
+      "craft_uses": [
+        "poison_dagger",
+        "antidote"
+      ]
+    },
+    "crab_shell_c": {
+      "name": "クラブの甲羅 C",
+      "description": "クラブの硬い甲羅。防御力の高い素材",
+      "rarity": "common",
+      "rank": "C",
+      "value": 18,
+      "emoji": "🟢",
+      "craft_uses": [
+        "crab_armor",
+        "shield"
+      ]
+    },
+    "fish_scale_c": {
+      "name": "フィッシュマンの鱗 C",
+      "description": "魚人の鱗。水属性の素材",
+      "rarity": "common",
+      "rank": "C",
+      "value": 14,
+      "emoji": "🟢",
+      "craft_uses": [
+        "water_robe",
+        "fishing_rod"
+      ]
+    },
+    "monster_bone_s": {
+      "name": "魔獣の骨 S",
+      "description": "魔獣の骨。伝説級の素材",
+      "rarity": "epic",
+      "rank": "S",
+      "value": 500,
+      "emoji": "🟧",
+      "craft_uses": [
+        "legendary_weapon",
+        "dragon_armor"
+      ]
+    },
+    "monster_bone_a": {
+      "name": "魔獣の骨 A",
+      "description": "魔獣の骨。極上の品質",
+      "rarity": "rare",
+      "rank": "A",
+      "value": 150,
+      "emoji": "🟣",
+      "craft_uses": [
+        "bone_sword_ex",
+        "bone_armor_ex"
+      ]
+    },
+    "monster_bone_b": {
+      "name": "魔獣の骨 B",
+      "description": "魔獣の骨。良質で強度が高い",
+      "rarity": "uncommon",
+      "rank": "B",
+      "value": 60,
+      "emoji": "🔵",
+      "craft_uses": [
+        "bone_sword_plus",
+        "bone_armor_plus"
+      ]
+    },
+    "monster_bone_c": {
+      "name": "魔獣の骨 C",
+      "description": "魔獣の骨。武器や防具の基本素材",
+      "rarity": "common",
+      "rank": "C",
+      "value": 25,
+      "emoji": "🟢",
+      "craft_uses": [
+        "bone_sword",
+        "bone_armor",
+        "bone_dagger"
+      ]
+    },
+    "fire_core_c": {
+      "name": "炎の核 C",
+      "description": "炎の精霊から採れる核。炎属性強化",
+      "rarity": "uncommon",
+      "rank": "C",
+      "value": 50,
+      "emoji": "🔥",
+      "craft_uses": [
+        "fire_sword",
+        "fire_robe"
+      ]
+    },
+    "ice_core_c": {
+      "name": "氷の核 C",
+      "description": "氷の精霊から採れる核。氷属性強化",
+      "rarity": "uncommon",
+      "rank": "C",
+      "value": 50,
+      "emoji": "❄️",
+      "craft_uses": [
+        "ice_dagger",
+        "ice_robe"
+      ]
+    },
+    "thunder_core_c": {
+      "name": "雷の核 C",
+      "description": "雷の精霊から採れる核。雷属性強化",
+      "rarity": "uncommon",
+      "rank": "C",
+      "value": 50,
+      "emoji": "⚡",
+      "craft_uses": [
+        "thunder_hammer",
+        "thunder_robe"
+      ]
+    },
+    "炎の牙_c": {
+      "name": "炎の牙 (Cランク)",
+      "rank": "C",
+      "emoji": "🟢",
+      "description": "炎属性の魔物から取れる牙",
+      "value": 10
+    }
+  },
+  "enemy_drops": {
+    "slime": {
+      "drops": [
+        {
+          "item": "slime_jelly_c",
+          "rate": 0.8,
+          "min": 1,
+          "max": 3
+        },
+        {
+          "item": "monster_bone_c",
+          "rate": 0.1,
+          "min": 1,
+          "max": 1
+        }
+      ]
+    },
+    "goblin": {
+      "drops": [
+        {
+          "item": "goblin_fang_c",
+          "rate": 0.7,
+          "min": 1,
+          "max": 2
+        },
+        {
+          "item": "monster_bone_c",
+          "rate": 0.3,
+          "min": 1,
+          "max": 1
+        }
+      ]
+    },
+    "wolf": {
+      "drops": [
+        {
+          "item": "wolf_pelt_c",
+          "rate": 0.6,
+          "min": 1,
+          "max": 2
+        },
+        {
+          "item": "monster_bone_c",
+          "rate": 0.4,
+          "min": 1,
+          "max": 1
+        }
+      ]
+    },
+    "bat": {
+      "drops": [
+        {
+          "item": "bat_wing_c",
+          "rate": 0.7,
+          "min": 1,
+          "max": 2
+        },
+        {
+          "item": "monster_bone_c",
+          "rate": 0.2,
+          "min": 1,
+          "max": 1
+        }
+      ]
+    },
+    "scorpion": {
+      "drops": [
+        {
+          "item": "scorpion_tail_c",
+          "rate": 0.5,
+          "min": 1,
+          "max": 1
+        },
+        {
+          "item": "monster_bone_c",
+          "rate": 0.5,
+          "min": 1,
+          "max": 2
+        }
+      ]
+    },
+    "crab": {
+      "drops": [
+        {
+          "item": "crab_shell_c",
+          "rate": 0.6,
+          "min": 1,
+          "max": 2
+        },
+        {
+          "item": "monster_bone_c",
+          "rate": 0.3,
+          "min": 1,
+          "max": 1
+        }
+      ]
+    },
+    "fishman": {
+      "drops": [
+        {
+          "item": "fish_scale_c",
+          "rate": 0.7,
+          "min": 1,
+          "max": 2
+        },
+        {
+          "item": "monster_bone_c",
+          "rate": 0.4,
+          "min": 1,
+          "max": 1
+        }
+      ]
+    },
+    "fire_elemental": {
+      "drops": [
+        {
+          "item": "fire_core_c",
+          "rate": 0.5,
+          "min": 1,
+          "max": 1
+        },
+        {
+          "item": "monster_bone_b",
+          "rate": 0.4,
+          "min": 1,
+          "max": 1
+        },
+        {
+          "item": "monster_bone_c",
+          "rate": 0.6,
+          "min": 1,
+          "max": 2
+        }
+      ]
+    },
+    "ice_golem": {
+      "drops": [
+        {
+          "item": "ice_core_c",
+          "rate": 0.5,
+          "min": 1,
+          "max": 1
+        },
+        {
+          "item": "monster_bone_b",
+          "rate": 0.5,
+          "min": 1,
+          "max": 2
+        },
+        {
+          "item": "monster_bone_c",
+          "rate": 0.4,
+          "min": 1,
+          "max": 1
+        }
+      ]
+    },
+    "thunder_bird": {
+      "drops": [
+        {
+          "item": "thunder_core_c",
+          "rate": 0.5,
+          "min": 1,
+          "max": 1
+        },
+        {
+          "item": "monster_bone_b",
+          "rate": 0.4,
+          "min": 1,
+          "max": 1
+        },
+        {
+          "item": "monster_bone_c",
+          "rate": 0.5,
+          "min": 1,
+          "max": 2
+        }
+      ]
+    },
+    "wood_ent": {
+      "drops": [
+        {
+          "item": "monster_bone_b",
+          "rate": 0.3,
+          "min": 1,
+          "max": 1
+        },
+        {
+          "item": "monster_bone_c",
+          "rate": 0.7,
+          "min": 1,
+          "max": 3
+        }
+      ]
+    },
+    "dark_knight": {
+      "drops": [
+        {
+          "item": "monster_bone_a",
+          "rate": 0.3,
+          "min": 1,
+          "max": 1
+        },
+        {
+          "item": "monster_bone_b",
+          "rate": 0.6,
+          "min": 1,
+          "max": 2
+        },
+        {
+          "item": "monster_bone_c",
+          "rate": 0.5,
+          "min": 1,
+          "max": 2
+        }
+      ]
+    },
+    "light_angel": {
+      "drops": [
+        {
+          "item": "monster_bone_a",
+          "rate": 0.4,
+          "min": 1,
+          "max": 1
+        },
+        {
+          "item": "monster_bone_b",
+          "rate": 0.5,
+          "min": 1,
+          "max": 2
+        }
+      ]
+    },
+    "rock_golem": {
+      "drops": [
+        {
+          "item": "monster_bone_b",
+          "rate": 0.5,
+          "min": 1,
+          "max": 2
+        },
+        {
+          "item": "monster_bone_c",
+          "rate": 0.8,
+          "min": 1,
+          "max": 3
+        }
+      ]
+    },
+    "wind_spirit": {
+      "drops": [
+        {
+          "item": "monster_bone_b",
+          "rate": 0.3,
+          "min": 1,
+          "max": 1
+        },
+        {
+          "item": "monster_bone_c",
+          "rate": 0.6,
+          "min": 1,
+          "max": 2
+        }
+      ]
+    }
+  }
+}

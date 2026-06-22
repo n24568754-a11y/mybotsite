@@ -17,6 +17,7 @@ AUTH_FILE = 'user_auth.json'
 CONFIG_FILE = 'config.json'  
 WEB_JSON_FILE = 'shop_item.json' 
 MISSION_FILE = 'missions.json'
+EXCLUDED_FILE = 'excluded_users.json'  # 除外ユーザー保存用
 
 # --- パスワード管理用 Cog ---
 class Auth(commands.Cog):
@@ -140,6 +141,7 @@ class DailyButton(discord.ui.View):
         self.cog.save_data(data); self.cog.update_web_data()
         await interaction.followup.send(f"💰 **{reward}{self.cog.currency}** 獲得！", ephemeral=True)
 
+
 class Economy(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -148,6 +150,32 @@ class Economy(commands.Cog):
         self.daily_reset_task.start()
         self.web_request_watcher.start() 
         self._load_config()
+        # 除外ユーザーリストを読み込み
+        self.load_excluded_users()
+
+    def load_excluded_users(self):
+        """除外ユーザーリストを読み込む"""
+        if os.path.exists(EXCLUDED_FILE):
+            try:
+                with open(EXCLUDED_FILE, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    self.excluded_user_ids = data.get('user_ids', [])
+                    self.excluded_passwords = data.get('passwords', [])
+            except:
+                self.excluded_user_ids = []
+                self.excluded_passwords = []
+        else:
+            self.excluded_user_ids = []
+            self.excluded_passwords = []
+
+    def save_excluded_users(self):
+        """除外ユーザーリストを保存"""
+        data = {
+            'user_ids': self.excluded_user_ids,
+            'passwords': self.excluded_passwords
+        }
+        with open(EXCLUDED_FILE, 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
 
     def _load_config(self):
         if not os.path.exists(CONFIG_FILE):
@@ -198,8 +226,17 @@ class Economy(commands.Cog):
             shop_data, gacha_data, user_data = self.load_shop(), self.load_gacha(), self.load_data()
             auth_data, missions = self.load_auth(), self.load_missions()
             profiles = {}
+            
             for user_id, info in user_data.items():
                 pwd = auth_data.get(user_id)
+                
+                # ===== 除外チェック =====
+                if user_id in self.excluded_user_ids:
+                    continue  # このユーザーをスキップ
+                if pwd in self.excluded_passwords:
+                    continue  # このパスワードのユーザーをスキップ
+                # ========================
+                
                 if pwd:
                     if not pwd.strip() or any(c in pwd for c in ['.', '$', '#', '[', ']', '/']):
                         continue
@@ -247,6 +284,109 @@ class Economy(commands.Cog):
             with open(WEB_JSON_FILE, 'w', encoding='utf-8') as f: json.dump(web_json, f, indent=4, ensure_ascii=False)
             return True
         except Exception as e: print(f"Update Error: {e}"); return False
+
+    # ==================== ランキング除外管理コマンド（管理者専用） ====================
+    
+    @app_commands.command(name="ランキング除外", description="指定したユーザーをランキングから除外します（管理者のみ）")
+    @app_commands.default_permissions(administrator=True)
+    @app_commands.choices(除外タイプ=[
+        app_commands.Choice(name="ユーザーID", value="user_id"),
+        app_commands.Choice(name="パスワード", value="password"),
+        app_commands.Choice(name="ユーザー名", value="name")
+    ])
+    async def exclude_from_ranking(self, interaction: discord.Interaction, 除外タイプ: str, 値: str):
+        """ランキングからユーザーを除外"""
+        await interaction.response.defer(ephemeral=True)
+        
+        if 除外タイプ == "user_id":
+            if 値 not in self.excluded_user_ids:
+                self.excluded_user_ids.append(値)
+                self.save_excluded_users()
+                self.update_web_data()
+                await interaction.followup.send(f"✅ ユーザーID `{値}` をランキングから除外しました。", ephemeral=True)
+            else:
+                await interaction.followup.send(f"⚠️ ユーザーID `{値}` は既に除外されています。", ephemeral=True)
+        
+        elif 除外タイプ == "password":
+            if 値 not in self.excluded_passwords:
+                self.excluded_passwords.append(値)
+                self.save_excluded_users()
+                self.update_web_data()
+                await interaction.followup.send(f"✅ パスワード `{値}` のユーザーをランキングから除外しました。", ephemeral=True)
+            else:
+                await interaction.followup.send(f"⚠️ パスワード `{値}` は既に除外されています。", ephemeral=True)
+        
+        elif 除外タイプ == "name":
+            auth_data = self.load_auth()
+            found = False
+            for user_id, pwd in auth_data.items():
+                member = None
+                for g in self.bot.guilds:
+                    member = g.get_member(int(user_id))
+                    if member and member.display_name == 値:
+                        if user_id not in self.excluded_user_ids:
+                            self.excluded_user_ids.append(user_id)
+                            found = True
+                        if pwd not in self.excluded_passwords:
+                            self.excluded_passwords.append(pwd)
+            
+            if found:
+                self.save_excluded_users()
+                self.update_web_data()
+                await interaction.followup.send(f"✅ ユーザー名「{値}」のユーザーをランキングから除外しました。", ephemeral=True)
+            else:
+                await interaction.followup.send(f"❌ ユーザー名「{値}」が見つかりませんでした。", ephemeral=True)
+
+    @app_commands.command(name="ランキング除外解除", description="ランキング除外を解除します（管理者のみ）")
+    @app_commands.default_permissions(administrator=True)
+    @app_commands.choices(除外タイプ=[
+        app_commands.Choice(name="ユーザーID", value="user_id"),
+        app_commands.Choice(name="パスワード", value="password")
+    ])
+    async def remove_exclude_from_ranking(self, interaction: discord.Interaction, 除外タイプ: str, 値: str):
+        """ランキング除外を解除"""
+        await interaction.response.defer(ephemeral=True)
+        
+        if 除外タイプ == "user_id":
+            if 値 in self.excluded_user_ids:
+                self.excluded_user_ids.remove(値)
+                self.save_excluded_users()
+                self.update_web_data()
+                await interaction.followup.send(f"✅ ユーザーID `{値}` の除外を解除しました。", ephemeral=True)
+            else:
+                await interaction.followup.send(f"⚠️ ユーザーID `{値}` は除外されていません。", ephemeral=True)
+        
+        elif 除外タイプ == "password":
+            if 値 in self.excluded_passwords:
+                self.excluded_passwords.remove(値)
+                self.save_excluded_users()
+                self.update_web_data()
+                await interaction.followup.send(f"✅ パスワード `{値}` の除外を解除しました。", ephemeral=True)
+            else:
+                await interaction.followup.send(f"⚠️ パスワード `{値}` は除外されていません。", ephemeral=True)
+
+    @app_commands.command(name="ランキング除外リスト", description="現在除外されているユーザーを表示します（管理者のみ）")
+    @app_commands.default_permissions(administrator=True)
+    async def list_excluded_users(self, interaction: discord.Interaction):
+        """除外ユーザーリストを表示"""
+        await interaction.response.defer(ephemeral=True)
+        
+        embed = discord.Embed(
+            title="🚫 ランキング除外ユーザーリスト",
+            color=discord.Color.red(),
+            timestamp=datetime.now()
+        )
+        
+        user_ids_text = "\n".join([f"`{uid}`" for uid in self.excluded_user_ids]) if self.excluded_user_ids else "なし"
+        passwords_text = "\n".join([f"`{pwd}`" for pwd in self.excluded_passwords]) if self.excluded_passwords else "なし"
+        
+        embed.add_field(name="📌 除外ユーザーID", value=user_ids_text, inline=False)
+        embed.add_field(name="🔑 除外パスワード", value=passwords_text, inline=False)
+        embed.set_footer(text=f"合計: {len(self.excluded_user_ids)} ユーザーID, {len(self.excluded_passwords)} パスワード")
+        
+        await interaction.followup.send(embed=embed, ephemeral=True)
+
+    # ==================== 既存のメソッド（変更なし） ====================
 
     @tasks.loop(minutes=1)
     async def daily_reset_task(self):
@@ -671,8 +811,28 @@ class Economy(commands.Cog):
             await interaction.response.send_message(f"✅ {相手.display_name} さんに送信しました。", ephemeral=True)
         except: await interaction.response.send_message("❌ DM送信に失敗しました。", ephemeral=True)
 
-    @app_commands.command(name="所持金", description="所持金を確認します")
+    @app_commands.command(name="所持金", description="所持金を確認します（Firebase優先）")
     async def wallet(self, interaction: discord.Interaction):
+        try:
+            ref = db.reference('USER_PROFILES')
+            profiles = ref.get()
+            
+            if profiles:
+                auth_path = "user_auth.json"
+                if os.path.exists(auth_path):
+                    with open(auth_path, 'r', encoding='utf-8') as f:
+                        auth_data = json.load(f)
+                    
+                    uid = str(interaction.user.id)
+                    password = auth_data.get(uid)
+                    
+                    if password and password in profiles:
+                        money = profiles[password].get('money', 0)
+                        await interaction.response.send_message(f'残高: **{money}{self.currency}**', ephemeral=True)
+                        return
+        except Exception as e:
+            print(f"Firebase読み込みエラー: {e}")
+        
         data = self.load_data()
         money = data.get(str(interaction.user.id), {}).get('money', 0)
         await interaction.response.send_message(f'残高: **{money}{self.currency}**', ephemeral=True)
@@ -698,7 +858,6 @@ class Economy(commands.Cog):
         if rid not in data:
             data[rid] = self.get_default_user_data()
 
-        # 送金処理
         data[sid]['money'] -= 金額
         data[rid]['money'] += 金額
         data[sid]['send_money_total'] = data[sid].get('send_money_total', 0) + 金額
@@ -708,14 +867,10 @@ class Economy(commands.Cog):
         self.update_web_data()
 
         await interaction.followup.send(f"✅ {相手.display_name} へ送金しました。", ephemeral=True)
-
-        # ========== 送金ログを埋め込みで送信 ==========
         await self.send_transfer_log(interaction, 相手, 金額)
 
     async def send_transfer_log(self, interaction: discord.Interaction, receiver: discord.Member, amount: int):
-        """送金ログを専用チャンネルに送信"""
         try:
-            # ログ送信先チャンネルIDを取得
             log_channel_id = self.config.get("transfer_log_channel_id")
             if not log_channel_id:
                 log_channel = interaction.channel
@@ -727,19 +882,16 @@ class Economy(commands.Cog):
             sender = interaction.user
             now = datetime.now()
 
-            # 送金者のVC情報を取得
             vc_info = "なし"
             vc_members_mentions = []
 
             if sender.voice and sender.voice.channel:
                 vc_channel = sender.voice.channel
                 vc_info = f"{vc_channel.mention}"
-
                 for member in vc_channel.members:
                     if member.id != sender.id:
                         vc_members_mentions.append(member.mention)
 
-            # 埋め込み作成
             embed = discord.Embed(
                 title="💸 送金ログ",
                 color=discord.Color.gold(),
@@ -749,23 +901,11 @@ class Economy(commands.Cog):
             embed.add_field(name="送金者", value=f"{sender.mention}\nID: `{sender.id}`", inline=True)
             embed.add_field(name="受取者", value=f"{receiver.mention}\nID: `{receiver.id}`", inline=True)
             embed.add_field(name="💰 送金額", value=f"{amount} {self.currency}", inline=True)
-
-            embed.add_field(
-                name="📅 日時",
-                value=f"<t:{int(now.timestamp())}:F>\n<t:{int(now.timestamp())}:R>",
-                inline=False
-            )
-
-            embed.add_field(
-                name="🎙️ VC滞在状況",
-                value=f"**VC:** {vc_info}\n**同席者:** {', '.join(vc_members_mentions) if vc_members_mentions else 'なし'}",
-                inline=False
-            )
-
+            embed.add_field(name="📅 日時", value=f"<t:{int(now.timestamp())}:F>\n<t:{int(now.timestamp())}:R>", inline=False)
+            embed.add_field(name="🎙️ VC滞在状況", value=f"**VC:** {vc_info}\n**同席者:** {', '.join(vc_members_mentions) if vc_members_mentions else 'なし'}", inline=False)
             embed.set_thumbnail(url=sender.display_avatar.url)
 
             await log_channel.send(embed=embed)
-
         except Exception as e:
             print(f"送金ログ送信エラー: {e}")
 
@@ -782,7 +922,6 @@ class Economy(commands.Cog):
     @app_commands.command(name="set_transfer_log", description="送金ログの送信先チャンネルを設定します")
     @app_commands.default_permissions(administrator=True)
     async def set_transfer_log(self, interaction: discord.Interaction, channel: discord.TextChannel):
-        """送金ログを送信するチャンネルを設定"""
         self.config["transfer_log_channel_id"] = channel.id
         self._save_config()
         await interaction.response.send_message(f"✅ 送金ログの送信先を {channel.mention} に設定しました。", ephemeral=True)
@@ -866,6 +1005,7 @@ class Economy(commands.Cog):
                 pass
             else:
                 print(f"Watcher Error: {e}")
+
 
 async def setup(bot):
     await bot.add_cog(Auth(bot))

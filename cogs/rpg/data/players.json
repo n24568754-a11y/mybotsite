@@ -1,0 +1,51 @@
+{
+  "1368428956214100062": {
+    "name": "天",
+    "level": 4,
+    "exp": 6,
+    "hp": 70,
+    "max_hp": 70,
+    "mp": 45,
+    "max_mp": 45,
+    "atk": 17,
+    "def": 12,
+    "gold": 255,
+    "location": "草原",
+    "x": 9,
+    "y": 3,
+    "steps": 113,
+    "job": "魔法使い",
+    "mag": 22,
+    "agi": 14,
+    "luk": 10,
+    "skills": [
+      "通常攻撃"
+    ],
+    "spells": [
+      "ファイア"
+    ],
+    "items": {
+      "potion": 3
+    },
+    "inventory": {
+      "items": {},
+      "equipment": [
+        "bronze_sword",
+        "leather_armor",
+        "power_ring",
+        "bone_sword"
+      ]
+    },
+    "equipment": {
+      "weapon": "bronze_sword",
+      "armor": "leather_armor"
+    },
+    "materials": {
+      "slime_jelly_c": 13,
+      "monster_bone_c": 10
+    },
+    "crafted_items": [
+      "bone_sword"
+    ]
+  }
+}

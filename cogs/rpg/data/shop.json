@@ -1,0 +1,47 @@
+{
+  "categories": {
+    "weapons": {
+      "name": "⚔️ 武器",
+      "emoji": "⚔️",
+      "items": [
+        "bronze_sword",
+        "iron_sword",
+        "flame_sword",
+        "ice_dagger",
+        "thunder_hammer"
+      ]
+    },
+    "armors": {
+      "name": "🛡️ 防具",
+      "emoji": "🛡️",
+      "items": [
+        "leather_armor",
+        "iron_armor",
+        "flame_robe"
+      ]
+    },
+    "accessories": {
+      "name": "💍 アクセサリー",
+      "emoji": "💍",
+      "items": [
+        "power_ring",
+        "magic_ring",
+        "life_necklace"
+      ]
+    },
+    "items": {
+      "name": "🧪 アイテム",
+      "emoji": "🧪",
+      "items": [
+        "potion",
+        "antidote"
+      ]
+    }
+  },
+  "shop_npc": {
+    "name": "カリーナ",
+    "icon": "🛒",
+    "greeting": "いらっしゃい！何かお探し？",
+    "farewell": "また来てね！"
+  }
+}

@@ -26,5 +26,11 @@
         "cost": 100000,
         "send_log": true,
         "specific_log_channel_id": 1502771003489652868
+    },
+    "1512467834603569212": {
+        "vc_name": "高級宵宿",
+        "cost": 100000,
+        "send_log": true,
+        "specific_log_channel_id": 1502771003489652868
     }
 }

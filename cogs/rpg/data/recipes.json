@@ -1,0 +1,520 @@
+{
+  "weapons": {
+    "bone_sword": {
+      "name": "骨の剣",
+      "description": "魔獣の骨で作られた剣",
+      "type": "weapon",
+      "stats": {
+        "atk": 12
+      },
+      "required_level": 3,
+      "materials": [
+        {
+          "item": "monster_bone_c",
+          "quantity": 3
+        }
+      ],
+      "emoji": "🗡️",
+      "sell_price": 200
+    },
+    "bone_sword_plus": {
+      "name": "骨の剣+",
+      "description": "強化された骨の剣",
+      "type": "weapon",
+      "stats": {
+        "atk": 18
+      },
+      "required_level": 6,
+      "materials": [
+        {
+          "item": "bone_sword",
+          "quantity": 1
+        },
+        {
+          "item": "monster_bone_b",
+          "quantity": 2
+        },
+        {
+          "item": "monster_bone_c",
+          "quantity": 5
+        }
+      ],
+      "emoji": "🗡️✨",
+      "sell_price": 500
+    },
+    "bone_sword_ex": {
+      "name": "骨の剣EX",
+      "description": "極上の骨の剣",
+      "type": "weapon",
+      "stats": {
+        "atk": 28,
+        "agi": 5
+      },
+      "required_level": 10,
+      "materials": [
+        {
+          "item": "bone_sword_plus",
+          "quantity": 1
+        },
+        {
+          "item": "monster_bone_a",
+          "quantity": 3
+        },
+        {
+          "item": "monster_bone_b",
+          "quantity": 8
+        }
+      ],
+      "emoji": "🗡️💎",
+      "sell_price": 1200
+    },
+    "goblin_dagger": {
+      "name": "ゴブリンダガー",
+      "description": "ゴブリンの牙で作られた短剣",
+      "type": "weapon",
+      "stats": {
+        "atk": 8,
+        "agi": 4
+      },
+      "required_level": 2,
+      "materials": [
+        {
+          "item": "goblin_fang_c",
+          "quantity": 2
+        }
+      ],
+      "emoji": "🔪",
+      "sell_price": 150
+    },
+    "goblin_dagger_plus": {
+      "name": "ゴブリンダガー+",
+      "description": "強化されたゴブリンダガー",
+      "type": "weapon",
+      "stats": {
+        "atk": 14,
+        "agi": 7
+      },
+      "required_level": 5,
+      "materials": [
+        {
+          "item": "goblin_dagger",
+          "quantity": 1
+        },
+        {
+          "item": "goblin_fang_b",
+          "quantity": 2
+        },
+        {
+          "item": "monster_bone_c",
+          "quantity": 3
+        }
+      ],
+      "emoji": "🔪✨",
+      "sell_price": 400
+    },
+    "fire_sword": {
+      "name": "炎の剣",
+      "description": "炎の力を宿した剣",
+      "type": "weapon",
+      "stats": {
+        "atk": 20,
+        "mag": 5
+      },
+      "element": "fire",
+      "required_level": 8,
+      "materials": [
+        {
+          "item": "fire_core_c",
+          "quantity": 2
+        },
+        {
+          "item": "bone_sword",
+          "quantity": 1
+        },
+        {
+          "item": "monster_bone_b",
+          "quantity": 3
+        }
+      ],
+      "emoji": "🔥🗡️",
+      "sell_price": 800
+    },
+    "ice_dagger": {
+      "name": "氷の短剣",
+      "description": "氷の力を宿した短剣",
+      "type": "weapon",
+      "stats": {
+        "atk": 15,
+        "agi": 8
+      },
+      "element": "ice",
+      "required_level": 8,
+      "materials": [
+        {
+          "item": "ice_core_c",
+          "quantity": 2
+        },
+        {
+          "item": "goblin_dagger",
+          "quantity": 1
+        },
+        {
+          "item": "monster_bone_b",
+          "quantity": 3
+        }
+      ],
+      "emoji": "❄️🔪",
+      "sell_price": 750
+    },
+    "thunder_hammer": {
+      "name": "雷のハンマー",
+      "description": "雷の力を宿したハンマー",
+      "type": "weapon",
+      "stats": {
+        "atk": 25,
+        "def": 5
+      },
+      "element": "thunder",
+      "required_level": 10,
+      "materials": [
+        {
+          "item": "thunder_core_c",
+          "quantity": 2
+        },
+        {
+          "item": "bone_sword_plus",
+          "quantity": 1
+        },
+        {
+          "item": "monster_bone_a",
+          "quantity": 2
+        }
+      ],
+      "emoji": "⚡🔨",
+      "sell_price": 1000
+    },
+    "a0af01d8": {
+      "name": "小熱の短剣",
+      "description": "少しの熱を帯びた短剣。低級の魔物になら効果はある。\n初心者向け",
+      "emoji": "⚔️",
+      "required_level": 1,
+      "stats": {
+        "atk": 15,
+        "def": 0,
+        "mag": 10,
+        "agi": 0,
+        "hp": 0,
+        "mp": 0
+      },
+      "element": "fire",
+      "materials": [
+        {
+          "item": "fire_core_c",
+          "quantity": 5
+        },
+        {
+          "item": "monster_bone_c",
+          "quantity": 5
+        }
+      ]
+    }
+  },
+  "armors": {
+    "bone_armor": {
+      "name": "骨の鎧",
+      "description": "魔獣の骨で作られた鎧",
+      "type": "armor",
+      "stats": {
+        "def": 10,
+        "hp": 15
+      },
+      "required_level": 3,
+      "materials": [
+        {
+          "item": "monster_bone_c",
+          "quantity": 4
+        }
+      ],
+      "emoji": "🛡️",
+      "sell_price": 250
+    },
+    "bone_armor_plus": {
+      "name": "骨の鎧+",
+      "description": "強化された骨の鎧",
+      "type": "armor",
+      "stats": {
+        "def": 18,
+        "hp": 25
+      },
+      "required_level": 6,
+      "materials": [
+        {
+          "item": "bone_armor",
+          "quantity": 1
+        },
+        {
+          "item": "monster_bone_b",
+          "quantity": 3
+        },
+        {
+          "item": "monster_bone_c",
+          "quantity": 5
+        }
+      ],
+      "emoji": "🛡️✨",
+      "sell_price": 600
+    },
+    "bone_armor_ex": {
+      "name": "骨の鎧EX",
+      "description": "極上の骨の鎧",
+      "type": "armor",
+      "stats": {
+        "def": 28,
+        "hp": 40
+      },
+      "required_level": 10,
+      "materials": [
+        {
+          "item": "bone_armor_plus",
+          "quantity": 1
+        },
+        {
+          "item": "monster_bone_a",
+          "quantity": 4
+        },
+        {
+          "item": "monster_bone_b",
+          "quantity": 8
+        }
+      ],
+      "emoji": "🛡️💎",
+      "sell_price": 1400
+    },
+    "wolf_armor": {
+      "name": "ウルフアーマー",
+      "description": "ウルフの毛皮で作られた軽鎧",
+      "type": "armor",
+      "stats": {
+        "def": 8,
+        "agi": 4,
+        "hp": 10
+      },
+      "required_level": 4,
+      "materials": [
+        {
+          "item": "wolf_pelt_c",
+          "quantity": 3
+        },
+        {
+          "item": "monster_bone_c",
+          "quantity": 2
+        }
+      ],
+      "emoji": "🐺🛡️",
+      "sell_price": 300
+    },
+    "wolf_armor_plus": {
+      "name": "ウルフアーマー+",
+      "description": "強化されたウルフアーマー",
+      "type": "armor",
+      "stats": {
+        "def": 14,
+        "agi": 7,
+        "hp": 18
+      },
+      "required_level": 7,
+      "materials": [
+        {
+          "item": "wolf_armor",
+          "quantity": 1
+        },
+        {
+          "item": "wolf_pelt_b",
+          "quantity": 3
+        },
+        {
+          "item": "monster_bone_b",
+          "quantity": 2
+        }
+      ],
+      "emoji": "🐺🛡️✨",
+      "sell_price": 600
+    },
+    "crab_armor": {
+      "name": "クラブアーマー",
+      "description": "クラブの甲羅で作られた硬い鎧",
+      "type": "armor",
+      "stats": {
+        "def": 15,
+        "hp": 10
+      },
+      "required_level": 5,
+      "materials": [
+        {
+          "item": "crab_shell_c",
+          "quantity": 3
+        },
+        {
+          "item": "monster_bone_c",
+          "quantity": 2
+        }
+      ],
+      "emoji": "🦀🛡️",
+      "sell_price": 350
+    },
+    "fire_robe": {
+      "name": "火のローブ",
+      "description": "炎耐性を持つローブ",
+      "type": "armor",
+      "stats": {
+        "def": 6,
+        "mag": 10,
+        "hp": 15
+      },
+      "element_resist": "fire",
+      "required_level": 8,
+      "materials": [
+        {
+          "item": "fire_core_c",
+          "quantity": 1
+        },
+        {
+          "item": "bone_armor",
+          "quantity": 1
+        },
+        {
+          "item": "monster_bone_b",
+          "quantity": 3
+        }
+      ],
+      "emoji": "🔥👘",
+      "sell_price": 700
+    },
+    "water_robe": {
+      "name": "水のローブ",
+      "description": "水耐性を持つローブ",
+      "type": "armor",
+      "stats": {
+        "def": 6,
+        "mag": 10,
+        "hp": 15
+      },
+      "element_resist": "water",
+      "required_level": 8,
+      "materials": [
+        {
+          "item": "fish_scale_c",
+          "quantity": 3
+        },
+        {
+          "item": "bone_armor",
+          "quantity": 1
+        },
+        {
+          "item": "monster_bone_b",
+          "quantity": 2
+        }
+      ],
+      "emoji": "💧👘",
+      "sell_price": 650
+    }
+  },
+  "items": {
+    "high_potion": {
+      "name": "ハイポーション",
+      "description": "HPを150回復する",
+      "type": "item",
+      "effect": {
+        "hp": 150
+      },
+      "required_level": 1,
+      "materials": [
+        {
+          "item": "slime_jelly_b",
+          "quantity": 1
+        },
+        {
+          "item": "slime_jelly_c",
+          "quantity": 2
+        }
+      ],
+      "emoji": "🧪💚",
+      "sell_price": 100
+    },
+    "antidote": {
+      "name": "解毒薬",
+      "description": "毒状態を回復する",
+      "type": "item",
+      "effect": {
+        "cure": [
+          "poison"
+        ]
+      },
+      "required_level": 1,
+      "materials": [
+        {
+          "item": "scorpion_tail_c",
+          "quantity": 1
+        },
+        {
+          "item": "slime_jelly_c",
+          "quantity": 1
+        }
+      ],
+      "emoji": "🌿",
+      "sell_price": 50
+    },
+    "elixir": {
+      "name": "エリクサー",
+      "description": "HPを完全回復する",
+      "type": "item",
+      "effect": {
+        "hp": 9999
+      },
+      "required_level": 10,
+      "materials": [
+        {
+          "item": "slime_jelly_a",
+          "quantity": 2
+        },
+        {
+          "item": "monster_bone_a",
+          "quantity": 1
+        }
+      ],
+      "emoji": "✨💊",
+      "sell_price": 500
+    }
+  },
+  "accessories": {
+    "050e2b6c": {
+      "name": "静かなる雫",
+      "description": "眠るような落ち着いた雰囲気を帯びたアクセサリー\n初心者向け",
+      "emoji": "🟩",
+      "required_level": 6,
+      "stats": {
+        "atk": 50,
+        "def": 30,
+        "mag": 20,
+        "agi": 0,
+        "hp": 80,
+        "mp": 30
+      },
+      "element": "water",
+      "materials": [
+        {
+          "item": "fish_scale_c",
+          "quantity": 3
+        },
+        {
+          "item": "slime_jelly_b",
+          "quantity": 1
+        },
+        {
+          "item": "monster_bone_b",
+          "quantity": 3
+        }
+      ]
+    }
+  }
+}

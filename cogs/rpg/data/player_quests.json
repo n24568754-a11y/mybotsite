@@ -1,0 +1,28 @@
+{
+  "1368428956214100062": {
+    "daily": {
+      "daily_slime_hunt": {
+        "progress": 5,
+        "completed": true
+      },
+      "daily_walk": {
+        "progress": 9,
+        "completed": false
+      },
+      "daily_train": {
+        "progress": 0,
+        "completed": false
+      }
+    },
+    "weekly": {
+      "weekly_boss_hunter": {
+        "progress": 0,
+        "completed": false
+      },
+      "weekly_gold_gather": {
+        "progress": 0,
+        "completed": false
+      }
+    }
+  }
+}

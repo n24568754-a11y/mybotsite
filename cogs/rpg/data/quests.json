@@ -1,0 +1,80 @@
+{
+  "daily_quests": {
+    "daily_slime_hunt": {
+      "name": "💪 スライム討伐",
+      "description": "スライムを5体倒そう！",
+      "type": "daily",
+      "target": {
+        "type": "defeat",
+        "enemy": "slime",
+        "count": 5
+      },
+      "reward": {
+        "exp": 50,
+        "gold": 30
+      },
+      "reset_time": "daily"
+    },
+    "daily_walk": {
+      "name": "🚶 散歩",
+      "description": "30歩移動しよう！",
+      "type": "daily",
+      "target": {
+        "type": "walk",
+        "count": 30
+      },
+      "reward": {
+        "exp": 30,
+        "gold": 20
+      },
+      "reset_time": "daily"
+    },
+    "daily_train": {
+      "name": "🏋️ 修行",
+      "description": "/rpg_train を3回実行しよう！",
+      "type": "daily",
+      "target": {
+        "type": "command",
+        "command": "train",
+        "count": 3
+      },
+      "reward": {
+        "exp": 40,
+        "gold": 25
+      },
+      "reset_time": "daily"
+    }
+  },
+  "weekly_quests": {
+    "weekly_boss_hunter": {
+      "name": "🏆 強敵ハンター",
+      "description": "レベル5以上のモンスターを5体倒そう！",
+      "type": "weekly",
+      "target": {
+        "type": "defeat_min_level",
+        "min_level": 5,
+        "count": 5
+      },
+      "reward": {
+        "exp": 300,
+        "gold": 200,
+        "item": "rare_potion"
+      },
+      "reset_time": "weekly"
+    },
+    "weekly_gold_gather": {
+      "name": "💰 小金持ち",
+      "description": "500ゴールド稼ごう！",
+      "type": "weekly",
+      "target": {
+        "type": "earn_gold",
+        "count": 500
+      },
+      "reward": {
+        "exp": 250,
+        "gold": 100
+      },
+      "reset_time": "weekly"
+    }
+  }
+}

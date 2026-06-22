@@ -103,18 +103,16 @@ class MyBot(commands.Bot):
                             await self.load_extension(f"six.{filename[:-3]}")
                             print(f"⚙️ 6台目Bot ({self.bot_index}): {filename} をロード")
 
-            # Index 6: RPG専用Bot
+            # Index 6: RPG専用Bot（自動リロード機能付き）
             elif self.bot_index == 6:
                 if os.path.exists("./cogs/rpg"):
-                    # 各Cogを個別に読み込む（順序重要）
-                    await self.load_extension("cogs.rpg.story")         # ストーリー
-                    await self.load_extension("cogs.rpg.quest_board")   # クエストボード
-                    await self.load_extension("cogs.rpg.equipment")     # 装備システム
-                    await self.load_extension("cogs.rpg.shop")          # ショップシステム
-                    await self.load_extension("cogs.rpg.craft")         # クラフトシステム
-                    await self.load_extension("cogs.rpg.admin_creator") # 管理用作成ツール
-                    await self.load_extension("cogs.rpg.rpg_main")      # メインRPG
-                    print(f"🎮 RPG Bot ({self.bot_index}): ロード完了 (Story, QuestBoard, Equipment, Shop, Craft, AdminCreator, RPG)")
+                    await self.load_extension("cogs.rpg.rpg_main")
+                    # 自動リロード用のDevToolsをロード
+                    if os.path.exists("./cogs/rpg/dev_tools.py"):
+                        await self.load_extension("cogs.rpg.dev_tools")
+                        print(f"🎮 RPG Bot ({self.bot_index}): ロード完了（自動リロード有効）")
+                    else:
+                        print(f"🎮 RPG Bot ({self.bot_index}): ロード完了（自動リロードなし）")
                 else:
                     print(f"⚠️ RPG Bot ({self.bot_index}): cogs/rpg フォルダが見つかりません")
 
